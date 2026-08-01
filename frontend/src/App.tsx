@@ -1,0 +1,1310 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  LogOut, 
+  User as UserIcon, 
+  Briefcase, 
+  Layers, 
+  Search, 
+  UploadCloud, 
+  ShieldCheck, 
+  CheckSquare, 
+  Plus, 
+  FileSpreadsheet, 
+  AlertTriangle, 
+  FileText, 
+  Mail, 
+  Link as LinkIcon, 
+  Users,
+  CheckCircle,
+  XCircle,
+  ArrowRight
+} from 'lucide-react';
+
+// --- TS Types matching C# Entities ---
+interface Milestone {
+  id: string;
+  projectId: string;
+  title: string;
+  description: string;
+  done: boolean;
+  dateCompleted?: string;
+  createdAt: string;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  pitch: string;
+  description: string;
+  status: 'Draft' | 'Active' | 'At-Risk' | 'Suspended';
+  storageUsedBytes: number;
+  lastUpdatedAt: string;
+  milestones: Milestone[];
+  teamMembers: User[];
+}
+
+interface Job {
+  id: string;
+  projectId: string;
+  project?: Project;
+  title: string;
+  category: 'Engineering' | 'Business' | 'Design' | 'Marketing';
+  description: string;
+  requirements: string;
+  status: 'Open' | 'Closed';
+  createdAt: string;
+}
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'Student' | 'Founder' | 'Manager' | 'Guest';
+  studentId?: string;
+  contactLink?: string;
+  cvUrl?: string;
+  projectId?: string;
+  project?: Project;
+}
+
+interface Application {
+  id: string;
+  application_status: 'Pending' | 'Approved' | 'Rejected';
+  createdAt: string;
+  job_title: string;
+  project_name: string;
+}
+
+interface Candidate {
+  id: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  createdAt: string;
+  job_title: string;
+  student_name: string;
+  student_id?: string;
+  student_email: string;
+  student_contact?: string;
+  student_cv?: string;
+}
+
+export default function App() {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Dashboard Tabs
+  const [activeTab, setActiveTab] = useState<string>('');
+
+  // Local state feeds
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [studentApps, setStudentApps] = useState<Application[]>([]);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Selected project modal
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // Student Profile forms
+  const [contactLink, setContactLink] = useState('');
+  const [cvUrl, setCvUrl] = useState('');
+  const [profileMsg, setProfileMsg] = useState({ text: '', type: '' });
+
+  // Founder Project details editor
+  const [founderProject, setFounderProject] = useState<Project | null>(null);
+  const [projectPitch, setProjectPitch] = useState('');
+  const [uploadMsg, setUploadMsg] = useState({ text: '', type: '' });
+  const [uploadProgress, setUploadProgress] = useState(false);
+
+  // Milestone/Job creators
+  const [newMilestoneTitle, setNewMilestoneTitle] = useState('');
+  const [newMilestoneDesc, setNewMilestoneDesc] = useState('');
+  const [newJobTitle, setNewJobTitle] = useState('');
+  const [newJobCategory, setNewJobCategory] = useState<'Engineering' | 'Business' | 'Design' | 'Marketing'>('Engineering');
+  const [newJobDesc, setNewJobDesc] = useState('');
+  const [newJobReqs, setNewJobReqs] = useState('');
+
+  // General Notification Banner
+  const [notification, setNotification] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
+
+  useEffect(() => {
+    fetchSession();
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      // Set default tab based on role
+      if (currentUser.role === 'Student') {
+        setActiveTab('projects');
+        fetchStudentDashboard();
+      } else if (currentUser.role === 'Founder') {
+        setActiveTab('my-project');
+        fetchFounderDashboard();
+      } else if (currentUser.role === 'Manager') {
+        setActiveTab('vetting-queue');
+        fetchManagerDashboard();
+      }
+    }
+  }, [currentUser]);
+
+  const showNotification = (text: string, type: 'success' | 'error') => {
+    setNotification({ text, type });
+    setTimeout(() => setNotification({ text: '', type: '' }), 5000);
+  };
+
+  const fetchSession = async () => {
+    try {
+      const res = await fetch('/api/auth/me');
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUser(data);
+        if (data.contactLink) setContactLink(data.contactLink);
+        if (data.cvUrl) setCvUrl(data.cvUrl);
+      }
+    } catch (err) {
+      console.error('Session verify failed', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogin = async (role: 'Student' | 'Founder' | 'Manager') => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/auth/login?mockRole=${role}`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUser(data.user);
+        if (data.user.contactLink) setContactLink(data.user.contactLink);
+        if (data.user.cvUrl) setCvUrl(data.user.cvUrl);
+        showNotification(`Đã kết nối tài khoản giả lập: ${data.user.name}`, 'success');
+      } else {
+        showNotification('Lỗi kết nối tài khoản.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi kết nối mạng.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setCurrentUser(null);
+      setFounderProject(null);
+      setProjects([]);
+      setJobs([]);
+      setStudentApps([]);
+      setCandidates([]);
+      showNotification('Đã đăng xuất tài khoản.', 'success');
+    } catch {
+      showNotification('Lỗi đăng xuất.', 'error');
+    }
+  };
+
+  // --- STUDENT DASHBOARD FETCHERS ---
+  const fetchStudentDashboard = async () => {
+    try {
+      const resProj = await fetch('/api/projects');
+      if (resProj.ok) setProjects(await resProj.ok ? await resProj.json() : []);
+
+      const resJobs = await fetch('/api/jobs');
+      if (resJobs.ok) setJobs(await resJobs.json());
+
+      if (currentUser?.id) {
+        const resApps = await fetch(`/api/applications/student/${currentUser.id}`);
+        if (resApps.ok) setStudentApps(await resApps.json());
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    setProfileMsg({ text: '', type: '' });
+
+    try {
+      const res = await fetch(`/api/users/${currentUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contactLink, cvUrl })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setProfileMsg({ text: 'Hồ sơ cá nhân cập nhật thành công!', type: 'success' });
+        setCurrentUser(data.user);
+        // Refresh feeds
+        fetchStudentDashboard();
+      } else {
+        setProfileMsg({ text: data.error || 'Lỗi cập nhật hồ sơ.', type: 'error' });
+      }
+    } catch {
+      setProfileMsg({ text: 'Lỗi kết nối máy chủ.', type: 'error' });
+    }
+  };
+
+  const handleApplyJob = async (jobId: string) => {
+    if (!currentUser) return;
+    try {
+      const res = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: currentUser.id, jobId })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification(data.message, 'success');
+        fetchStudentDashboard();
+      } else {
+        showNotification(data.error || 'Ứng tuyển thất bại.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi kết nối máy chủ.', 'error');
+    }
+  };
+
+  // --- FOUNDER DASHBOARD FETCHERS ---
+  const fetchFounderDashboard = async () => {
+    if (!currentUser) return;
+    try {
+      // Get founder's active project details
+      const userRes = await fetch('/api/auth/me');
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        setCurrentUser(userData);
+        if (userData.projectId) {
+          const projRes = await fetch(`/api/projects/${userData.projectId}`);
+          if (projRes.ok) {
+            const projData = await projRes.json();
+            setFounderProject(projData);
+            setProjectPitch(projData.pitch);
+
+            // Fetch job applicants for this project
+            const candRes = await fetch(`/api/applications/project/${projData.id}`);
+            if (candRes.ok) setCandidates(await candRes.json());
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAddMilestone = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!founderProject || !newMilestoneTitle) return;
+
+    try {
+      const res = await fetch(`/api/projects/${founderProject.id}/milestones`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newMilestoneTitle, description: newMilestoneDesc })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification(data.message, 'success');
+        setNewMilestoneTitle('');
+        setNewMilestoneDesc('');
+        fetchFounderDashboard();
+      } else {
+        showNotification(data.error || 'Lỗi thêm cột mốc.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi kết nối.', 'error');
+    }
+  };
+
+  const handlePostJob = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!founderProject || !newJobTitle || !newJobDesc) return;
+
+    try {
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId: founderProject.id,
+          title: newJobTitle,
+          category: newJobCategory,
+          description: newJobDesc,
+          requirements: newJobReqs
+        })
+      });
+      if (res.ok) {
+        showNotification('Đăng tuyển dụng thành công!', 'success');
+        setNewJobTitle('');
+        setNewJobDesc('');
+        setNewJobReqs('');
+        fetchFounderDashboard();
+      } else {
+        const data = await res.json();
+        showNotification(data.error || 'Đăng tuyển thất bại.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi mạng.', 'error');
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!founderProject || !e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    setUploadProgress(true);
+    setUploadMsg({ text: '', type: '' });
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch(`/api/projects/${founderProject.id}/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUploadMsg({ text: 'Tải lên tài liệu thành công!', type: 'success' });
+        fetchFounderDashboard();
+      } else {
+        setUploadMsg({ text: data.error || 'Tải lên thất bại.', type: 'error' });
+      }
+    } catch {
+      setUploadMsg({ text: 'Lỗi mạng khi tải lên.', type: 'error' });
+    } finally {
+      setUploadProgress(false);
+    }
+  };
+
+  const handleReviewCandidate = async (appId: string, status: 'Approved' | 'Rejected') => {
+    try {
+      const res = await fetch(`/api/applications/${appId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification(data.message, 'success');
+        fetchFounderDashboard();
+      } else {
+        showNotification(data.error || 'Lỗi phê duyệt.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi mạng.', 'error');
+    }
+  };
+
+  // --- MANAGER DASHBOARD FETCHERS ---
+  const fetchManagerDashboard = async () => {
+    try {
+      const res = await fetch('/api/projects');
+      if (res.ok) setProjects(await res.json());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleVetProject = async (projectId: string, status: 'Active' | 'Suspended') => {
+    try {
+      const res = await fetch(`/api/admin/projects/${projectId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification(data.message, 'success');
+        fetchManagerDashboard();
+      } else {
+        showNotification(data.error || 'Lỗi duyệt.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi mạng.', 'error');
+    }
+  };
+
+  const handleRunDormancyCheck = async () => {
+    try {
+      const res = await fetch('/api/admin/run-dormancy-check', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification(
+          `Quét hoàn tất! Đã cập nhật ${data.results.warningsIssued} cảnh báo, tạm ngưng ${data.results.suspendedCount} dự án.`,
+          'success'
+        );
+        fetchManagerDashboard();
+      } else {
+        showNotification(data.error || 'Chạy quét thất bại.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi mạng.', 'error');
+    }
+  };
+
+  // --- FORMAT STORAGE SIZE ---
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = 2;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a16]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="font-heading text-purple-400 animate-pulse">Đang nạp hệ thống Gara...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // --- LOGIN GATEVIEW ---
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 relative">
+        {/* Glow Effects */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+
+        <div className="glass-panel p-8 max-w-md w-full text-center relative z-10 border-purple-500/20">
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+              <Layers className="w-9 h-9 text-white" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-extrabold font-heading bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+            GARA PORTAL
+          </h1>
+          <p className="text-sm text-slate-400 mb-8 font-body">
+            Cổng quản lý danh mục và tuyển dụng Khởi nghiệp liên khoa trường Đại học.
+          </p>
+
+          <div className="flex flex-col gap-4">
+            <button 
+              onClick={() => handleLogin('Student')}
+              className="btn btn-outline w-full flex justify-between items-center px-6 py-4 glass-panel-interactive border-white/10 group"
+            >
+              <div className="flex items-center gap-3">
+                <Briefcase className="w-5 h-5 text-cyan-400" />
+                <span className="text-left font-heading text-slate-200">Cổng Sinh Viên</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button 
+              onClick={() => handleLogin('Founder')}
+              className="btn btn-outline w-full flex justify-between items-center px-6 py-4 glass-panel-interactive border-white/10 group"
+            >
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-purple-400" />
+                <span className="text-left font-heading text-slate-200">Cổng Nhà Sáng Lập</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button 
+              onClick={() => handleLogin('Manager')}
+              className="btn btn-outline w-full flex justify-between items-center px-6 py-4 glass-panel-interactive border-white/10 group"
+            >
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="w-5 h-5 text-rose-400" />
+                <span className="text-left font-heading text-slate-200">Cổng Quản Trị Viên</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+          
+          <div className="mt-8 text-xs text-slate-500 border-t border-white/5 pt-4">
+            Ứng dụng kết nối React + ASP.NET Core & PostgreSQL
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Toast Notification */}
+      {notification.text && (
+        <div className={`fixed top-6 right-6 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 font-heading text-sm border animate-fade-in ${
+          notification.type === 'success' 
+            ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/30' 
+            : 'bg-rose-950/80 text-rose-400 border-rose-500/30'
+        }`}>
+          {notification.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
+          {notification.text}
+        </div>
+      )}
+
+      {/* --- HEADER --- */}
+      <header className="glass-panel border-t-0 border-x-0 rounded-none px-6 py-4 flex items-center justify-between sticky top-0 z-40 bg-[#070712]/90 backdrop-blur-md">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center">
+            <Layers className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="font-heading font-bold text-lg leading-tight bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              GARA SHOWCASE
+            </h1>
+            <p className="text-[10px] text-slate-400 tracking-wider font-body">INNOVATION HUB</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-white/5 border border-white/5">
+            <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+              <UserIcon className="w-4 h-4 text-purple-400" />
+            </div>
+            <div className="text-left hidden md:block">
+              <p className="text-xs font-semibold leading-none text-slate-200">{currentUser.name}</p>
+              <p className="text-[10px] text-purple-400 font-heading font-medium mt-0.5 uppercase tracking-wider">{currentUser.role}</p>
+            </div>
+          </div>
+
+          <button 
+            onClick={handleLogout}
+            className="btn btn-outline py-2 px-3 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border-white/5 flex items-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-xs hidden md:inline">Đăng xuất</span>
+          </button>
+        </div>
+      </header>
+
+      {/* --- PORTALS ROUTER WRAPPER --- */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 animate-fade-in">
+        
+        {/* ================= STUDENT PORTAL ================= */}
+        {currentUser.role === 'Student' && (
+          <div>
+            <div className="tabs-container">
+              <button 
+                onClick={() => { setActiveTab('projects'); fetchStudentDashboard(); }} 
+                className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
+              >
+                Khám phá Dự án
+              </button>
+              <button 
+                onClick={() => { setActiveTab('jobs'); fetchStudentDashboard(); }} 
+                className={`tab-btn ${activeTab === 'jobs' ? 'active' : ''}`}
+              >
+                Cơ hội Tuyển dụng
+              </button>
+              <button 
+                onClick={() => { setActiveTab('history'); fetchStudentDashboard(); }} 
+                className={`tab-btn ${activeTab === 'history' ? 'active' : ''}`}
+              >
+                Lịch sử & Profile
+              </button>
+            </div>
+
+            {/* TAB: Projects */}
+            {activeTab === 'projects' && (
+              <div className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-heading font-bold text-slate-200">Startup Portfolio</h2>
+                    <p className="text-sm text-slate-400">Khám phá danh sách các ý tưởng và dự án khởi nghiệp sinh viên.</p>
+                  </div>
+                  <div className="relative max-w-sm w-full">
+                    <Search className="absolute left-3 top-3.5 w-4 h-4 text-slate-500" />
+                    <input 
+                      type="text" 
+                      placeholder="Tìm kiếm dự án..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 py-2.5"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {projects.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase())).map(p => (
+                    <div key={p.id} className="glass-panel glass-panel-interactive p-6 flex flex-col justify-between border-white/5">
+                      <div>
+                        <div className="flex items-start justify-between mb-3">
+                          <span className={`badge ${
+                            p.status === 'Active' ? 'badge-active' : 'badge-risk'
+                          }`}>{p.status}</span>
+                          <span className="text-xs text-slate-500 font-body">Cập nhật: {new Date(p.lastUpdatedAt).toLocaleDateString()}</span>
+                        </div>
+                        <h3 className="text-xl font-heading font-bold text-slate-100 mb-2">{p.name}</h3>
+                        <p className="text-sm text-slate-400 mb-4 line-clamp-2">{p.pitch}</p>
+                      </div>
+
+                      <div className="border-t border-white/5 pt-4 flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-xs text-slate-400">
+                          <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-purple-400" /> {p.milestones.length} Cột mốc</span>
+                          <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-cyan-400" /> {p.teamMembers.length} Thành viên</span>
+                        </div>
+                        <button 
+                          onClick={() => setSelectedProject(p)}
+                          className="btn btn-outline py-1.5 px-3 text-xs border-purple-500/25 text-purple-400 hover:bg-purple-500/10"
+                        >
+                          Chi tiết
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: Jobs */}
+            {activeTab === 'jobs' && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl font-heading font-bold text-slate-200">Tuyển dụng thành viên</h2>
+                  <p className="text-sm text-slate-400">Gia nhập các startup của trường đại học, ứng tuyển vào các vai trò liên khoa.</p>
+                </div>
+
+                {(!currentUser.contactLink || !currentUser.cvUrl) && (
+                  <div className="p-4 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-400 text-sm flex gap-3">
+                    <AlertTriangle className="w-5 h-5 shrink-0" />
+                    <div>
+                      <span className="font-bold">Hồ sơ chưa hoàn thiện:</span> Bạn bắt buộc phải cập nhật thông tin liên hệ và đính kèm CV PDF tại tab <strong>Lịch sử & Profile</strong> mới có thể bấm nộp đơn tuyển dụng.
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {jobs.map(j => (
+                    <div key={j.id} className="glass-panel p-6 flex flex-col justify-between border-white/5">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="badge badge-draft">{j.category}</span>
+                          <span className="text-xs text-slate-400 font-heading font-bold">{j.project?.name}</span>
+                        </div>
+                        <h3 className="text-lg font-heading font-bold text-slate-100 mb-2">{j.title}</h3>
+                        <p className="text-sm text-slate-300 mb-4">{j.description}</p>
+                        
+                        <div className="bg-white/5 rounded-lg p-3 border border-white/5 mb-6 text-xs text-slate-400">
+                          <span className="font-bold text-slate-300 block mb-1">Yêu cầu vị trí:</span>
+                          {j.requirements}
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={() => handleApplyJob(j.id)}
+                        disabled={!currentUser.contactLink || !currentUser.cvUrl}
+                        className="btn btn-primary w-full disabled:opacity-50 disabled:pointer-events-none"
+                      >
+                        Nộp đơn ứng tuyển (CV)
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: Profile & History */}
+            {activeTab === 'history' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Profile update form */}
+                <div className="glass-panel p-6 border-white/5 space-y-6">
+                  <div>
+                    <h3 className="text-lg font-heading font-bold text-slate-200">Hồ sơ cá nhân</h3>
+                    <p className="text-xs text-slate-400">Cung cấp liên kết liên hệ và hồ sơ năng lực của bạn.</p>
+                  </div>
+
+                  {profileMsg.text && (
+                    <div className={`p-3 rounded text-xs border ${
+                      profileMsg.type === 'success' ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400' : 'bg-rose-950/40 border-rose-500/30 text-rose-400'
+                    }`}>
+                      {profileMsg.text}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleUpdateProfile} className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="text-xs text-slate-400 font-bold uppercase">Mã số Sinh viên</label>
+                      <input type="text" value={currentUser.studentId || ''} disabled className="opacity-50 cursor-not-allowed" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs text-slate-400 font-bold uppercase">Liên kết liên hệ (Facebook / LinkedIn)</label>
+                      <input 
+                        type="url" 
+                        value={contactLink}
+                        onChange={(e) => setContactLink(e.target.value)}
+                        placeholder="https://facebook.com/..." 
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs text-slate-400 font-bold uppercase">Liên kết tệp hồ sơ CV (PDF)</label>
+                      <input 
+                        type="url" 
+                        value={cvUrl}
+                        onChange={(e) => setCvUrl(e.target.value)}
+                        placeholder="https://..." 
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="btn btn-secondary w-full">Lưu thông tin</button>
+                  </form>
+
+                  {currentUser.projectId && (
+                    <div className="mt-4 p-4 rounded-lg bg-purple-950/30 border border-purple-500/30 text-purple-400 text-xs">
+                      <span className="font-bold block mb-1">Dự án tham gia:</span>
+                      Đang liên kết với dự án thành viên.
+                    </div>
+                  )}
+                </div>
+
+                {/* Applications history */}
+                <div className="glass-panel p-6 border-white/5 lg:col-span-2 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-heading font-bold text-slate-200">Đơn ứng tuyển của tôi</h3>
+                      <p className="text-xs text-slate-400">Danh sách các cơ hội mà bạn đã nộp đơn tuyển dụng.</p>
+                    </div>
+                    <span className="text-xs badge badge-draft">
+                      {studentApps.filter(a => a.application_status === 'Pending').length} / 3 Chờ duyệt
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    {studentApps.length === 0 ? (
+                      <p className="text-sm text-slate-500 text-center py-8">Bạn chưa nộp đơn ứng tuyển nào.</p>
+                    ) : (
+                      studentApps.map(a => (
+                        <div key={a.id} className="p-4 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between">
+                          <div>
+                            <h4 className="font-heading font-bold text-sm text-slate-200">{a.job_title}</h4>
+                            <p className="text-xs text-slate-400 mt-1">{a.project_name}</p>
+                          </div>
+                          <div className="text-right">
+                            <span className={`badge text-[10px] ${
+                              a.application_status === 'Approved' ? 'badge-active' :
+                              a.application_status === 'Rejected' ? 'badge-suspended' : 'badge-draft'
+                            }`}>{a.application_status}</span>
+                            <p className="text-[10px] text-slate-500 mt-1.5">{new Date(a.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ================= FOUNDER PORTAL ================= */}
+        {currentUser.role === 'Founder' && (
+          <div>
+            {!currentUser.projectId ? (
+              <div className="glass-panel p-8 max-w-lg mx-auto text-center border-amber-500/20">
+                <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+                <h2 className="text-xl font-heading font-bold text-slate-200 mb-2">Chưa gán quyền sở hữu Startup</h2>
+                <p className="text-sm text-slate-400 mb-6">
+                  Bạn đăng nhập bằng quyền Nhà sáng lập nhưng tài khoản của bạn chưa liên kết với bất cứ dự án nào. Vui lòng liên hệ với Vườn ươm quản trị để được thêm quyền.
+                </p>
+              </div>
+            ) : !founderProject ? (
+              <p className="text-center text-slate-500">Đang đồng bộ dữ liệu dự án của sáng lập viên...</p>
+            ) : (
+              <div>
+                <div className="tabs-container">
+                  <button 
+                    onClick={() => { setActiveTab('my-project'); fetchFounderDashboard(); }} 
+                    className={`tab-btn ${activeTab === 'my-project' ? 'active' : ''}`}
+                  >
+                    Dự án của tôi
+                  </button>
+                  <button 
+                    onClick={() => { setActiveTab('recruits'); fetchFounderDashboard(); }} 
+                    className={`tab-btn ${activeTab === 'recruits' ? 'active' : ''}`}
+                  >
+                    Ứng viên tuyển dụng ({candidates.filter(c => c.status === 'Pending').length})
+                  </button>
+                </div>
+
+                {/* TAB: My Project Editor & Milestones */}
+                {activeTab === 'my-project' && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* General Profile Info & storage */}
+                    <div className="glass-panel p-6 border-white/5 space-y-6">
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-lg font-heading font-bold text-slate-200">Thông tin dự án</h3>
+                          <span className={`badge ${
+                            founderProject.status === 'Active' ? 'badge-active' :
+                            founderProject.status === 'Suspended' ? 'badge-suspended' : 'badge-draft'
+                          }`}>{founderProject.status}</span>
+                        </div>
+                        <p className="text-xs text-slate-400">Quản lý và đồng bộ tệp tải lên cũng như thông tin quảng bá.</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Tên Startup</label>
+                          <input type="text" value={founderProject.name} disabled className="opacity-50 cursor-not-allowed" />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Khẩu hiệu (Pitch)</label>
+                          <textarea rows={3} value={projectPitch} readOnly className="opacity-75 cursor-not-allowed" />
+                        </div>
+                      </div>
+
+                      {/* Quota storage footprint */}
+                      <div className="space-y-2 border-t border-white/5 pt-4">
+                        <div className="flex justify-between text-xs font-heading font-semibold">
+                          <span className="text-slate-400">Không gian lưu trữ (Quotas)</span>
+                          <span className="text-slate-300">
+                            {formatBytes(founderProject.storageUsedBytes)} / 500 MB
+                          </span>
+                        </div>
+                        <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden border border-white/5">
+                          <div 
+                            className="bg-purple-500 h-full transition-all duration-300"
+                            style={{ width: `${Math.min(100, (founderProject.storageUsedBytes / (500 * 1024 * 1024)) * 100)}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-[10px] text-slate-500">Giới hạn tải lên tối đa 10MB cho mỗi tệp tin đính kèm.</p>
+                      </div>
+
+                      {/* File uploader stream tool */}
+                      <div className="border-t border-white/5 pt-4 space-y-4">
+                        <label className="text-xs text-slate-300 font-bold block">Tải lên tệp tài liệu dự án (.pdf, .zip)</label>
+                        
+                        {uploadMsg.text && (
+                          <div className={`p-3 rounded text-xs border ${
+                            uploadMsg.type === 'success' ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400' : 'bg-rose-950/40 border-rose-500/30 text-rose-400'
+                          }`}>{uploadMsg.text}</div>
+                        )}
+
+                        <div className="relative border-2 border-dashed border-white/10 rounded-lg p-6 hover:border-purple-500/30 hover:bg-white/5 transition-all text-center cursor-pointer">
+                          {uploadProgress ? (
+                            <div className="text-xs text-purple-400 animate-pulse">Đang truyền tải luồng bytes lên Azure...</div>
+                          ) : (
+                            <div>
+                              <UploadCloud className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                              <span className="text-xs text-slate-300 block">Kéo thả hoặc nhấp chọn để tải lên</span>
+                              <input 
+                                type="file" 
+                                onChange={handleFileUpload}
+                                className="absolute inset-0 opacity-0 cursor-pointer"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Milestones and Team Placements lists */}
+                    <div className="glass-panel p-6 border-white/5 lg:col-span-2 space-y-8">
+                      {/* Active Roster List */}
+                      <div className="space-y-4">
+                        <div>
+                          <h3 className="text-lg font-heading font-bold text-slate-200">Đội ngũ thành viên (Team Placements)</h3>
+                          <p className="text-xs text-slate-400">Danh sách nhân sự liên khoa chính thức đã được bạn phê duyệt.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {founderProject.teamMembers.length === 0 ? (
+                            <p className="text-xs text-slate-500 py-2 col-span-2">Dự án chưa có thành viên nào.</p>
+                          ) : (
+                            founderProject.teamMembers.map(member => (
+                              <div key={member.id} className="p-3 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between">
+                                <div>
+                                  <h4 className="font-heading font-bold text-sm text-slate-200">{member.name}</h4>
+                                  <p className="text-[10px] text-slate-400 mt-1">{member.studentId} • {member.email}</p>
+                                </div>
+                                {member.contactLink && (
+                                  <a href={member.contactLink} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-400">
+                                    <LinkIcon className="w-4 h-4" />
+                                  </a>
+                                )}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Milestones scheduler */}
+                      <div className="space-y-4 border-t border-white/5 pt-6">
+                        <div>
+                          <h3 className="text-lg font-heading font-bold text-slate-200">Lịch trình Cột mốc</h3>
+                          <p className="text-xs text-slate-400">Đăng cột mốc mới để gỡ cảnh báo hoặc cập nhật tiến trình của startup.</p>
+                        </div>
+
+                        <form onSubmit={handleAddMilestone} className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                          <div className="md:col-span-2">
+                            <input 
+                              type="text" 
+                              placeholder="Tiêu đề cột mốc mới..." 
+                              value={newMilestoneTitle}
+                              onChange={(e) => setNewMilestoneTitle(e.target.value)}
+                              required 
+                            />
+                          </div>
+                          <button type="submit" className="btn btn-secondary py-2.5">
+                            <Plus className="w-4 h-4" /> Thêm mới
+                          </button>
+                        </form>
+
+                        <div className="space-y-3">
+                          {founderProject.milestones.map(m => (
+                            <div key={m.id} className="p-3.5 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                {m.done ? (
+                                  <CheckSquare className="w-5 h-5 text-emerald-400 shrink-0" />
+                                ) : (
+                                  <div className="w-5 h-5 border-2 border-slate-500 rounded shrink-0"></div>
+                                )}
+                                <div>
+                                  <h4 className={`text-sm font-bold ${m.done ? 'line-through text-slate-500' : 'text-slate-200'}`}>{m.title}</h4>
+                                  <p className="text-[10px] text-slate-500 mt-1">Khởi tạo: {new Date(m.createdAt).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB: Candidates & Recruits */}
+                {activeTab === 'recruits' && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Post new job opportunity */}
+                    <div className="glass-panel p-6 border-white/5 space-y-6">
+                      <div>
+                        <h3 className="text-lg font-heading font-bold text-slate-200">Đăng tin tuyển dụng</h3>
+                        <p className="text-xs text-slate-400">Tìm kiếm các mảnh ghép sinh viên liên khoa (SE, GD, Biz).</p>
+                      </div>
+
+                      <form onSubmit={handlePostJob} className="space-y-4">
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Tiêu đề vai trò</label>
+                          <input 
+                            type="text" 
+                            placeholder="Ví dụ: Lập trình viên React..." 
+                            value={newJobTitle}
+                            onChange={(e) => setNewJobTitle(e.target.value)}
+                            required 
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Nhóm chuyên ngành</label>
+                          <select 
+                            value={newJobCategory}
+                            onChange={(e) => setNewJobCategory(e.target.value as any)}
+                          >
+                            <option value="Engineering">Kỹ thuật (Engineering)</option>
+                            <option value="Design">Thiết kế (Design)</option>
+                            <option value="Business">Kinh doanh (Business)</option>
+                            <option value="Marketing">Truyền thông (Marketing)</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Mô tả công việc</label>
+                          <textarea 
+                            rows={3} 
+                            placeholder="Mô tả các nhiệm vụ chính..." 
+                            value={newJobDesc}
+                            onChange={(e) => setNewJobDesc(e.target.value)}
+                            required 
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Yêu cầu kĩ năng</label>
+                          <textarea 
+                            rows={2} 
+                            placeholder="Thành thạo React, Git..." 
+                            value={newJobReqs}
+                            onChange={(e) => setNewJobReqs(e.target.value)}
+                          />
+                        </div>
+
+                        <button type="submit" className="btn btn-primary w-full">Đăng tin tuyển dụng</button>
+                      </form>
+                    </div>
+
+                    {/* Applicant Review Board */}
+                    <div className="glass-panel p-6 border-white/5 lg:col-span-2 space-y-6">
+                      <div>
+                        <h3 className="text-lg font-heading font-bold text-slate-200">Đơn ứng tuyển đang chờ duyệt</h3>
+                        <p className="text-xs text-slate-400">Phê duyệt hoặc từ chối sinh viên liên khoa nộp đơn vào dự án.</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        {candidates.filter(c => c.status === 'Pending').length === 0 ? (
+                          <p className="text-sm text-slate-500 text-center py-12">Không có hồ sơ nào đang chờ duyệt.</p>
+                        ) : (
+                          candidates.filter(c => c.status === 'Pending').map(c => (
+                            <div key={c.id} className="p-5 rounded-lg bg-white/5 border border-white/10 flex flex-col md:flex-row justify-between gap-4">
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2.5">
+                                  <span className="badge badge-draft text-[9px]">{c.job_title}</span>
+                                  <span className="text-[10px] text-slate-500">{new Date(c.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                <h4 className="font-heading font-bold text-base text-slate-100">{c.student_name} ({c.student_id})</h4>
+                                <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+                                  <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {c.student_email}</span>
+                                  {c.student_contact && (
+                                    <a href={c.student_contact} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-cyan-400 hover:underline">
+                                      <LinkIcon className="w-3.5 h-3.5" /> Liên hệ
+                                    </a>
+                                  )}
+                                  {c.student_cv && (
+                                    <a href={c.student_cv} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-purple-400 hover:underline">
+                                      <FileText className="w-3.5 h-3.5" /> Xem CV (PDF)
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 self-end md:self-center">
+                                <button 
+                                  onClick={() => handleReviewCandidate(c.id, 'Rejected')}
+                                  className="btn btn-outline py-1.5 px-3 text-xs text-rose-400 hover:bg-rose-500/10 border-rose-500/20"
+                                >
+                                  Từ chối
+                                </button>
+                                <button 
+                                  onClick={() => handleReviewCandidate(c.id, 'Approved')}
+                                  className="btn btn-secondary py-1.5 px-3 text-xs"
+                                >
+                                  Duyệt vào nhóm
+                                </button>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ================= MANAGER PORTAL ================= */}
+        {currentUser.role === 'Manager' && (
+          <div className="space-y-6">
+            <div className="tabs-container">
+              <button 
+                onClick={() => { setActiveTab('vetting-queue'); fetchManagerDashboard(); }} 
+                className={`tab-btn ${activeTab === 'vetting-queue' ? 'active' : ''}`}
+              >
+                Xét duyệt Startup ({projects.filter(p => p.status === 'Draft').length})
+              </button>
+              <button 
+                onClick={() => { setActiveTab('all-projects'); fetchManagerDashboard(); }} 
+                className={`tab-btn ${activeTab === 'all-projects' ? 'active' : ''}`}
+              >
+                Danh sách Vườn Ươm
+              </button>
+            </div>
+
+            {/* TAB: Startup Vetting Queue */}
+            {activeTab === 'vetting-queue' && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl font-heading font-bold text-slate-200">Startup Vetting Queue</h2>
+                  <p className="text-sm text-slate-400">Xét duyệt các ý tưởng dự án nộp bản nháp trước khi cho phép xuất hiện trên bảng tuyển dụng.</p>
+                </div>
+
+                <div className="space-y-4">
+                  {projects.filter(p => p.status === 'Draft').length === 0 ? (
+                    <p className="text-sm text-slate-500 text-center py-12">Không có dự án khởi nghiệp nào đang chờ duyệt.</p>
+                  ) : (
+                    projects.filter(p => p.status === 'Draft').map(p => (
+                      <div key={p.id} className="glass-panel p-6 border-white/5 flex flex-col md:flex-row justify-between gap-6">
+                        <div className="space-y-3 max-w-3xl">
+                          <h3 className="text-xl font-heading font-bold text-slate-100">{p.name}</h3>
+                          <p className="text-sm text-slate-300 bg-white/5 p-3 rounded border border-white/5 italic">"{p.pitch}"</p>
+                          <div className="flex items-center gap-4 text-xs text-slate-400">
+                            <span>Khởi tạo: {new Date(p.lastUpdatedAt).toLocaleDateString()}</span>
+                            <span>•</span>
+                            <span>{p.milestones.length} Cột mốc</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2.5 self-end md:self-center">
+                          <button 
+                            onClick={() => handleVetProject(p.id, 'Active')}
+                            className="btn btn-secondary py-2 px-4"
+                          >
+                            Phê duyệt Đăng
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: Portfolio Review & Dormancy Scan */}
+            {activeTab === 'all-projects' && (
+              <div className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-heading font-bold text-slate-200">Incubator Portfolio</h2>
+                    <p className="text-sm text-slate-400">Giám sát hoạt động, quotas bộ nhớ và tình trạng cập nhật của các startup.</p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={handleRunDormancyCheck}
+                      className="btn btn-outline py-2.5 px-4 text-xs border-amber-500/20 text-amber-400 hover:bg-amber-500/10 flex items-center gap-2"
+                    >
+                      <AlertTriangle className="w-4 h-4" /> Quét Dormancy
+                    </button>
+
+                    <a 
+                      href="/api/admin/reports/csv"
+                      className="btn btn-secondary py-2.5 px-4 text-xs flex items-center gap-2"
+                    >
+                      <FileSpreadsheet className="w-4 h-4" /> Xuất báo cáo CSV
+                    </a>
+                  </div>
+                </div>
+
+                <div className="glass-panel overflow-hidden border-white/5">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-sm text-slate-300">
+                      <thead>
+                        <tr className="bg-white/5 border-b border-white/5 text-slate-400 font-heading text-xs font-bold uppercase">
+                          <th className="p-4">Tên Startup</th>
+                          <th className="p-4">Tình trạng</th>
+                          <th className="p-4">Dung lượng sử dụng</th>
+                          <th className="p-4">Thành viên</th>
+                          <th className="p-4">Cập nhật cuối</th>
+                          <th className="p-4 text-right">Hành động</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {projects.map(p => (
+                          <tr key={p.id} className="hover:bg-white/5 transition-colors">
+                            <td className="p-4 font-heading font-bold text-slate-200">{p.name}</td>
+                            <td className="p-4">
+                              <span className={`badge text-[9px] ${
+                                p.status === 'Active' ? 'badge-active' :
+                                p.status === 'Suspended' ? 'badge-suspended' :
+                                p.status === 'At-Risk' ? 'badge-risk' : 'badge-draft'
+                              }`}>{p.status}</span>
+                            </td>
+                            <td className="p-4 font-mono text-xs">{formatBytes(p.storageUsedBytes)}</td>
+                            <td className="p-4">{p.teamMembers.length} Nhân sự</td>
+                            <td className="p-4 text-xs text-slate-400">{new Date(p.lastUpdatedAt).toLocaleDateString()}</td>
+                            <td className="p-4 text-right">
+                              {p.status === 'Active' && (
+                                <button 
+                                  onClick={() => handleVetProject(p.id, 'Suspended')}
+                                  className="btn btn-outline py-1 px-2.5 text-xs text-rose-400 border-rose-500/20 hover:bg-rose-500/10"
+                                >
+                                  Tạm dừng
+                                </button>
+                              )}
+                              {p.status === 'Suspended' && (
+                                <button 
+                                  onClick={() => handleVetProject(p.id, 'Active')}
+                                  className="btn btn-outline py-1 px-2.5 text-xs text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10"
+                                >
+                                  Mở lại
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      {/* --- SELECTED PROJECT MODAL DIALOG --- */}
+      {selectedProject && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="glass-panel max-w-2xl w-full p-6 relative border-purple-500/30 animate-fade-in max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+            >
+              <XCircle className="w-6 h-6" />
+            </button>
+
+            <div className="space-y-6">
+              <div>
+                <span className="badge badge-active mb-2">{selectedProject.status}</span>
+                <h2 className="text-2xl font-heading font-extrabold text-slate-100">{selectedProject.name}</h2>
+                <p className="text-sm text-slate-400 mt-2 italic">"{selectedProject.pitch}"</p>
+              </div>
+
+              {/* Roster of members */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-heading font-bold text-slate-300 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-purple-400" /> Thành viên dự án
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {selectedProject.teamMembers.length === 0 ? (
+                    <p className="text-xs text-slate-500">Dự án chưa gán thành viên chính thức.</p>
+                  ) : (
+                    selectedProject.teamMembers.map(m => (
+                      <div key={m.id} className="p-3 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between text-xs text-slate-300">
+                        <div>
+                          <p className="font-bold text-slate-200">{m.name}</p>
+                          <p className="text-[10px] text-slate-500 mt-0.5">{m.studentId} • {m.email}</p>
+                        </div>
+                        {m.contactLink && (
+                          <a href={m.contactLink} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-400">
+                            <LinkIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Milestones lists */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-heading font-bold text-slate-300 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-cyan-400" /> Cột mốc hoàn thành
+                </h3>
+                <div className="space-y-2">
+                  {selectedProject.milestones.length === 0 ? (
+                    <p className="text-xs text-slate-500">Chưa ghi nhận cột mốc nào.</p>
+                  ) : (
+                    selectedProject.milestones.map(m => (
+                      <div key={m.id} className="p-3 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between text-xs">
+                        <span className={m.done ? 'line-through text-slate-500' : 'text-slate-300'}>{m.title}</span>
+                        {m.done && <span className="text-[10px] text-emerald-400">Hoàn thành</span>}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- FOOTER --- */}
+      <footer className="mt-auto border-t border-white/5 py-6 text-center text-xs text-slate-500">
+        <div>© 2026 Gara Startup Showcase. Built with React + .NET 9 & Azure Flexible PostgreSQL.</div>
+      </footer>
+    </div>
+  );
+}

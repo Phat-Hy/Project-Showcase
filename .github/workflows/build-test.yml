@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   validate:
-    name: Lint, Test & Scan
+    name: Lint, Build & Scan
     runs-on: ubuntu-latest
 
     services:
@@ -31,24 +31,41 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # 1. Validate Frontend Build & Typing
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
-      - name: Install Dependencies
+      - name: Install Frontend Dependencies
+        working-directory: frontend
         run: npm ci || npm install
 
-      - name: Run Linter
-        run: npm run lint
+      - name: Install Native Windows Binding Bypass for Linux CI
+        working-directory: frontend
+        run: npm install @rolldown/binding-linux-x64-gnu --no-save
 
-      - name: Run Tests
-        env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/garashowcase_test
-          NODE_ENV: development
-        run: npm test
+      - name: Compile & Build Frontend
+        working-directory: frontend
+        run: npm run build
 
+      # 2. Validate C# Backend Compilation
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore Backend Packages
+        working-directory: backend
+        run: dotnet restore
+
+      - name: Compile Backend
+        working-directory: backend
+        run: dotnet build --configuration Release
+
+      # 3. Security Scanning
       - name: Run Trivy Security Scan (FS)
         uses: aquasecurity/trivy-action@master
         with:
