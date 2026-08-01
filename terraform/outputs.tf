@@ -14,6 +14,6 @@ output "database_fqdn" {
 }
 
 output "container_app_fqdn" {
-  value       = azurerm_container_app.app.fqdn
+  value       = azurerm_container_app.app.ingress[0].fqdn
   description = "The FQDN of the deployed Container App"
 }
