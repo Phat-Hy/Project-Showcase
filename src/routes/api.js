@@ -54,4 +54,32 @@ router.post('/admin/run-dormancy-check', requireAuth, checkRole(['Manager']), as
   }
 });
 
+// Update user profile details (contact link, CV)
+router.put('/users/:id', requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const { contactLink, cvUrl } = req.body;
+
+  if (req.user.role !== 'Manager' && req.user.id !== id) {
+    return res.status(403).json({ error: 'Bạn không có quyền sửa đổi hồ sơ này.' });
+  }
+
+  try {
+    const updatedCount = await db('users')
+      .where({ id })
+      .update({
+        contact_link: contactLink || null,
+        cv_url: cvUrl || null,
+        updated_at: db.fn.now()
+      });
+
+    if (updatedCount === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy người dùng.' });
+    }
+
+    res.json({ message: 'Cập nhật hồ sơ thành công.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi cập nhật hồ sơ: ' + err.message });
+  }
+});
+
 export default router;

@@ -158,4 +158,43 @@ describe('Gara Showcase Backend Business Rules & RBAC Integration Tests', () => 
       await db('projects').where({ id: newProjectId }).del();
     });
   });
+
+  describe('Student Profile Completed Requirement (BR-04 Exception)', () => {
+    it('should block applications if the student has not completed their profile (missing contact link or CV)', async () => {
+      // 1. Create a student with no contact_link or cv_url in database
+      const incompleteStudentId = randomUUID();
+      const incompleteStudentToken = signToken({
+        id: incompleteStudentId,
+        email: 'incomplete@fpt.edu.vn',
+        name: 'Incomplete Student',
+        role: 'Student',
+        student_id: 'SE181111'
+      });
+
+      await db('users').insert({
+        id: incompleteStudentId,
+        email: 'incomplete@fpt.edu.vn',
+        name: 'Incomplete Student',
+        role: 'Student',
+        student_id: 'SE181111',
+        contact_link: null,
+        cv_url: null
+      });
+
+      // 2. Attempt to apply
+      const res = await request(app)
+        .post('/api/applications')
+        .set('Authorization', `Bearer ${incompleteStudentToken}`)
+        .send({
+          studentId: incompleteStudentId,
+          jobId: mockJobId
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toContain('Bạn cần hoàn thiện hồ sơ sinh viên');
+
+      // Clean up
+      await db('users').where({ id: incompleteStudentId }).del();
+    });
+  });
 });

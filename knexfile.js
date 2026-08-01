@@ -20,6 +20,24 @@ export default {
     }
   },
 
+  test: {
+    client: 'pg',
+    connection: process.env.DATABASE_URL || {
+      host: process.env.DB_HOST || '127.0.0.1',
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'garashowcase_dev',
+      port: parseInt(process.env.DB_PORT || '5432', 10)
+    },
+    migrations: {
+      directory: './src/db/migrations',
+      tableName: 'knex_migrations'
+    },
+    seeds: {
+      directory: './src/db/seeds'
+    }
+  },
+
   // Azure Dev Environment (Triggered when NODE_ENV=dev on Container Apps)
   dev: {
     client: 'pg',

@@ -154,8 +154,16 @@ router.get('/callback', async (req, res) => {
 });
 
 // GET /api/auth/me (Returns active user profile)
-router.get('/me', requireAuth, (req, res) => {
-  res.json(req.user);
+router.get('/me', requireAuth, async (req, res) => {
+  try {
+    const user = await db('users').where({ id: req.user.id }).first();
+    if (!user) {
+      return res.status(404).json({ error: 'Không tìm thấy người dùng.' });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi đồng bộ hồ sơ: ' + err.message });
+  }
 });
 
 // POST /api/auth/logout (Clears user session cookie)

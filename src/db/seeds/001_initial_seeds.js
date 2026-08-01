@@ -22,42 +22,54 @@ export async function seed(knex) {
       email: 'phathmse184629@fpt.edu.vn',
       name: 'Hỷ Minh Phát',
       role: 'Founder',
-      student_id: 'SE184629'
+      student_id: 'SE184629',
+      contact_link: 'https://facebook.com/hyminhphat',
+      cv_url: 'https://crgarashowcasedev.blob.core.windows.net/cv/se184629_cv.pdf'
     },
     {
       id: userIdDuc,
       email: 'ducthse180000@fpt.edu.vn',
       name: 'Trịnh Hải Đức',
       role: 'Founder',
-      student_id: 'SE180000'
+      student_id: 'SE180000',
+      contact_link: 'https://facebook.com/ducth',
+      cv_url: 'https://crgarashowcasedev.blob.core.windows.net/cv/se180000_cv.pdf'
     },
     {
       id: userIdPhu,
       email: 'phupqase180001@fpt.edu.vn',
       name: 'Phan Quới An Phú',
       role: 'Founder',
-      student_id: 'SE180001'
+      student_id: 'SE180001',
+      contact_link: 'https://facebook.com/anphu',
+      cv_url: 'https://crgarashowcasedev.blob.core.windows.net/cv/se180001_cv.pdf'
     },
     {
       id: userIdKhanh,
       email: 'khanhltkse180002@fpt.edu.vn',
       name: 'Lê Tuấn Khanh',
       role: 'Founder',
-      student_id: 'SE180002'
+      student_id: 'SE180002',
+      contact_link: 'https://facebook.com/tuankhanh',
+      cv_url: 'https://crgarashowcasedev.blob.core.windows.net/cv/se180002_cv.pdf'
     },
     {
       id: userIdStudent,
       email: 'student.mock@fpt.edu.vn',
       name: 'Nguyễn Văn A',
       role: 'Student',
-      student_id: 'SE189999'
+      student_id: 'SE189999',
+      contact_link: 'https://facebook.com/studenta',
+      cv_url: 'https://crgarashowcasedev.blob.core.windows.net/cv/se189999_cv.pdf'
     },
     {
       id: userIdManager,
       email: 'manager.mock@fpt.edu.vn',
       name: 'Vườn Ươm Gara Manager',
       role: 'Manager',
-      student_id: null
+      student_id: null,
+      contact_link: 'https://gara.edu.vn',
+      cv_url: null
     }
   ]);
 

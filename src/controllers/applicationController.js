@@ -15,6 +15,13 @@ export async function applyToJob(req, res) {
       return res.status(404).json({ error: 'Không tìm thấy thông tin sinh viên.' });
     }
 
+    // Enforce BR-04 Exception: Must have completed resume profile (contact link and CV url)
+    if (!user.contact_link || !user.cv_url) {
+      return res.status(400).json({ 
+        error: 'Bạn cần hoàn thiện hồ sơ sinh viên (cập nhật liên kết liên hệ và tệp CV PDF) trước khi ứng tuyển.' 
+      });
+    }
+
     // 2. Verify job exists and is open
     const job = await db('jobs').where({ id: jobId, status: 'Open' }).first();
     if (!job) {
