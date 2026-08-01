@@ -7,7 +7,7 @@ resource "random_password" "db_password" {
 
 # 2. Resource Group
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-${var.project_name}-${var.environment}"
+  name     = "rg-${var.project_name}-${var.environment}-us"
   location = var.location
 }
 
