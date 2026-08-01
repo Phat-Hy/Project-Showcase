@@ -274,7 +274,6 @@ namespace GaraShowcase.Api.Data
                     Id = Guid.NewGuid(),
                     StudentId = userBinhId,
                     JobId = jobIdFullstack,
-                    CoverLetter = "Chào nhóm Gara, mình là Bình, mình có kinh nghiệm làm các project C# API học tập và muốn ứng tuyển vị trí Fullstack.",
                     Status = "Pending",
                     CreatedAt = DateTime.UtcNow.AddDays(-2)
                 },
@@ -283,7 +282,6 @@ namespace GaraShowcase.Api.Data
                     Id = Guid.NewGuid(),
                     StudentId = userLinhId,
                     JobId = jobIdDesigner,
-                    CoverLetter = "Xin chào, mình chuyên về thiết kế UI dạng tối giản (minimalism) và có thể phụ trách thiết kế slide deck pitching cho dự án.",
                     Status = "Pending",
                     CreatedAt = DateTime.UtcNow.AddDays(-1)
                 },
@@ -292,7 +290,6 @@ namespace GaraShowcase.Api.Data
                     Id = Guid.NewGuid(),
                     StudentId = userHoangId,
                     JobId = jobIdBizDev,
-                    CoverLetter = "Mình muốn ứng tuyển để giúp nhóm tìm kiếm đối tác và làm báo cáo tài chính.",
                     Status = "Rejected", // Seeded as Rejected to enforce Lockout testing
                     CreatedAt = DateTime.UtcNow.AddDays(-5)
                 }
