@@ -110,6 +110,7 @@ export default function App() {
   const [founderProject, setFounderProject] = useState<Project | null>(null);
   const [projectPitch, setProjectPitch] = useState('');
   const [uploadMsg, setUploadMsg] = useState({ text: '', type: '' });
+  const [lastUploadedUrl, setLastUploadedUrl] = useState('');
   const [uploadProgress, setUploadProgress] = useState(false);
 
   // Milestone/Job creators
@@ -203,6 +204,7 @@ export default function App() {
       setStudentApps([]);
       setCandidates([]);
       setActiveTab('');
+      setLastUploadedUrl('');
       showNotification('Đã đăng xuất tài khoản.', 'success');
     } catch {
       showNotification('Lỗi đăng xuất.', 'error');
@@ -372,6 +374,7 @@ export default function App() {
       });
       const data = await res.json();
       if (res.ok) {
+        setLastUploadedUrl(data.fileUrl);
         setUploadMsg({ text: 'Tải lên tài liệu thành công!', type: 'success' });
         fetchFounderDashboard();
       } else {
@@ -913,9 +916,24 @@ export default function App() {
                         <label className="text-xs text-slate-300 font-bold block">Tải lên tệp tài liệu dự án (.pdf, .zip)</label>
                         
                         {uploadMsg.text && (
-                          <div className={`p-3 rounded text-xs border ${
-                            uploadMsg.type === 'success' ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400' : 'bg-rose-950/40 border-rose-500/30 text-rose-400'
-                          }`}>{uploadMsg.text}</div>
+                          <div className="space-y-2">
+                            <div className={`p-3 rounded text-xs border ${
+                              uploadMsg.type === 'success' ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400' : 'bg-rose-950/40 border-rose-500/30 text-rose-400'
+                            }`}>{uploadMsg.text}</div>
+                            {uploadMsg.type === 'success' && lastUploadedUrl && (
+                              <div className="p-3 rounded bg-white/5 border border-white/10 text-[10px] space-y-1.5 text-left">
+                                <span className="font-bold text-slate-300 block">Đường dẫn tệp tài liệu:</span>
+                                <input 
+                                  type="text" 
+                                  readOnly 
+                                  value={lastUploadedUrl} 
+                                  className="w-full bg-black/30 border border-white/10 rounded px-2 py-1 text-slate-300 font-mono text-[9px]"
+                                  onClick={(e) => (e.target as HTMLInputElement).select()}
+                                />
+                                <span className="text-slate-500 block text-[9px] leading-tight">Mẹo: Sao chép link này và dán vào phần <strong>Mô tả chi tiết</strong> của dự án dạng Markdown: <code>[Xem tài liệu]({lastUploadedUrl})</code> để thành viên hoặc sinh viên khác có thể click xem!</span>
+                              </div>
+                            )}
+                          </div>
                         )}
 
                         <div className="relative border-2 border-dashed border-white/10 rounded-lg p-6 hover:border-purple-500/30 hover:bg-white/5 transition-all text-center cursor-pointer">
