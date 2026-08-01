@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Sinh Viên - Gara Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --color-primary: #8b5cf6;
+      --color-primary-glow: rgba(139, 92, 246, 0.2);
+      --color-secondary: #06b6d4;
+      --color-secondary-glow: rgba(6, 182, 212, 0.2);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --status-active: #10b981;
+      --status-suspended: #ef4444;
+      --status-warning: #f59e0b;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Nav */
+    header {
+      background-color: rgba(10, 14, 26, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .brand-title span {
+      color: var(--color-secondary);
+      font-size: 0.85rem;
+      margin-left: 6px;
+      font-weight: 400;
+      border-left: 1px solid var(--card-border);
+      padding-left: 8px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--color-secondary);
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    /* Main Layout */
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    /* Sidebar tabs */
+    aside {
+      width: 240px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      padding: 30px 20px;
+      box-sizing: border-box;
+    }
+
+    .nav-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      border-left: 3px solid var(--color-primary);
+      background: rgba(139, 92, 246, 0.08);
+      color: var(--color-primary);
+    }
+
+    /* Content Area */
+    main {
+      flex: 1;
+      padding: 40px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .view-header {
+      margin-bottom: 30px;
+    }
+
+    .view-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.75rem;
+      margin: 0 0 6px 0;
+    }
+
+    .view-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Grid layout */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+
+    .card-pitch {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .badge-active { background: rgba(16, 185, 129, 0.1); color: var(--status-active); }
+    .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--status-warning); }
+    .badge-suspended { background: rgba(239, 68, 68, 0.1); color: var(--status-suspended); }
+
+    .btn-action {
+      background: var(--color-primary);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: #7c3aed;
+      box-shadow: 0 4px 12px var(--color-primary-glow);
+    }
+
+    .btn-action:disabled {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      width: 100%;
+      max-width: 600px;
+      border-radius: 16px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.9rem;
+    }
+
+    /* Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--color-primary);
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 200;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/></svg>
+      <div class="brand-title">Gara Showcase <span>Cổng Sinh Viên</span></div>
+    </a>
+    <div class="user-profile">
+      <div class="profile-info">
+        <div class="user-name" id="header-user-name">Đang tải...</div>
+        <div class="user-role">Sinh viên</div>
+      </div>
+      <button class="btn-logout" id="btn-logout">Đăng xuất</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside>
+      <span class="nav-title">Danh mục chính</span>
+      <div class="nav-item active" data-view="view-projects">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        Bảng tin dự án
+      </div>
+      <div class="nav-item" data-view="view-jobs">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+        Tuyển dụng liên khoa
+      </div>
+      <div class="nav-item" data-view="view-applications">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        Lịch sử ứng tuyển
+      </div>
+    </aside>
+
+    <main>
+      <!-- SECTION 1: PROJECTS BOARD -->
+      <section class="view-section active" id="view-projects">
+        <div class="view-header">
+          <h2>Khám Phá Các Dự Án Startup</h2>
+          <p>Xem thông tin, tiến độ cột mốc và giải pháp sáng tạo từ các đội ngũ khởi nghiệp sinh viên.</p>
+        </div>
+        <div class="grid-container" id="projects-grid">
+          <!-- Projects loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- SECTION 2: JOB BOARD -->
+      <section class="view-section" id="view-jobs">
+        <div class="view-header">
+          <h2>Tuyển Dụng Thành Viên Liên Khoa</h2>
+          <p>Tìm kiếm cơ hội hợp tác và phát triển năng lực tại các dự án ươm tạo trong trường học.</p>
+        </div>
+        <div class="grid-container" id="jobs-grid">
+          <!-- Jobs loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- SECTION 3: APPLICATION HISTORY -->
+      <section class="view-section" id="view-applications">
+        <div class="view-header">
+          <h2>Đơn Ứng Tuyển Của Bạn</h2>
+          <p>Theo dõi tình trạng xét duyệt các vị trí bạn đã gửi yêu cầu ứng tuyển (Giới hạn tối đa 3 đơn chờ duyệt).</p>
+        </div>
+        <div id="applications-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Dự án</th>
+                <th>Vị trí</th>
+                <th>Ngày nộp</th>
+                <th>Tình trạng</th>
+              </tr>
+            </thead>
+            <tbody id="applications-table-body">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PROJECT DETAIL MODAL -->
+  <div class="modal-overlay" id="project-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h3 class="view-header" style="margin-bottom:15px;" id="modal-project-name">Tên Dự Án</h3>
+      <div id="modal-project-status" style="margin-bottom:20px;"></div>
+      <p id="modal-project-desc" style="line-height:1.6; font-size:0.95rem; color:var(--text-muted); margin-bottom:25px;"></p>
+      
+      <h4 style="font-family:'Outfit', sans-serif; font-size:1.05rem; margin-bottom:12px;">Cột mốc phát triển (Milestones)</h4>
+      <div id="modal-project-milestones" style="display:flex; flex-direction:column; gap:10px;">
+        <!-- Milestones list -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">Ứng tuyển thành công!</div>
+
+  <script>
+    let currentUser = null;
+
+    // View switcher
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.view-section');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(n => n.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        
+        item.classList.add('active');
+        const viewId = item.getAttribute('data-view');
+        document.getElementById(viewId).classList.add('active');
+
+        // Trigger dynamic fetches
+        if (viewId === 'view-projects') fetchProjects();
+        if (viewId === 'view-jobs') fetchJobs();
+        if (viewId === 'view-applications') fetchApplications();
+      });
+    });
+
+    // Toast helper
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.borderLeftColor = isError ? 'var(--status-suspended)' : 'var(--color-primary)';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Modal Helper
+    function openModal() {
+      document.getElementById('project-modal').classList.add('open');
+    }
+    function closeModal() {
+      document.getElementById('project-modal').classList.remove('open');
+    }
+
+    // Authenticate & Load profile
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          window.location.href = '/app/login.html';
+          return;
+        }
+        currentUser = await res.json();
+        if (currentUser.role !== 'Student' && currentUser.role !== 'Founder') {
+          // If manager, redirect to admin portal
+          window.location.href = '/app/admin.html';
+          return;
+        }
+        document.getElementById('header-user-name').textContent = currentUser.name;
+        
+        // Initial fetch
+        fetchProjects();
+      } catch (err) {
+        window.location.href = '/app/login.html';
+      }
+    }
+
+    // Fetch projects
+    async function fetchProjects() {
+      try {
+        const res = await fetch('/api/projects');
+        const projects = await res.json();
+        const grid = document.getElementById('projects-grid');
+        grid.innerHTML = '';
+
+        projects.forEach(p => {
+          let statusBadge = `<span class="badge badge-active">Hoạt động</span>`;
+          if (p.status === 'Suspended') {
+            statusBadge = `<span class="badge badge-suspended">Tạm ngưng (Dormant)</span>`;
+          }
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3 class="card-title">${escapeHtml(p.name)}</h3>
+            <p class="card-pitch">${escapeHtml(p.pitch)}</p>
+            <div class="card-footer">
+              ${statusBadge}
+              <button class="btn-action" onclick="viewProjectDetails('${p.id}')">Xem chi tiết</button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        showToast('Lỗi tải danh sách dự án', true);
+      }
+    }
+
+    // View project detail modal
+    async function viewProjectDetails(projectId) {
+      try {
+        const res = await fetch(`/api/projects/${projectId}`);
+        const p = await res.json();
+
+        document.getElementById('modal-project-name').textContent = p.name;
+        document.getElementById('modal-project-desc').textContent = p.description || 'Không có mô tả chi tiết.';
+        
+        let statusBadge = `<span class="badge badge-active">Hoạt động</span>`;
+        if (p.status === 'Suspended') {
+          statusBadge = `<span class="badge badge-suspended">Tạm ngưng</span>`;
+        }
+        document.getElementById('modal-project-status').innerHTML = statusBadge;
+
+        const msContainer = document.getElementById('modal-project-milestones');
+        msContainer.innerHTML = '';
+
+        if (!p.milestones || p.milestones.length === 0) {
+          msContainer.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Chưa cập nhật cột mốc phát triển.</div>`;
+        } else {
+          p.milestones.forEach(m => {
+            const row = document.createElement('div');
+            row.style.cssText = 'background:rgba(255,255,255,0.02); padding:10px 14px; border-radius:6px; border:1px solid var(--card-border);';
+            row.innerHTML = `
+              <div style="font-size:0.85rem; font-weight:600;">${escapeHtml(m.title)}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${escapeHtml(m.description || '')}</div>
+            `;
+            msContainer.appendChild(row);
+          });
+        }
+
+        openModal();
+      } catch (err) {
+        showToast('Lỗi xem chi tiết dự án', true);
+      }
+    }
+
+    // Fetch jobs
+    async function fetchJobs() {
+      try {
+        const res = await fetch('/api/jobs');
+        const jobs = await res.json();
+        const grid = document.getElementById('jobs-grid');
+        grid.innerHTML = '';
+
+        if (jobs.length === 0) {
+          grid.innerHTML = `<div style="color:var(--text-muted); font-size:0.9rem;">Hiện không có tin tuyển dụng nào đang mở.</div>`;
+          return;
+        }
+
+        jobs.forEach(j => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3 class="card-title">${escapeHtml(j.title)}</h3>
+            <div style="font-size:0.8rem; color:var(--color-secondary); margin-bottom:8px; font-weight:500;">Dự án: ${escapeHtml(j.project_name)}</div>
+            <p class="card-pitch">${escapeHtml(j.description)}</p>
+            <div style="font-size:0.8rem; margin-bottom:16px;">
+              <strong style="color:var(--text-muted)">Yêu cầu:</strong> ${escapeHtml(j.requirements || 'Không yêu cầu')}
+            </div>
+            <div class="card-footer" style="padding-top:12px;">
+              <span class="badge badge-active">${escapeHtml(j.role_category)}</span>
+              <button class="btn-action" onclick="applyJob('${j.id}')">Ứng tuyển nhanh</button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        showToast('Lỗi tải danh sách tuyển dụng', true);
+      }
+    }
+
+    // Apply job (BR-05)
+    async function applyJob(jobId) {
+      if (!currentUser) return;
+      try {
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId: currentUser.id,
+            jobId: jobId
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Nộp đơn thất bại.', true);
+        } else {
+          showToast('Nộp đơn ứng tuyển thành công!');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối tới máy chủ.', true);
+      }
+    }
+
+    // Fetch applications history
+    async function fetchApplications() {
+      if (!currentUser) return;
+      try {
+        const res = await fetch(`/api/applications/student/${currentUser.id}`);
+        const apps = await res.json();
+        const tbody = document.getElementById('applications-table-body');
+        tbody.innerHTML = '';
+
+        if (apps.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Bạn chưa nộp đơn ứng tuyển nào.</td></tr>`;
+          return;
+        }
+
+        apps.forEach(a => {
+          let statusBadge = `<span class="badge badge-warning">Đang chờ</span>`;
+          if (a.application_status === 'Approved') statusBadge = `<span class="badge badge-active">Chấp nhận</span>`;
+          if (a.application_status === 'Rejected') statusBadge = `<span class="badge badge-suspended">Từ chối</span>`;
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${escapeHtml(a.project_name)}</strong></td>
+            <td>${escapeHtml(a.job_title)}</td>
+            <td>${new Date(a.created_at).toLocaleDateString('vi-VN')}</td>
+            <td>${statusBadge}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        showToast('Lỗi tải lịch sử ứng tuyển', true);
+      }
+    }
+
+    // Logout
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/auth/logout', { method: 'POST' });
+        if (res.ok) {
+          window.location.href = '/';
+        }
+      } catch (err) {
+        showToast('Đăng xuất thất bại.', true);
+      }
+    });
+
+    // Helper utilities
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Boot
+    window.addEventListener('load', loadProfile);
+  </script>
+</body>
+</html>

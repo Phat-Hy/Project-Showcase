@@ -1,5 +1,17 @@
 import { verifyToken } from '../utils/token.js';
 
+function getCookieToken(req) {
+  if (!req.headers.cookie) return null;
+  const cookies = req.headers.cookie.split(';').reduce((acc, cookie) => {
+    const parts = cookie.trim().split('=');
+    const key = parts[0];
+    const val = parts.slice(1).join('=');
+    acc[key] = val;
+    return acc;
+  }, {});
+  return cookies['token'] || null;
+}
+
 export function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization;
   let token = null;
@@ -8,6 +20,8 @@ export function requireAuth(req, res, next) {
     token = authHeader.substring(7);
   } else if (req.query && req.query.token) {
     token = req.query.token;
+  } else {
+    token = getCookieToken(req);
   }
 
   if (!token) {

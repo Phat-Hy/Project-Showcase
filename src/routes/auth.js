@@ -2,6 +2,7 @@ import express from 'express';
 import { Issuer, custom } from 'openid-client';
 import { signToken } from '../utils/token.js';
 import db from '../db/db.js';
+import { requireAuth } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -96,9 +97,9 @@ router.get('/login', async (req, res) => {
         student_id: user.student_id
       });
 
-      // Redirect back to frontend simulator with the generated token
-      const frontendRedirectUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      res.redirect(`${frontendRedirectUrl}/?token=${token}`);
+      // Set secure cookie and redirect to the application portal
+      res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+      res.redirect('/app/');
     } catch (err) {
       res.status(500).json({ error: 'Lỗi đồng bộ Mock Login: ' + err.message });
     }
@@ -145,11 +146,22 @@ router.get('/callback', async (req, res) => {
       student_id: user.student_id
     });
 
-    const frontendRedirectUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    res.redirect(`${frontendRedirectUrl}/?token=${sessionToken}`);
+    res.cookie('token', sessionToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 });
+    res.redirect('/app/');
   } catch (error) {
     res.status(500).json({ error: 'Xác thực OIDC thất bại: ' + error.message });
   }
+});
+
+// GET /api/auth/me (Returns active user profile)
+router.get('/me', requireAuth, (req, res) => {
+  res.json(req.user);
+});
+
+// POST /api/auth/logout (Clears user session cookie)
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ success: true });
 });
 
 export default router;

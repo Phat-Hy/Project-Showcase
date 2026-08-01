@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Gara Startup Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --color-primary: #8b5cf6;
+      --color-primary-glow: rgba(139, 92, 246, 0.4);
+      --color-secondary: #06b6d4;
+      --color-secondary-glow: rgba(6, 182, 212, 0.4);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%);
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      padding: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      text-align: center;
+      margin: 20px;
+    }
+
+    .logo-area {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+    }
+
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--color-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.4rem;
+      margin: 0 0 8px 0;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .btn-sso {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #6d28d9 100%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--color-primary-glow);
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
+    }
+
+    .btn-sso:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--color-primary-glow);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .divider:not(:empty)::before {
+      margin-right: 1em;
+    }
+
+    .divider:not(:empty)::after {
+      margin-left: 1em;
+    }
+
+    .role-section {
+      text-align: left;
+    }
+
+    .role-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .role-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .role-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--color-secondary);
+    }
+
+    .role-icon {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: var(--text-muted);
+      stroke-width: 2;
+    }
+
+    .role-info {
+      flex: 1;
+    }
+
+    .role-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .role-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .role-card:hover .role-icon {
+      stroke: var(--color-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-area">
+      <svg class="logo-icon" viewBox="0 0 24 24">
+        <path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/>
+      </svg>
+      <span class="brand-name">Gara Platform</span>
+    </div>
+
+    <h2>Chào mừng quay trở lại</h2>
+    <p class="subtitle">Đăng nhập để kết nối với hệ sinh thái khởi nghiệp trường đại học</p>
+
+    <!-- Standard SSO Login -->
+    <button class="btn-sso" id="btn-sso-login">ĐĂNG NHẬP SSO TRƯỜNG HỌC</button>
+
+    <div class="divider">Hoặc thử nghiệm nhanh (Mock SSO)</div>
+
+    <!-- Quick Developer Roles Mock Chooser -->
+    <div class="role-section">
+      <span class="role-label">Chọn vai trò mô phỏng</span>
+      <div class="role-options">
+        <div class="role-card" onclick="loginMock('Student')">
+          <svg class="role-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <div class="role-info">
+            <div class="role-name">Sinh viên (Student)</div>
+            <div class="role-desc">Xem bảng tin dự án, ứng tuyển thành viên chéo khoa</div>
+          </div>
+        </div>
+
+        <div class="role-card" onclick="loginMock('Founder')">
+          <svg class="role-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <div class="role-info">
+            <div class="role-name">Nhà sáng lập (Founder)</div>
+            <div class="role-desc">Quản lý dự án, cập nhật cột mốc, tải tài liệu 500MB</div>
+          </div>
+        </div>
+
+        <div class="role-card" onclick="loginMock('Manager')">
+          <svg class="role-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <div class="role-info">
+            <div class="role-name">Ban quản lý (Manager)</div>
+            <div class="role-desc">Xem báo cáo tổng hợp, quét dormancy cảnh báo dự án</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Real OIDC SSO trigger
+    document.getElementById('btn-sso-login').addEventListener('click', () => {
+      window.location.href = '/api/auth/login';
+    });
+
+    // Mock Login Redirects
+    function loginMock(role) {
+      window.location.href = `/api/auth/login?mockRole=${role}`;
+    }
+  </script>
+</body>
+</html>

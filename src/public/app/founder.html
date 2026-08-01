@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Sáng Lập - Gara Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --color-primary: #8b5cf6;
+      --color-primary-glow: rgba(139, 92, 246, 0.2);
+      --color-secondary: #06b6d4;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --status-active: #10b981;
+      --status-suspended: #ef4444;
+      --status-warning: #f59e0b;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: rgba(10, 14, 26, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .brand-title span {
+      color: var(--color-primary);
+      font-size: 0.85rem;
+      margin-left: 6px;
+      font-weight: 400;
+      border-left: 1px solid var(--card-border);
+      padding-left: 8px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--color-primary);
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    aside {
+      width: 240px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      padding: 30px 20px;
+      box-sizing: border-box;
+    }
+
+    .nav-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      border-left: 3px solid var(--color-primary);
+      background: rgba(139, 92, 246, 0.08);
+      color: var(--color-primary);
+    }
+
+    main {
+      flex: 1;
+      padding: 40px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .view-header {
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .view-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.75rem;
+      margin: 0 0 6px 0;
+    }
+
+    .view-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.25);
+    }
+
+    .btn-submit {
+      background: var(--color-primary);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background: #7c3aed;
+    }
+
+    /* Storage Indicator */
+    .storage-bar-container {
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+      height: 12px;
+      width: 100%;
+      margin: 10px 0 6px 0;
+      overflow: hidden;
+    }
+
+    .storage-bar {
+      background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Info panels */
+    .info-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 600px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .badge-active { background: rgba(16, 185, 129, 0.1); color: var(--status-active); }
+    .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--status-warning); }
+    .badge-suspended { background: rgba(239, 68, 68, 0.1); color: var(--status-suspended); }
+
+    /* Drag & Drop */
+    .upload-zone {
+      border: 2px dashed var(--card-border);
+      background: rgba(255,255,255,0.01);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      max-width: 600px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .upload-zone:hover {
+      background: rgba(255,255,255,0.02);
+      border-color: var(--color-secondary);
+    }
+
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      stroke: var(--text-muted);
+      stroke-width: 1.5;
+      fill: none;
+      margin-bottom: 12px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--color-primary);
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 200;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/></svg>
+      <div class="brand-title">Gara Showcase <span>Cổng Sáng Lập</span></div>
+    </a>
+    <div class="user-profile">
+      <div class="profile-info">
+        <div class="user-name" id="header-user-name">Đang tải...</div>
+        <div class="user-role">Nhà sáng lập (Founder)</div>
+      </div>
+      <button class="btn-logout" id="btn-logout">Đăng xuất</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside>
+      <span class="nav-title">Công cụ quản lý</span>
+      <div class="nav-item active" data-view="view-project-profile">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        Hồ sơ dự án
+      </div>
+      <div class="nav-item" data-view="view-milestones">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        Quản lý cột mốc
+      </div>
+      <div class="nav-item" data-view="view-uploads">
+        <svg viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Tài nguyên / Upload
+      </div>
+      <div class="nav-item" data-view="view-create-job">
+        <svg viewBox="0 0 24 24"><path d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Đăng tuyển vị trí
+      </div>
+    </aside>
+
+    <main>
+      <!-- NO PROJECT COMPONENT (Fallback) -->
+      <section class="view-section" id="view-no-project" style="max-width:600px;">
+        <div class="view-header">
+          <h2>Bắt đầu Dự Án Mới</h2>
+          <p>Tài khoản Founder của bạn hiện chưa liên kết với bất kỳ dự án khởi nghiệp nào. Hãy khởi tạo hồ sơ dự án của bạn.</p>
+        </div>
+        <div class="info-panel">
+          <form id="create-project-form">
+            <div class="form-group">
+              <label>Tên Dự Án</label>
+              <input type="text" class="form-control" id="new-proj-name" placeholder="Ví dụ: EduLink Platform" required>
+            </div>
+            <div class="form-group">
+              <label>Tóm tắt ngắn (Pitch)</label>
+              <input type="text" class="form-control" id="new-proj-pitch" placeholder="Câu tóm tắt ngắn về giải pháp dự án trong 1 câu" required>
+            </div>
+            <div class="form-group">
+              <label>Mô tả chi tiết</label>
+              <textarea class="form-control" id="new-proj-desc" rows="5" placeholder="Mô tả kỹ hơn về vấn đề, sản phẩm, và mục tiêu của đội ngũ..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Khởi Tạo Dự Án</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- SECTION 1: PROJECT PROFILE -->
+      <section class="view-section active" id="view-project-profile">
+        <div class="view-header">
+          <h2>Hồ Sơ Dự Án</h2>
+          <p>Quản lý và cập nhật thông tin giới thiệu chung về startup của bạn.</p>
+        </div>
+        <div class="info-panel" id="project-profile-details">
+          <h3 style="font-family:'Outfit', sans-serif; font-size:1.4rem; margin:0 0 8px 0;" id="prof-proj-name">Tên dự án</h3>
+          <div id="prof-proj-status-wrapper" style="margin-bottom:16px;"></div>
+          <p style="font-size:0.95rem; line-height:1.6;" id="prof-proj-desc">Mô tả dự án...</p>
+        </div>
+      </section>
+
+      <!-- SECTION 2: MILESTONES -->
+      <section class="view-section" id="view-milestones">
+        <div class="view-header">
+          <h2>Quản Lý Cột Mốc Phát Triển</h2>
+          <p>Cập nhật tiến độ dự án. Việc thêm cột mốc mới sẽ đặt lại trạng thái Dormancy (BR-08) và chuyển dự án về Active.</p>
+        </div>
+        
+        <div class="info-panel" style="margin-bottom:30px;">
+          <h3 style="font-size:1.1rem; margin-top:0;">Thêm cột mốc mới</h3>
+          <form id="add-milestone-form">
+            <div class="form-group">
+              <label>Tiêu đề cột mốc</label>
+              <input type="text" class="form-control" id="ms-title" placeholder="Ví dụ: Hoàn thiện Prototype v1.0" required>
+            </div>
+            <div class="form-group">
+              <label>Chi tiết cột mốc</label>
+              <textarea class="form-control" id="ms-desc" rows="3" placeholder="Mô tả cụ thể kết quả đạt được..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Thêm cột mốc</button>
+          </form>
+        </div>
+
+        <h3 style="font-family:'Outfit', sans-serif; font-size:1.15rem; margin-bottom:16px;">Lịch sử cột mốc</h3>
+        <div id="milestones-history-list" style="display:flex; flex-direction:column; gap:12px; max-width:600px;">
+          <!-- Loaded dynamically -->
+        </div>
+      </section>
+
+      <!-- SECTION 3: UPLOADS -->
+      <section class="view-section" id="view-uploads">
+        <div class="view-header">
+          <h2>Tài Nguyên Lưu Trữ</h2>
+          <p>Tải lên hồ sơ, tài liệu thuyết trình. Hệ thống giới hạn tối đa 500MB cho mỗi dự án (BR-04).</p>
+        </div>
+
+        <div class="info-panel">
+          <div style="display:flex; justify-content:between; align-items:center; margin-bottom:4px;">
+            <strong style="font-size:0.9rem;">Dung lượng lưu trữ đã sử dụng:</strong>
+            <span style="font-size:0.9rem; margin-left:auto;" id="storage-txt">0MB / 500MB</span>
+          </div>
+          <div class="storage-bar-container">
+            <div class="storage-bar" id="storage-progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="upload-zone" id="upload-dropzone">
+          <svg class="upload-icon" viewBox="0 0 24 24">
+            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+          </svg>
+          <div style="font-weight:600; font-size:0.95rem; margin-bottom:6px;">Mô phỏng tải lên tệp tin</div>
+          <div style="color:var(--text-muted); font-size:0.8rem; margin-bottom:20px;">Hệ thống sẽ cộng dồn tệp ngẫu nhiên từ 5MB - 80MB</div>
+          <button class="btn-submit" style="background:var(--color-secondary);">Bắt đầu mô phỏng tải lên</button>
+        </div>
+      </section>
+
+      <!-- SECTION 4: CREATE JOB vacancies -->
+      <section class="view-section" id="view-create-job">
+        <div class="view-header">
+          <h2>Đăng Tuyển Vị Trí Thành Viên</h2>
+          <p>Tìm kiếm nhân sự chéo khoa (Công nghệ, Thiết kế, Kinh doanh) để củng cố đội ngũ dự án.</p>
+        </div>
+        <div class="info-panel">
+          <form id="create-job-form">
+            <div class="form-group">
+              <label>Tên vai trò / Vị trí</label>
+              <input type="text" class="form-control" id="job-title" placeholder="Ví dụ: Lập trình viên React Native" required>
+            </div>
+            <div class="form-group">
+              <label>Khoa tuyển dụng (Category)</label>
+              <select class="form-control" id="job-category" required>
+                <option value="Software Engineering">Kỹ thuật Phần mềm (Software)</option>
+                <option value="Graphic Design">Thiết kế Đồ họa (Design)</option>
+                <option value="Business Administration">Quản trị Kinh doanh (Business)</option>
+                <option value="Marketing">Truyền thông & Marketing (Marketing)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Mô tả công việc</label>
+              <textarea class="form-control" id="job-desc" rows="4" placeholder="Mô tả các đầu việc chính cần thực hiện..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label>Yêu cầu kỹ năng / Chuyên môn</label>
+              <input type="text" class="form-control" id="job-reqs" placeholder="Ví dụ: Có kinh nghiệm JS cơ bản, Git.">
+            </div>
+            <button type="submit" class="btn-submit">Đăng tuyển vị trí</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">Cập nhật thành công!</div>
+
+  <script>
+    let currentUser = null;
+    let myProject = null;
+
+    // View switcher
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.view-section');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // Prevent accessing other views if project doesn't exist
+        if (!myProject && item.getAttribute('data-view') !== 'view-project-profile') {
+          showToast('Vui lòng tạo hồ sơ dự án của bạn trước.', true);
+          return;
+        }
+
+        navItems.forEach(n => n.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        
+        item.classList.add('active');
+        const viewId = item.getAttribute('data-view');
+        
+        if (!myProject) {
+          document.getElementById('view-no-project').classList.add('active');
+        } else {
+          document.getElementById(viewId).classList.add('active');
+          if (viewId === 'view-project-profile') fetchProjectProfile();
+          if (viewId === 'view-milestones') fetchMilestones();
+          if (viewId === 'view-uploads') updateStorageUI();
+        }
+      });
+    });
+
+    // Toast helper
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.borderLeftColor = isError ? 'var(--status-suspended)' : 'var(--color-primary)';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Authenticate & load profile
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          window.location.href = '/app/login.html';
+          return;
+        }
+        currentUser = await res.json();
+        if (currentUser.role !== 'Founder') {
+          // Managers go to admin, Students go to student portal
+          window.location.href = currentUser.role === 'Manager' ? '/app/admin.html' : '/app/student.html';
+          return;
+        }
+        document.getElementById('header-user-name').textContent = currentUser.name;
+        
+        // Find existing project (Mock lookup: check first project or map to this user)
+        await checkExistingProject();
+      } catch (err) {
+        window.location.href = '/app/login.html';
+      }
+    }
+
+    // Check project existence
+    async function checkExistingProject() {
+      try {
+        const res = await fetch('/api/projects');
+        const projects = await res.json();
+        
+        // Under a production setting, users are mapped to their specific project uuid.
+        // For development convenience, we map this Founder to the first project in seed database
+        // or allow them to create one if empty.
+        if (projects.length > 0) {
+          myProject = projects[0]; // Link to first project
+          showProjectProfileView();
+        } else {
+          showNoProjectView();
+        }
+      } catch (err) {
+        showToast('Lỗi tải thông tin dự án.', true);
+      }
+    }
+
+    function showNoProjectView() {
+      myProject = null;
+      sections.forEach(s => s.classList.remove('active'));
+      document.getElementById('view-no-project').classList.add('active');
+    }
+
+    function showProjectProfileView() {
+      sections.forEach(s => s.classList.remove('active'));
+      document.getElementById('view-project-profile').classList.add('active');
+      fetchProjectProfile();
+    }
+
+    // Create Project Action
+    document.getElementById('create-project-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-proj-name').value;
+      const pitch = document.getElementById('new-proj-pitch').value;
+      const description = document.getElementById('new-proj-desc').value;
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, pitch, description })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Khởi tạo thất bại.', true);
+        } else {
+          showToast('Khởi tạo dự án thành công!');
+          myProject = data;
+          showProjectProfileView();
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối tới máy chủ.', true);
+      }
+    });
+
+    // Fetch Project Profile details
+    async function fetchProjectProfile() {
+      if (!myProject) return;
+      try {
+        const res = await fetch(`/api/projects/${myProject.id}`);
+        myProject = await res.json();
+
+        document.getElementById('prof-proj-name').textContent = myProject.name;
+        document.getElementById('prof-proj-desc').textContent = myProject.description || 'Không có mô tả chi tiết.';
+        
+        let statusBadge = `<span class="badge badge-active">Hoạt động</span>`;
+        if (myProject.status === 'Suspended') {
+          statusBadge = `<span class="badge badge-suspended">Tạm ngưng (Dormant)</span>`;
+        }
+        document.getElementById('prof-proj-status-wrapper').innerHTML = statusBadge;
+      } catch (err) {
+        showToast('Lỗi cập nhật hồ sơ.', true);
+      }
+    }
+
+    // Fetch milestones list
+    async function fetchMilestones() {
+      if (!myProject) return;
+      try {
+        const res = await fetch(`/api/projects/${myProject.id}`);
+        const p = await res.json();
+        myProject = p;
+
+        const list = document.getElementById('milestones-history-list');
+        list.innerHTML = '';
+
+        if (!p.milestones || p.milestones.length === 0) {
+          list.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Chưa ghi nhận cột mốc nào. Hãy thêm cột mốc đầu tiên của bạn ở phía trên!</div>`;
+          return;
+        }
+
+        p.milestones.forEach(m => {
+          const card = document.createElement('div');
+          card.style.cssText = 'background:var(--card-bg); border:1px solid var(--card-border); padding:16px; border-radius:8px;';
+          card.innerHTML = `
+            <div style="font-weight:600; font-size:0.95rem; margin-bottom:4px;">${escapeHtml(m.title)}</div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">${escapeHtml(m.description || '')}</div>
+            <div style="font-size:0.75rem; color:var(--color-primary);">${new Date(m.created_at).toLocaleDateString('vi-VN')}</div>
+          `;
+          list.appendChild(card);
+        });
+      } catch (err) {
+        showToast('Lỗi tải cột mốc.', true);
+      }
+    }
+
+    // Add Milestone (BR-08)
+    document.getElementById('add-milestone-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!myProject) return;
+
+      const title = document.getElementById('ms-title').value;
+      const description = document.getElementById('ms-desc').value;
+
+      try {
+        const res = await fetch(`/api/projects/${myProject.id}/milestones`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Thêm cột mốc thất bại.', true);
+        } else {
+          showToast('Cập nhật cột mốc thành công! Cảnh báo Dormancy đã được đặt lại.');
+          document.getElementById('ms-title').value = '';
+          document.getElementById('ms-desc').value = '';
+          fetchMilestones();
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối tới máy chủ.', true);
+      }
+    });
+
+    // Update Storage UI
+    function updateStorageUI() {
+      if (!myProject) return;
+      const currentBytes = parseInt(myProject.storage_used_bytes || 0, 10);
+      const limitBytes = 524288000; // 500MB
+
+      const currentMB = (currentBytes / 1024 / 1024).toFixed(2);
+      document.getElementById('storage-txt').textContent = `${currentMB}MB / 500MB`;
+      
+      const pct = Math.min((currentBytes / limitBytes) * 100, 100);
+      document.getElementById('storage-progress-bar').style.width = `${pct}%`;
+    }
+
+    // Simulate File Upload (BR-04)
+    document.getElementById('upload-dropzone').addEventListener('click', async () => {
+      if (!myProject) return;
+
+      // Choose a random simulated file size between 10MB and 80MB
+      const randomMB = Math.floor(Math.random() * (80 - 10 + 1) + 10);
+      const randomBytes = randomMB * 1024 * 1024;
+
+      try {
+        const res = await fetch(`/api/projects/${myProject.id}/upload`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileSize: randomBytes })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Tải tệp lên thất bại.', true);
+        } else {
+          showToast(`Tải lên tệp tin ${(randomMB)}MB thành công!`);
+          myProject.storage_used_bytes = data.storage_used_bytes;
+          updateStorageUI();
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối tới máy chủ.', true);
+      }
+    });
+
+    // Create Job Vacancy
+    document.getElementById('create-job-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!myProject) return;
+
+      const title = document.getElementById('job-title').value;
+      const category = document.getElementById('job-category').value;
+      const description = document.getElementById('job-desc').value;
+      const requirements = document.getElementById('job-reqs').value;
+
+      try {
+        const res = await fetch('/api/jobs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            projectId: myProject.id,
+            title,
+            roleCategory: category,
+            description,
+            requirements
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Đăng tuyển thất bại.', true);
+        } else {
+          showToast('Đăng tin tuyển dụng thành công!');
+          document.getElementById('job-title').value = '';
+          document.getElementById('job-desc').value = '';
+          document.getElementById('job-reqs').value = '';
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối tới máy chủ.', true);
+      }
+    });
+
+    // Logout Action
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/auth/logout', { method: 'POST' });
+        if (res.ok) {
+          window.location.href = '/';
+        }
+      } catch (err) {
+        showToast('Đăng xuất thất bại.', true);
+      }
+    });
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Boot
+    window.addEventListener('load', loadProfile);
+  </script>
+</body>
+</html>
