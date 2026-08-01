@@ -1,0 +1,46 @@
+name: CD - Deploy to Azure
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-dev:
+    name: Deploy to Dev Environment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: OIDC Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to Azure Container Registry (ACR)
+        run: |
+          az acr login --name crgarashowcasedev
+
+      - name: Build & Tag Docker Image
+        run: |
+          docker build -t crgarashowcasedev.azurecr.io/gara-showcase:${{ github.sha }} .
+          docker tag crgarashowcasedev.azurecr.io/gara-showcase:${{ github.sha }} crgarashowcasedev.azurecr.io/gara-showcase:latest
+
+      - name: Push Docker Image to ACR
+        run: |
+          docker push crgarashowcasedev.azurecr.io/gara-showcase:${{ github.sha }}
+          docker push crgarashowcasedev.azurecr.io/gara-showcase:latest
+
+      - name: Deploy Image to Azure Container App (ACA)
+        run: |
+          az containerapp update \
+            --name app-gara-dev \
+            --resource-group rg-gara-dev \
+            --image crgarashowcasedev.azurecr.io/gara-showcase:${{ github.sha }}

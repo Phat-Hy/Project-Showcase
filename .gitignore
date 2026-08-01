@@ -27,3 +27,8 @@ build/
 .idea/
 .DS_Store
 Thumbs.db
+
+# AI Agent Environments & Skills Configuration
+.agents/
+.claude/
+
