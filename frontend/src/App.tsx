@@ -132,7 +132,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !activeTab) {
       // Set default tab based on role
       if (currentUser.role === 'Student') {
         setActiveTab('projects');
@@ -145,7 +145,7 @@ export default function App() {
         fetchManagerDashboard();
       }
     }
-  }, [currentUser]);
+  }, [currentUser, activeTab]);
 
   const showNotification = (text: string, type: 'success' | 'error') => {
     setNotification({ text, type });
@@ -202,6 +202,7 @@ export default function App() {
       setJobs([]);
       setStudentApps([]);
       setCandidates([]);
+      setActiveTab('');
       showNotification('Đã đăng xuất tài khoản.', 'success');
     } catch {
       showNotification('Lỗi đăng xuất.', 'error');
