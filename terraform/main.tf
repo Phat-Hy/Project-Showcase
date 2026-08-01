@@ -91,7 +91,7 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure_service
   name             = "allow-azure-internal"
   server_id        = azurerm_postgresql_flexible_server.db.id
   start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
+  end_ip_address   = "255.255.255.255"
 }
 
 # 7. Storage Account (Blob Storage)
