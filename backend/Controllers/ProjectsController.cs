@@ -213,5 +213,30 @@ namespace GaraShowcase.Api.Controllers
 
             return Ok(new { message = "Tải lên file thành công.", fileUrl, storageUsedBytes = newStorage });
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] ProjectUpdateDto dto)
+        {
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
+            if (project == null)
+            {
+                return NotFound(new { error = "Không tìm thấy dự án." });
+            }
+
+            if (dto.Pitch != null) project.Pitch = dto.Pitch;
+            if (dto.Description != null) project.Description = dto.Description;
+
+            project.LastUpdatedAt = DateTime.UtcNow;
+            project.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Cập nhật thông tin dự án thành công.", project });
+        }
+    }
+
+    public class ProjectUpdateDto
+    {
+        public string? Pitch { get; set; }
+        public string? Description { get; set; }
     }
 }

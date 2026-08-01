@@ -109,6 +109,7 @@ export default function App() {
   // Founder Project details editor
   const [founderProject, setFounderProject] = useState<Project | null>(null);
   const [projectPitch, setProjectPitch] = useState('');
+  const [projectDescription, setProjectDescription] = useState('');
   const [uploadMsg, setUploadMsg] = useState({ text: '', type: '' });
   const [lastUploadedUrl, setLastUploadedUrl] = useState('');
   const [uploadProgress, setUploadProgress] = useState(false);
@@ -205,6 +206,7 @@ export default function App() {
       setCandidates([]);
       setActiveTab('');
       setLastUploadedUrl('');
+      setProjectDescription('');
       showNotification('Đã đăng xuất tài khoản.', 'success');
     } catch {
       showNotification('Lỗi đăng xuất.', 'error');
@@ -290,6 +292,7 @@ export default function App() {
             const projData = await projRes.json();
             setFounderProject(projData);
             setProjectPitch(projData.pitch);
+            setProjectDescription(projData.description || '');
 
             // Fetch job applicants for this project
             const candRes = await fetch(`/api/applications/project/${projData.id}`);
@@ -299,6 +302,27 @@ export default function App() {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleSaveProjectInfo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!founderProject) return;
+    try {
+      const res = await fetch(`/api/projects/${founderProject.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pitch: projectPitch, description: projectDescription })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification('Cập nhật thông tin dự án thành công!', 'success');
+        fetchFounderDashboard();
+      } else {
+        showNotification(data.error || 'Cập nhật thất bại.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi kết nối khi cập nhật dự án.', 'error');
     }
   };
 
@@ -871,18 +895,7 @@ export default function App() {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* General Profile Info & storage */}
                     <div className="glass-panel p-6 border-white/5 space-y-6">
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-lg font-heading font-bold text-slate-200">Thông tin dự án</h3>
-                          <span className={`badge ${
-                            founderProject.status === 'Active' ? 'badge-active' :
-                            founderProject.status === 'Suspended' ? 'badge-suspended' : 'badge-draft'
-                          }`}>{founderProject.status}</span>
-                        </div>
-                        <p className="text-xs text-slate-400">Quản lý và đồng bộ tệp tải lên cũng như thông tin quảng bá.</p>
-                      </div>
-
-                      <div className="space-y-4">
+                      <form onSubmit={handleSaveProjectInfo} className="space-y-4">
                         <div className="space-y-1">
                           <label className="text-xs text-slate-400 font-bold uppercase">Tên Startup</label>
                           <input type="text" value={founderProject.name} disabled className="opacity-50 cursor-not-allowed" />
@@ -890,9 +903,30 @@ export default function App() {
 
                         <div className="space-y-1">
                           <label className="text-xs text-slate-400 font-bold uppercase">Khẩu hiệu (Pitch)</label>
-                          <textarea rows={3} value={projectPitch} readOnly className="opacity-75 cursor-not-allowed" />
+                          <textarea 
+                            rows={2} 
+                            value={projectPitch} 
+                            onChange={(e) => setProjectPitch(e.target.value)} 
+                            placeholder="Nhập giới thiệu ngắn gọn về dự án..."
+                            required
+                          />
                         </div>
-                      </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Mô tả chi tiết (Markdown)</label>
+                          <textarea 
+                            rows={8} 
+                            value={projectDescription} 
+                            onChange={(e) => setProjectDescription(e.target.value)} 
+                            placeholder="Nhập mô tả chi tiết bằng định dạng Markdown (hỗ trợ liên kết tài liệu, hình ảnh)..."
+                            required
+                          />
+                        </div>
+
+                        <button type="submit" className="btn btn-secondary w-full py-2.5">
+                          Lưu thông tin dự án
+                        </button>
+                      </form>
 
                       {/* Quota storage footprint */}
                       <div className="space-y-2 border-t border-white/5 pt-4">
