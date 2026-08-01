@@ -10,6 +10,7 @@ RUN npm ci --only=production
 
 # Bundle app source
 COPY src/ ./src/
+COPY knexfile.js ./
 
 # Expose server port
 EXPOSE 3000
