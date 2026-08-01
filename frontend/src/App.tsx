@@ -14,7 +14,8 @@ import {
   Link as LinkIcon, 
   Users,
   CheckCircle,
-  XCircle
+  XCircle,
+  Trash2
 } from 'lucide-react';
 
 // --- TS Types matching C# Entities ---
@@ -430,6 +431,25 @@ export default function App() {
     }
   };
 
+  const handleRemoveMember = async (memberId: string) => {
+    if (!founderProject) return;
+    if (!window.confirm('Bạn có chắc chắn muốn loại bỏ thành viên này khỏi dự án?')) return;
+    try {
+      const res = await fetch(`/api/projects/${founderProject.id}/members/${memberId}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification('Đã loại bỏ thành viên ra khỏi dự án.', 'success');
+        fetchFounderDashboard();
+      } else {
+        showNotification(data.error || 'Loại bỏ thất bại.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi kết nối khi loại bỏ thành viên.', 'error');
+    }
+  };
+
   // --- MANAGER DASHBOARD FETCHERS ---
   const fetchManagerDashboard = async () => {
     try {
@@ -657,6 +677,14 @@ export default function App() {
               >
                 Cơ hội Tuyển dụng
               </button>
+              {currentUser.projectId && (
+                <button 
+                  onClick={() => { setActiveTab('my-joined-project'); fetchStudentDashboard(); }} 
+                  className={`tab-btn ${activeTab === 'my-joined-project' ? 'active' : ''}`}
+                >
+                  Dự án tham gia
+                </button>
+              )}
               <button 
                 onClick={() => { setActiveTab('history'); fetchStudentDashboard(); }} 
                 className={`tab-btn ${activeTab === 'history' ? 'active' : ''}`}
@@ -664,6 +692,96 @@ export default function App() {
                 Lịch sử & Profile
               </button>
             </div>
+
+            {/* TAB: Joined Project */}
+            {activeTab === 'my-joined-project' && currentUser.projectId && (() => {
+              const myProject = projects.find(p => p.id === currentUser.projectId);
+              if (!myProject) return <p className="text-slate-500 py-8 text-center">Đang đồng bộ thông tin dự án của bạn...</p>;
+              return (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left animate-fade-in mt-6">
+                  {/* Left Column: Project Profile */}
+                  <div className="glass-panel p-6 border-white/5 space-y-6 lg:col-span-1 h-fit">
+                    <div>
+                      <span className={`badge ${
+                        myProject.status === 'Active' ? 'badge-active' :
+                        myProject.status === 'Suspended' ? 'badge-suspended' : 'badge-draft'
+                      } mb-2`}>{myProject.status}</span>
+                      <h2 className="text-2xl font-heading font-extrabold text-slate-100">{myProject.name}</h2>
+                      <p className="text-sm text-slate-400 mt-2 italic">"{myProject.pitch}"</p>
+                    </div>
+
+                    <div className="space-y-2 border-t border-white/5 pt-4 text-xs">
+                      <span className="text-slate-400 font-bold uppercase block mb-1">Dung lượng lưu trữ</span>
+                      <div className="flex justify-between text-slate-300">
+                        <span>Đã sử dụng:</span>
+                        <span className="font-mono">{formatBytes(myProject.storageUsedBytes)} / 500 MB</span>
+                      </div>
+                      <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden mt-1">
+                        <div 
+                          className="bg-purple-500 h-full"
+                          style={{ width: `${Math.min(100, (myProject.storageUsedBytes / (500 * 1024 * 1024)) * 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Columns: Description, Team Roster, and Milestones */}
+                  <div className="lg:col-span-2 space-y-6">
+                    {/* Teammates List */}
+                    <div className="glass-panel p-6 border-white/5 space-y-4">
+                      <h3 className="text-lg font-heading font-bold text-slate-200 flex items-center gap-2">
+                        <Users className="w-5 h-5 text-purple-400" /> Đồng đội của tôi
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {myProject.teamMembers.map(m => (
+                          <div key={m.id} className="p-3.5 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between">
+                            <div>
+                              <h4 className="font-heading font-bold text-sm text-slate-200">
+                                {m.name} {m.role === 'Founder' && <span className="text-[9px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1.5 py-0.5 rounded font-mono ml-1 font-normal">FOUNDER</span>}
+                              </h4>
+                              <p className="text-[10px] text-slate-400 mt-1">{m.studentId} • {m.email}</p>
+                            </div>
+                            {m.contactLink && (
+                              <a href={m.contactLink} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-400">
+                                <LinkIcon className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Milestones list */}
+                    <div className="glass-panel p-6 border-white/5 space-y-4">
+                      <h3 className="text-lg font-heading font-bold text-slate-200 flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-cyan-400" /> Lộ trình & Cột mốc hoàn thành
+                      </h3>
+                      <div className="space-y-3">
+                        {myProject.milestones.length === 0 ? (
+                          <p className="text-xs text-slate-500">Chưa ghi nhận cột mốc nào.</p>
+                        ) : (
+                          myProject.milestones.map(m => (
+                            <div key={m.id} className="p-3.5 rounded-lg bg-white/5 border border-white/5 flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                {m.done ? (
+                                  <CheckSquare className="w-5 h-5 text-emerald-400 shrink-0" />
+                                ) : (
+                                  <div className="w-5 h-5 border-2 border-slate-500 rounded shrink-0"></div>
+                                )}
+                                <span className={`text-sm ${m.done ? 'line-through text-slate-500' : 'text-slate-200'}`}>{m.title}</span>
+                              </div>
+                              {m.done && m.dateCompleted && (
+                                <span className="text-[10px] text-emerald-400">Hoàn thành: {new Date(m.dateCompleted).toLocaleDateString()}</span>
+                              )}
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* TAB: Projects */}
             {activeTab === 'projects' && (
@@ -1006,11 +1124,22 @@ export default function App() {
                                   <h4 className="font-heading font-bold text-sm text-slate-200">{member.name}</h4>
                                   <p className="text-[10px] text-slate-400 mt-1">{member.studentId} • {member.email}</p>
                                 </div>
-                                {member.contactLink && (
-                                  <a href={member.contactLink} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-400">
-                                    <LinkIcon className="w-4 h-4" />
-                                  </a>
-                                )}
+                                <div className="flex items-center gap-2">
+                                  {member.contactLink && (
+                                    <a href={member.contactLink} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-400 p-1.5 rounded hover:bg-white/5">
+                                      <LinkIcon className="w-4 h-4" />
+                                    </a>
+                                  )}
+                                  {member.role !== 'Founder' && (
+                                    <button 
+                                      onClick={() => handleRemoveMember(member.id)}
+                                      className="text-rose-500 hover:text-rose-400 p-1.5 rounded hover:bg-rose-500/10"
+                                      title="Loại bỏ thành viên"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             ))
                           )}

@@ -232,6 +232,34 @@ namespace GaraShowcase.Api.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { message = "Cập nhật thông tin dự án thành công.", project });
         }
+
+        [HttpDelete("{id}/members/{memberId}")]
+        public async Task<IActionResult> RemoveMember(Guid id, Guid memberId)
+        {
+            var project = await _context.Projects.Include(p => p.TeamMembers).FirstOrDefaultAsync(p => p.Id == id);
+            if (project == null)
+            {
+                return NotFound(new { error = "Không tìm thấy dự án." });
+            }
+
+            var member = await _context.Users.FirstOrDefaultAsync(u => u.Id == memberId && u.ProjectId == id);
+            if (member == null)
+            {
+                return NotFound(new { error = "Không tìm thấy thành viên trong dự án này." });
+            }
+
+            if (member.Role == "Founder")
+            {
+                return BadRequest(new { error = "Không thể loại bỏ nhà sáng lập ra khỏi dự án." });
+            }
+
+            member.ProjectId = null;
+            project.LastUpdatedAt = DateTime.UtcNow;
+            project.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Đã loại bỏ thành viên ra khỏi dự án." });
+        }
     }
 
     public class ProjectUpdateDto
