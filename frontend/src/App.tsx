@@ -650,7 +650,7 @@ export default function App() {
                     <p className="text-sm text-slate-400">Khám phá danh sách các ý tưởng và dự án khởi nghiệp sinh viên.</p>
                   </div>
                   <div className="relative max-w-sm w-full">
-                    <Search className="absolute left-3 w-4 h-4 text-slate-500" style={{ top: '50%', transform: 'translateY(-50%)' }} />
+                    <Search className="absolute w-4 h-4 text-slate-500" style={{ top: '50%', transform: 'translateY(-50%)', left: '12px' }} />
                     <input 
                       type="text" 
                       placeholder="Tìm kiếm dự án..." 
