@@ -531,9 +531,9 @@ export default function App() {
             <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-1">
               {[
                 { name: 'Hỷ Minh Phát', id: 'SE184629', email: 'phathmse184629@fpt.edu.vn', role: 'Sáng lập Gara Showcase', color: 'text-purple-400' },
-                { name: 'Trịnh Hải Đức', id: 'SE184622', email: 'ducthse184622@fpt.edu.vn', role: 'Sáng lập EduLink NFC', color: 'text-purple-400' },
-                { name: 'Phan Quới An Phú', id: 'SE180573', email: 'phupqase180573@fpt.edu.vn', role: 'Sáng lập Zodiac AI', color: 'text-purple-400' },
                 { name: 'Lê Tuấn Khanh', id: 'SE184638', email: 'khanhltse184638@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
+                { name: 'Trịnh Hải Đức', id: 'SE184622', email: 'ducthse184622@fpt.edu.vn', role: 'Thành viên Gara (Dev)', color: 'text-cyan-400' },
+                { name: 'Phan Quới An Phú', id: 'SE180573', email: 'phupqase180573@fpt.edu.vn', role: 'Thành viên Gara (Dev)', color: 'text-cyan-400' },
                 { name: 'Vườn Ươm Gara Manager', id: 'Admin', email: 'manager.mock@fpt.edu.vn', role: 'Quản trị hệ thống', color: 'text-rose-400' }
               ].map((acc) => (
                 <button
