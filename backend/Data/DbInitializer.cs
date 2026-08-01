@@ -22,31 +22,90 @@ namespace GaraShowcase.Api.Data
             context.Projects.RemoveRange(context.Projects);
             context.SaveChanges();
 
-            // 1. Seed ONLY Gara Startup Project Showcase
+            // 1. Seed Startup Projects (6 distinct projects in different states)
             var projectIdGara = Guid.Parse("bea55711-bccf-4326-ad39-e83c89c516f9");
+            var projectIdEdu = Guid.Parse("cea55711-bccf-4326-ad39-e83c89c516f9");
+            var projectIdZodiac = Guid.Parse("dea55711-bccf-4326-ad39-e83c89c516f9");
+            var projectIdGreen = Guid.Parse("eea55711-bccf-4326-ad39-e83c89c516f9");
+            var projectIdBook = Guid.Parse("fea55711-bccf-4326-ad39-e83c89c516f9");
+            var projectIdCrypto = Guid.Parse("9ea55711-bccf-4326-ad39-e83c89c516f9");
 
-            var project = new Project
+            var projects = new Project[]
             {
-                Id = projectIdGara,
-                Name = "Gara Startup Project Showcase",
-                Pitch = "Nền tảng quản lý danh mục khởi nghiệp và tuyển dụng thành viên liên khoa cho trường đại học.",
-                Description = "# Gara Startup Showcase\nNền tảng kết nối sinh viên thuộc các khối ngành kỹ thuật (SE), thiết kế (GD) và kinh doanh (Biz) dưới sự quản lý của vườn ươm khởi nghiệp trường đại học.",
-                Status = "Active",
-                StorageUsedBytes = 452140,
-                LastUpdatedAt = DateTime.UtcNow
+                new Project
+                {
+                    Id = projectIdGara,
+                    Name = "Gara Startup Project Showcase",
+                    Pitch = "Nền tảng quản lý danh mục khởi nghiệp và tuyển dụng thành viên liên khoa cho trường đại học.",
+                    Description = "# Gara Startup Showcase\nNền tảng kết nối sinh viên thuộc các khối ngành kỹ thuật (SE), thiết kế (GD) và kinh doanh (Biz) dưới sự quản lý của vườn ươm khởi nghiệp trường đại học.",
+                    Status = "Active",
+                    StorageUsedBytes = 452140,
+                    LastUpdatedAt = DateTime.UtcNow
+                },
+                new Project
+                {
+                    Id = projectIdEdu,
+                    Name = "EduLink NFC",
+                    Pitch = "Thẻ học sinh thông minh tích hợp chip NFC giúp điểm danh nhanh và thanh toán học phí.",
+                    Description = "# EduLink NFC Card\nHệ thống thẻ thông minh ứng dụng NFC giúp quản lý học sinh và liên lạc giữa phụ huynh và trường học thời gian thực.",
+                    Status = "Active",
+                    StorageUsedBytes = 2309100,
+                    LastUpdatedAt = DateTime.UtcNow
+                },
+                new Project
+                {
+                    Id = projectIdZodiac,
+                    Name = "Zodiac Tarot AI",
+                    Pitch = "Ứng dụng phân tích bản đồ sao cá nhân và giải mã bài Tarot bằng công nghệ AI sinh ngẫu nhiên.",
+                    Description = "# Zodiac Tarot AI Engine\nSử dụng các mô hình ngôn ngữ lớn để diễn giải thông điệp chiêm tinh học và Tarot được cá nhân hóa cao cho người dùng trẻ.",
+                    Status = "Active",
+                    StorageUsedBytes = 15998200,
+                    LastUpdatedAt = DateTime.UtcNow
+                },
+                new Project
+                {
+                    Id = projectIdGreen,
+                    Name = "GreenCycle IoT",
+                    Pitch = "Hệ thống thùng rác thông minh tự phân loại rác thải nhựa tích hợp cảm biến IoT.",
+                    Description = "# GreenCycle IoT Network\nPhát triển mạng lưới thùng rác công cộng thông minh tự động nén rác và gửi báo cáo đầy rác về trung tâm quản lý đô thị.",
+                    Status = "Draft",
+                    StorageUsedBytes = 0,
+                    LastUpdatedAt = DateTime.UtcNow
+                },
+                new Project
+                {
+                    Id = projectIdBook,
+                    Name = "BookHub Sharing",
+                    Pitch = "Nền tảng trao đổi sách giáo khoa và tài liệu học tập cũ giữa các thế hệ sinh viên trong trường.",
+                    Description = "# BookHub Platform\nGiải pháp giảm thiểu chi phí mua sách và thúc đẩy văn hóa đọc xanh thông qua mạng lưới chia sẻ sách ngang hàng.",
+                    Status = "At-Risk",
+                    StorageUsedBytes = 120400,
+                    LastUpdatedAt = DateTime.UtcNow.AddDays(-15) // > 14 days stale
+                },
+                new Project
+                {
+                    Id = projectIdCrypto,
+                    Name = "CryptoPay Wallet",
+                    Pitch = "Ví điện tử thanh toán nội bộ trường học bảo mật cao ứng dụng công nghệ chuỗi khối.",
+                    Description = "# CryptoPay Campus Wallet\nGiải pháp giao dịch không tiền mặt an toàn, minh bạch dành cho các hoạt động ngoại khóa, căng tin và đóng quỹ lớp.",
+                    Status = "Suspended",
+                    StorageUsedBytes = 94100,
+                    LastUpdatedAt = DateTime.UtcNow.AddDays(-32) // > 30 days stale
+                }
             };
 
-            context.Projects.Add(project);
+            context.Projects.AddRange(projects);
             context.SaveChanges();
 
             // Default hashed password (password123)
             var defaultPasswordHash = PasswordHasher.HashPassword("password123");
 
-            // 2. Seed Users (Real Team Members + Additional Mock Students)
+            // 2. Seed Users (Real Team Members + Additional Mock Accounts)
             var userPhatId = Guid.Parse("fca55711-bccf-4326-ad39-e83c89c516f9");
             var userDucId = Guid.Parse("dca55711-bccf-4326-ad39-e83c89c516f9");
             var userPhuId = Guid.Parse("aca55711-bccf-4326-ad39-e83c89c516f9");
             var userKhanhId = Guid.Parse("cca55711-bccf-4326-ad39-e83c89c516f9");
+            var userVyId = Guid.Parse("7ca55711-bccf-4326-ad39-e83c89c516f9");
             
             var userBinhId = Guid.Parse("bca55711-bccf-4326-ad39-e83c89c516f9");
             var userLinhId = Guid.Parse("1ca55711-bccf-4326-ad39-e83c89c516f9");
@@ -54,10 +113,19 @@ namespace GaraShowcase.Api.Data
             
             var userMockStudent1 = Guid.Parse("5ca55711-bccf-4326-ad39-e83c89c516f9");
             var userMockStudent2 = Guid.Parse("6ca55711-bccf-4326-ad39-e83c89c516f9");
+            
+            var managerId = Guid.Parse("2ca55711-bccf-4326-ad39-e83c89c516f9");
+            
+            var founderEduId = Guid.Parse("3ca55711-bccf-4326-ad39-e83c89c516f9");
+            var founderZodiacId = Guid.Parse("4ca55711-bccf-4326-ad39-e83c89c516f9");
+            
+            var founderGreenId = Guid.Parse("ad0cc535-f771-4a39-e83c-89c516f9a001");
+            var founderBookId = Guid.Parse("ad0cc535-f771-4a39-e83c-89c516f9a002");
+            var founderCryptoId = Guid.Parse("ad0cc535-f771-4a39-e83c-89c516f9a003");
 
             var users = new User[]
             {
-                // Founder (Hỷ Minh Phát)
+                // Hỷ Minh Phát (Founder of Gara Showcase)
                 new User
                 {
                     Id = userPhatId,
@@ -71,7 +139,7 @@ namespace GaraShowcase.Api.Data
                     ProjectId = projectIdGara
                 },
 
-                // Team Members (Already in the Gara Showcase project roster)
+                // Trịnh Hải Đức (Member of Gara Showcase)
                 new User
                 {
                     Id = userDucId,
@@ -84,6 +152,8 @@ namespace GaraShowcase.Api.Data
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se184622_cv.pdf",
                     ProjectId = projectIdGara
                 },
+
+                // Phan Quới An Phú (Member of Gara Showcase)
                 new User
                 {
                     Id = userPhuId,
@@ -96,6 +166,8 @@ namespace GaraShowcase.Api.Data
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se180573_cv.pdf",
                     ProjectId = projectIdGara
                 },
+
+                // Nguyễn Văn B (Member of Gara Showcase)
                 new User
                 {
                     Id = userMockStudent1,
@@ -108,6 +180,8 @@ namespace GaraShowcase.Api.Data
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/gd180002_cv.pdf",
                     ProjectId = projectIdGara
                 },
+
+                // Trần Thị C (Member of Gara Showcase)
                 new User
                 {
                     Id = userMockStudent2,
@@ -121,7 +195,77 @@ namespace GaraShowcase.Api.Data
                     ProjectId = projectIdGara
                 },
 
-                // Student Job Seekers (Ready to apply / test applications)
+                // EduLink NFC Founder
+                new User
+                {
+                    Id = founderEduId,
+                    Email = "edulink.founder@fpt.edu.vn",
+                    Name = "Trần Minh Quân (EduLink)",
+                    Role = "Founder",
+                    PasswordHash = defaultPasswordHash,
+                    StudentId = "SE183204",
+                    ContactLink = "https://facebook.com/edu.founder",
+                    CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se183204_cv.pdf",
+                    ProjectId = projectIdEdu
+                },
+
+                // Zodiac Tarot AI Founder
+                new User
+                {
+                    Id = founderZodiacId,
+                    Email = "zodiac.founder@fpt.edu.vn",
+                    Name = "Võ Hoàng Yến (Zodiac)",
+                    Role = "Founder",
+                    PasswordHash = defaultPasswordHash,
+                    StudentId = "SE185112",
+                    ContactLink = "https://facebook.com/zodiac.founder",
+                    CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se185112_cv.pdf",
+                    ProjectId = projectIdZodiac
+                },
+
+                // GreenCycle IoT Founder (Draft Startup)
+                new User
+                {
+                    Id = founderGreenId,
+                    Email = "greencycle.founder@fpt.edu.vn",
+                    Name = "Phạm Đình Phong (GreenCycle)",
+                    Role = "Founder",
+                    PasswordHash = defaultPasswordHash,
+                    StudentId = "SE187531",
+                    ContactLink = "https://facebook.com/green.founder",
+                    CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se187531_cv.pdf",
+                    ProjectId = projectIdGreen
+                },
+
+                // BookHub Sharing Founder (At-Risk Startup)
+                new User
+                {
+                    Id = founderBookId,
+                    Email = "bookhub.founder@fpt.edu.vn",
+                    Name = "Hoàng Thanh Trúc (BookHub)",
+                    Role = "Founder",
+                    PasswordHash = defaultPasswordHash,
+                    StudentId = "SE189912",
+                    ContactLink = "https://facebook.com/book.founder",
+                    CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se189912_cv.pdf",
+                    ProjectId = projectIdBook
+                },
+
+                // CryptoPay Wallet Founder (Suspended Startup)
+                new User
+                {
+                    Id = founderCryptoId,
+                    Email = "cryptopay.founder@fpt.edu.vn",
+                    Name = "Vũ Việt Anh (CryptoPay)",
+                    Role = "Founder",
+                    PasswordHash = defaultPasswordHash,
+                    StudentId = "SE188844",
+                    ContactLink = "https://facebook.com/crypto.founder",
+                    CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se188844_cv.pdf",
+                    ProjectId = projectIdCrypto
+                },
+
+                // Lê Tuấn Khanh (Student Seeker - Ready to apply)
                 new User
                 {
                     Id = userKhanhId,
@@ -133,6 +277,21 @@ namespace GaraShowcase.Api.Data
                     ContactLink = "https://facebook.com/khanhlt",
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se184638_cv.pdf"
                 },
+
+                // Trương Ngọc Vy (Student Seeker - Ready to apply)
+                new User
+                {
+                    Id = userVyId,
+                    Email = "vyntse182233@fpt.edu.vn",
+                    Name = "Trương Ngọc Vy",
+                    Role = "Student",
+                    PasswordHash = defaultPasswordHash,
+                    StudentId = "SE182233",
+                    ContactLink = "https://facebook.com/vynt",
+                    CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se182233_cv.pdf"
+                },
+
+                // Bùi Thanh Bình (Student Seeker - Mock Seeker)
                 new User
                 {
                     Id = userBinhId,
@@ -144,6 +303,8 @@ namespace GaraShowcase.Api.Data
                     ContactLink = "https://facebook.com/binhbt",
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se185566_cv.pdf"
                 },
+
+                // Phạm Thu Linh (Student Seeker - Mock Seeker)
                 new User
                 {
                     Id = userLinhId,
@@ -155,6 +316,8 @@ namespace GaraShowcase.Api.Data
                     ContactLink = "https://facebook.com/linhpt",
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/gd186677_cv.pdf"
                 },
+
+                // Lê Minh Hoàng (Student Seeker - Mock Seeker with lockout)
                 new User
                 {
                     Id = userHoangId,
@@ -167,10 +330,10 @@ namespace GaraShowcase.Api.Data
                     CvUrl = "https://crgarashowcasedev.blob.core.windows.net/cv/se181234_cv.pdf"
                 },
 
-                // Manager
+                // Vườn Ươm Gara Manager (Manager Admin)
                 new User
                 {
-                    Id = Guid.Parse("2ca55711-bccf-4326-ad39-e83c89c516f9"),
+                    Id = managerId,
                     Email = "manager.mock@fpt.edu.vn",
                     Name = "Vườn Ươm Gara Manager",
                     Role = "Manager",
@@ -184,7 +347,7 @@ namespace GaraShowcase.Api.Data
             context.Users.AddRange(users);
             context.SaveChanges();
 
-            // 3. Seed Gara Milestones
+            // 3. Seed Milestones (For Gara and BookHub)
             var milestones = new Milestone[]
             {
                 new Milestone
@@ -215,16 +378,28 @@ namespace GaraShowcase.Api.Data
                     Description = "Di chuyển mã nguồn sang ASP.NET Core, kết nối cơ sở dữ liệu và triển khai lên Azure Container App.",
                     Done = false,
                     CreatedAt = DateTime.UtcNow
+                },
+                new Milestone
+                {
+                    Id = Guid.NewGuid(),
+                    ProjectId = projectIdBook,
+                    Title = "Khởi chạy Web App BookHub Beta",
+                    Description = "Sinh viên bắt đầu tạo tài khoản trao đổi sách thử nghiệm nội bộ.",
+                    Done = true,
+                    DateCompleted = DateTime.UtcNow.AddDays(-25),
+                    CreatedAt = DateTime.UtcNow.AddDays(-35)
                 }
             };
 
             context.Milestones.AddRange(milestones);
             context.SaveChanges();
 
-            // 4. Seed Gara Jobs
+            // 4. Seed Jobs
             var jobIdFullstack = Guid.Parse("1ca55711-bccf-4326-ad39-e83c89c516f9");
             var jobIdDesigner = Guid.Parse("2ca55711-bccf-4326-ad39-e83c89c516f9");
             var jobIdBizDev = Guid.Parse("3ca55711-bccf-4326-ad39-e83c89c516f9");
+            var jobIdEduFront = Guid.Parse("4ca55711-bccf-4326-ad39-e83c89c516f9");
+            var jobIdTarotAI = Guid.Parse("5ca55711-bccf-4326-ad39-e83c89c516f9");
 
             var jobs = new Job[]
             {
@@ -258,6 +433,28 @@ namespace GaraShowcase.Api.Data
                     Category = "Business",
                     Description = "Tìm kiếm các đối tác trường học thực hiện thử nghiệm nền tảng tuyển dụng.",
                     Requirements = "Kỹ năng giao tiếp tốt, đam mê môi trường khởi nghiệp giáo dục.",
+                    Status = "Open",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new Job
+                {
+                    Id = jobIdEduFront,
+                    ProjectId = projectIdEdu,
+                    Title = "Lập trình viên Frontend (React)",
+                    Category = "Engineering",
+                    Description = "Phát triển cổng giao diện thanh toán NFC nội trú trường học.",
+                    Requirements = "Thành thạo ReactJS, CSS Flexbox/Grid, làm việc nhóm tốt.",
+                    Status = "Open",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new Job
+                {
+                    Id = jobIdTarotAI,
+                    ProjectId = projectIdZodiac,
+                    Title = "Kỹ sư AI & Python",
+                    Category = "Engineering",
+                    Description = "Tích hợp các mô hình phân tích bài Tarot và chiêm tinh học tự động.",
+                    Requirements = "Thành thạo Python, kinh nghiệm làm việc với OpenAI API hoặc các mô hình LLM tương tự.",
                     Status = "Open",
                     CreatedAt = DateTime.UtcNow
                 }

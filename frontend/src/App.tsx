@@ -533,8 +533,9 @@ export default function App() {
               {[
                 { name: 'Hỷ Minh Phát', id: 'SE184629', email: 'phathmse184629@fpt.edu.vn', role: 'Sáng lập Gara Showcase', color: 'text-purple-400' },
                 { name: 'Lê Tuấn Khanh', id: 'SE184638', email: 'khanhltse184638@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
-                { name: 'Trịnh Hải Đức', id: 'SE184622', email: 'ducthse184622@fpt.edu.vn', role: 'Thành viên Gara (Dev)', color: 'text-cyan-400' },
-                { name: 'Phan Quới An Phú', id: 'SE180573', email: 'phupqase180573@fpt.edu.vn', role: 'Thành viên Gara (Dev)', color: 'text-cyan-400' },
+                { name: 'Trương Ngọc Vy', id: 'SE182233', email: 'vyntse182233@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
+                { name: 'Trần Minh Quân', id: 'SE183204', email: 'edulink.founder@fpt.edu.vn', role: 'Sáng lập EduLink NFC', color: 'text-purple-400' },
+                { name: 'Võ Hoàng Yến', id: 'SE185112', email: 'zodiac.founder@fpt.edu.vn', role: 'Sáng lập Zodiac AI', color: 'text-purple-400' },
                 { name: 'Vườn Ươm Gara Manager', id: 'Admin', email: 'manager.mock@fpt.edu.vn', role: 'Quản trị hệ thống', color: 'text-rose-400' }
               ].map((acc) => (
                 <button
