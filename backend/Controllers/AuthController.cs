@@ -90,5 +90,26 @@ namespace GaraShowcase.Api.Controllers
 
             return Ok(user);
         }
+
+        [HttpGet("debug")]
+        public async Task<IActionResult> DebugUsers()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .Select(u => new { u.Email, u.Name, u.Role, HasPassword = !string.IsNullOrEmpty(u.PasswordHash) })
+                    .ToListAsync();
+                
+                var projects = await _context.Projects
+                    .Select(p => new { p.Name, p.Status })
+                    .ToListAsync();
+
+                return Ok(new { users, projects });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message, stackTrace = ex.StackTrace });
+            }
+        }
     }
 }
