@@ -21,72 +21,26 @@ namespace GaraShowcase.Api.Controllers
             _context = context;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromQuery] string? mockRole)
+        public class LoginRequest
         {
-            if (string.IsNullOrEmpty(mockRole))
+            public string Email { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
             {
-                return BadRequest(new { error = "Thiếu thông tin vai trò đăng nhập." });
+                return BadRequest(new { error = "Thiếu thông tin Email hoặc Mật khẩu." });
             }
 
-            // Map mock users
-            var email = "";
-            var name = "";
-            var studentId = "";
-            var role = "";
-            Guid? projectId = null;
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.Trim().ToLower());
 
-            if (mockRole == "FounderPhat")
+            if (user == null || !PasswordHasher.VerifyPassword(request.Password, user.PasswordHash))
             {
-                email = "phathmse184629@fpt.edu.vn";
-                name = "Hỷ Minh Phát";
-                studentId = "SE184629";
-                role = "Founder";
-                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "Gara Startup Project Showcase");
-                projectId = project?.Id;
-            }
-            else if (mockRole == "StudentKhanh")
-            {
-                email = "khanhltse184638@fpt.edu.vn";
-                name = "Lê Tuấn Khanh";
-                studentId = "SE184638";
-                role = "Student";
-            }
-            else if (mockRole == "Manager")
-            {
-                email = "manager.mock@fpt.edu.vn";
-                name = "Vườn Ươm Gara Manager";
-                studentId = null;
-                role = "Manager";
-            }
-            else
-            {
-                return BadRequest(new { error = "Vai trò không hợp lệ." });
-            }
-
-            // Sync user in database
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
-            {
-                user = new User
-                {
-                    Id = Guid.NewGuid(),
-                    Email = email,
-                    Name = name,
-                    Role = role,
-                    StudentId = studentId,
-                    ProjectId = projectId
-                };
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                user.Role = role;
-                user.Name = name;
-                user.StudentId = studentId;
-                user.ProjectId = projectId;
-                await _context.SaveChangesAsync();
+                return BadRequest(new { error = "Email hoặc Mật khẩu không chính xác." });
             }
 
             // Sign JWT token

@@ -19,6 +19,9 @@ namespace GaraShowcase.Api.Models
         [Required]
         public string Role { get; set; } = "Guest"; // Student, Founder, Manager, Guest
 
+        [Required]
+        public string PasswordHash { get; set; } = string.Empty;
+
         public string? StudentId { get; set; }
 
         public string? ContactLink { get; set; }

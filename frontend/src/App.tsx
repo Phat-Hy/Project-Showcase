@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { 
   LogOut, 
   User as UserIcon, 
-  Briefcase, 
   Layers, 
   Search, 
   UploadCloud, 
-  ShieldCheck, 
   CheckSquare, 
   Plus, 
   FileSpreadsheet, 
@@ -16,8 +14,7 @@ import {
   Link as LinkIcon, 
   Users,
   CheckCircle,
-  XCircle,
-  ArrowRight
+  XCircle
 } from 'lucide-react';
 
 // --- TS Types matching C# Entities ---
@@ -126,6 +123,10 @@ export default function App() {
   // General Notification Banner
   const [notification, setNotification] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
 
+  // Login form states
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
   useEffect(() => {
     fetchSession();
   }, []);
@@ -167,18 +168,23 @@ export default function App() {
     }
   };
 
-  const handleLogin = async (mockRole: 'FounderPhat' | 'StudentKhanh' | 'Manager') => {
+  const handleLogin = async (emailStr: string, passwordStr: string) => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/auth/login?mockRole=${mockRole}`, { method: 'POST' });
+      const res = await fetch(`/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailStr, password: passwordStr })
+      });
       if (res.ok) {
         const data = await res.json();
         setCurrentUser(data.user);
         if (data.user.contactLink) setContactLink(data.user.contactLink);
         if (data.user.cvUrl) setCvUrl(data.user.cvUrl);
-        showNotification(`Đã kết nối tài khoản giả lập: ${data.user.name}`, 'success');
+        showNotification(`Đăng nhập thành công: ${data.user.name}`, 'success');
       } else {
-        showNotification('Lỗi kết nối tài khoản.', 'error');
+        const errData = await res.json();
+        showNotification(errData.error || 'Email hoặc Mật khẩu không chính xác.', 'error');
       }
     } catch {
       showNotification('Lỗi kết nối mạng.', 'error');
@@ -472,68 +478,82 @@ export default function App() {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
-        <div className="glass-panel p-8 max-w-md w-full text-center relative z-10 border-purple-500/20">
+        <div className="glass-panel p-8 max-w-md w-full relative z-10 border-purple-500/20">
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
               <Layers className="w-9 h-9 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl font-extrabold font-heading bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+          
+          <h1 className="text-3xl font-extrabold font-heading bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent text-center mb-2">
             GARA PORTAL
           </h1>
-          <p className="text-sm text-slate-400 mb-8 font-body">
-            Cổng quản lý danh mục và tuyển dụng Khởi nghiệp liên khoa trường Đại học.
+          <p className="text-sm text-slate-400 text-center mb-6 font-body">
+            Hệ thống quản lý dự án & tuyển dụng Vườn ươm khởi nghiệp trường Đại học.
           </p>
 
-          <div className="flex flex-col gap-3">
-            {/* Student portal */}
-            <button 
-              onClick={() => handleLogin('StudentKhanh')}
-              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
-            >
-              <div className="flex items-center gap-3">
-                <Briefcase className="w-5 h-5 text-cyan-400" />
-                <div className="text-left">
-                  <span className="block font-heading font-bold text-xs text-slate-200">Cổng Sinh Viên</span>
-                  <span className="block text-[10px] text-slate-400">Lê Tuấn Khanh (SE184638)</span>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-            </button>
+          <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginEmail, loginPassword); }} className="space-y-4 mb-6">
+            <div>
+              <label className="block text-left text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email học viên / Quản trị</label>
+              <input
+                type="email"
+                placeholder="email@fpt.edu.vn"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                required
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-slate-200"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-left text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Mật khẩu</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                required
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-slate-200"
+              />
+            </div>
 
-            {/* Founder Gara Portal */}
-            <button 
-              onClick={() => handleLogin('FounderPhat')}
-              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn btn-primary w-full py-3.5 mt-2 rounded-lg font-heading"
             >
-              <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-purple-400" />
-                <div className="text-left">
-                  <span className="block font-heading font-bold text-xs text-slate-200">Cổng Sáng Lập</span>
-                  <span className="block text-[10px] text-slate-400">Hỷ Minh Phát (SE184629)</span>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
+              {isLoading ? 'Đang xác thực...' : 'Đăng Nhập'}
             </button>
+          </form>
 
-            {/* Manager Portal */}
-            <button 
-              onClick={() => handleLogin('Manager')}
-              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
-            >
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5 text-rose-400" />
-                <div className="text-left">
-                  <span className="block font-heading font-bold text-xs text-slate-200">Cổng Quản Trị Viên</span>
-                  <span className="block text-[10px] text-slate-400">Quản lý Vườn Ươm Gara</span>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-          
-          <div className="mt-8 text-xs text-slate-500 border-t border-white/5 pt-4">
-            Ứng dụng kết nối React + ASP.NET Core & PostgreSQL
+          <div className="border-t border-white/5 pt-4">
+            <span className="block text-left text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Tài khoản kiểm thử nhanh (Click để tự điền & đăng nhập)</span>
+            <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-1">
+              {[
+                { name: 'Hỷ Minh Phát', id: 'SE184629', email: 'phathmse184629@fpt.edu.vn', role: 'Sáng lập Gara Showcase', color: 'text-purple-400' },
+                { name: 'Trịnh Hải Đức', id: 'SE184622', email: 'ducthse184622@fpt.edu.vn', role: 'Sáng lập EduLink NFC', color: 'text-purple-400' },
+                { name: 'Phan Quới An Phú', id: 'SE180573', email: 'phupqase180573@fpt.edu.vn', role: 'Sáng lập Zodiac AI', color: 'text-purple-400' },
+                { name: 'Lê Tuấn Khanh', id: 'SE184638', email: 'khanhltse184638@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
+                { name: 'Vườn Ươm Gara Manager', id: 'Admin', email: 'manager.mock@fpt.edu.vn', role: 'Quản trị hệ thống', color: 'text-rose-400' }
+              ].map((acc) => (
+                <button
+                  key={acc.email}
+                  type="button"
+                  onClick={() => {
+                    setLoginEmail(acc.email);
+                    setLoginPassword('password123');
+                    handleLogin(acc.email, 'password123');
+                  }}
+                  className="btn btn-outline text-left w-full flex flex-col justify-center px-4 py-2.5 glass-panel-interactive border-white/10"
+                >
+                  <div className="flex justify-between items-center w-full">
+                    <span className="font-heading font-semibold text-xs text-slate-200">{acc.name}</span>
+                    <span className={`text-[10px] font-mono ${acc.color}`}>{acc.role}</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-0.5">{acc.email}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
