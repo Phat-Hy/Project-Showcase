@@ -45,11 +45,11 @@ namespace GaraShowcase.Api.Data
             // 2. Seed Users (Real Team Members + Additional Mock Students)
             var userPhatId = Guid.Parse("fca55711-bccf-4326-ad39-e83c89c516f9");
             var userDucId = Guid.Parse("dca55711-bccf-4326-ad39-e83c89c516f9");
-            var userPhuId = Guid.Parse("hca55711-bccf-4326-ad39-e83c89c516f9");
+            var userPhuId = Guid.Parse("aca55711-bccf-4326-ad39-e83c89c516f9");
             var userKhanhId = Guid.Parse("cca55711-bccf-4326-ad39-e83c89c516f9");
             
             var userBinhId = Guid.Parse("bca55711-bccf-4326-ad39-e83c89c516f9");
-            var userLinhId = Guid.Parse("lca55711-bccf-4326-ad39-e83c89c516f9");
+            var userLinhId = Guid.Parse("1ca55711-bccf-4326-ad39-e83c89c516f9");
             var userHoangId = Guid.Parse("8ca55711-bccf-4326-ad39-e83c89c516f9");
             
             var userMockStudent1 = Guid.Parse("5ca55711-bccf-4326-ad39-e83c89c516f9");
@@ -170,7 +170,7 @@ namespace GaraShowcase.Api.Data
                 // Manager
                 new User
                 {
-                    Id = Guid.Parse("mca55711-bccf-4326-ad39-e83c89c516f9"),
+                    Id = Guid.Parse("2ca55711-bccf-4326-ad39-e83c89c516f9"),
                     Email = "manager.mock@fpt.edu.vn",
                     Name = "Vườn Ươm Gara Manager",
                     Role = "Manager",
