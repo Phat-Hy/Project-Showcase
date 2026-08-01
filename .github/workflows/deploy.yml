@@ -42,5 +42,5 @@ jobs:
         run: |
           az containerapp update \
             --name app-gara-dev \
-            --resource-group rg-gara-dev-us \
+            --resource-group rg-gara-dev-sea \
             --image crgarashowcasedev.azurecr.io/gara-showcase:${{ github.sha }}
