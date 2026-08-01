@@ -149,6 +149,10 @@ resource "azurerm_container_app" "app" {
         name  = "PORT"
         value = "3000"
       }
+      env {
+        name  = "DATABASE_URL"
+        value = "postgres://${azurerm_postgresql_flexible_server.db.administrator_login}:${random_password.db_password.result}@${azurerm_postgresql_flexible_server.db.fqdn}/${azurerm_postgresql_flexible_server_database.dbname.name}?sslmode=require"
+      }
     }
   }
 
