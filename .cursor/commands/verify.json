@@ -1,5 +1,0 @@
-{
-  "name": "Verify",
-  "description": "Run workspace maturity verification and scoring checks",
-  "command": "npx harness-score"
-}
