@@ -167,7 +167,7 @@ export default function App() {
     }
   };
 
-  const handleLogin = async (mockRole: 'FounderPhat' | 'FounderDuc' | 'FounderPhu' | 'StudentKhanh' | 'Manager') => {
+  const handleLogin = async (mockRole: 'FounderPhat' | 'StudentKhanh' | 'Manager') => {
     setIsLoading(true);
     try {
       const res = await fetch(`/api/auth/login?mockRole=${mockRole}`, { method: 'POST' });
@@ -509,38 +509,8 @@ export default function App() {
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-purple-400" />
                 <div className="text-left">
-                  <span className="block font-heading font-bold text-xs text-slate-200">Sáng lập Gara Showcase</span>
+                  <span className="block font-heading font-bold text-xs text-slate-200">Cổng Sáng Lập</span>
                   <span className="block text-[10px] text-slate-400">Hỷ Minh Phát (SE184629)</span>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-            </button>
-
-            {/* Founder EduLink Portal */}
-            <button 
-              onClick={() => handleLogin('FounderDuc')}
-              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
-            >
-              <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-purple-400" />
-                <div className="text-left">
-                  <span className="block font-heading font-bold text-xs text-slate-200">Sáng lập EduLink</span>
-                  <span className="block text-[10px] text-slate-400">Trịnh Hải Đức (SE184622)</span>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-            </button>
-
-            {/* Founder Zodiac Portal */}
-            <button 
-              onClick={() => handleLogin('FounderPhu')}
-              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
-            >
-              <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-purple-400" />
-                <div className="text-left">
-                  <span className="block font-heading font-bold text-xs text-slate-200">Sáng lập Zodiac Tarot AI</span>
-                  <span className="block text-[10px] text-slate-400">Phan Quới An Phú (SE180573)</span>
                 </div>
               </div>
               <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />

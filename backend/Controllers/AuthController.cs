@@ -45,24 +45,6 @@ namespace GaraShowcase.Api.Controllers
                 var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "Gara Startup Project Showcase");
                 projectId = project?.Id;
             }
-            else if (mockRole == "FounderDuc")
-            {
-                email = "ducthse184622@fpt.edu.vn";
-                name = "Trịnh Hải Đức";
-                studentId = "SE184622";
-                role = "Founder";
-                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "EduLink Platform");
-                projectId = project?.Id;
-            }
-            else if (mockRole == "FounderPhu")
-            {
-                email = "phupqase180573@fpt.edu.vn";
-                name = "Phan Quới An Phú";
-                studentId = "SE180573";
-                role = "Founder";
-                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "Zodiac Tarot AI Broker");
-                projectId = project?.Id;
-            }
             else if (mockRole == "StudentKhanh")
             {
                 email = "khanhltse184638@fpt.edu.vn";
