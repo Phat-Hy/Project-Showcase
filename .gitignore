@@ -35,3 +35,9 @@ Thumbs.db
 AGENTS.md
 plan.md
 
+# Terraform Local State
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+

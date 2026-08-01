@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gara Startup Project Showcase - Pitch Deck (EXE101)</title>
+  <meta name="description" content="Pitch deck chính thức của dự án Gara Startup Project Showcase - Giải pháp số hóa hệ sinh thái khởi nghiệp trường đại học theo tiêu chuẩn môn học EXE.">
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <title>Gara Showcase Platform</title>
+  <style>
+    /* Global Base styles */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0e1a;
+      font-family: 'Inter', sans-serif;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+    
+    /* Standalone wrapper overrides to make it full screen immediately */
+    #simulator-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+      display: flex !important;
+      flex-direction: column;
+      z-index: 1;
+      background: #0a0e1a;
+    }
+
+    #simulator-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #070a13;
+      z-index: 1000;
+      display: none; /* Controlled by JS */
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      flex-direction: column;
+    }
+
+    #simulator-container.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Simulator Header bar */
+    .sim-header {
+      background: #0d1222;
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1010;
+    }
+
+    .sim-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sim-logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sim-logo svg {
+      width: 18px;
+      height: 18px;
+      fill: #fff;
+    }
+
+    .sim-brand {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .sim-brand span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-secondary);
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+
+    .sim-auth-status {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px 12px;
+      border-radius: 30px;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-avatar-mini {
+      width: 24px;
+      height: 24px;
+      background: #7c3aed;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.7rem;
+      color: #fff;
+    }
+
+    .user-name-mini {
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .btn-sim-exit {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-sim-exit:hover {
+      background: #ef4444;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Simulator Main Content Area */
+    .sim-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Simulator Sidebar Navigation */
+    .sim-sidebar {
+      width: 250px;
+      background: #090d19;
+      border-right: 1px solid var(--card-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sim-nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sim-nav-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      padding-left: 8px;
+    }
+
+    .sim-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sim-nav-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+      color: #fff;
+    }
+
+    .sim-nav-item.active {
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.02) 100%);
+      color: #fff;
+      border-left: 3px solid var(--color-primary);
+    }
+
+    .sim-nav-item svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .sim-sidebar-footer {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .sim-app-limit-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sim-app-limit-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .sim-app-limit-bar {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%; /* Dynamic */
+      transition: width 0.3s ease;
+    }
+
+    /* Simulator Main Panel */
+    .sim-content {
+      flex: 1;
+      background: #070a13;
+      overflow-y: auto;
+      padding: 2.5rem 3rem;
+    }
+
+    .sim-view {
+      display: none;
+    }
+
+    .sim-view.active {
+      display: block;
+      animation: fade-in 0.3s ease-out;
+    }
+
+    /* View 1: Projects Showcase Grid */
+    .sim-view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .sim-view-title {
+      font-family: var(--font-title);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .sim-search-filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.6rem 1rem;
+    }
+
+    .sim-search-input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sim-search-input-wrapper svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--text-muted);
+    }
+
+    .sim-search-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .sim-filter-select {
+      background: #181f38;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      padding: 4px 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sim-project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sim-project-card {
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .sim-project-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .sim-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .sim-card-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .sim-card-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .sim-card-badge.active-badge { background: rgba(16, 185, 129, 0.1); color: var(--status-active); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .sim-card-badge.risk-badge { background: rgba(245, 158, 11, 0.1); color: var(--status-risk); border: 1px solid rgba(245, 158, 11, 0.2); }
+    .sim-card-badge.suspended-badge { background: rgba(239, 68, 68, 0.1); color: var(--status-suspended); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .sim-card-name {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .sim-card-pitch {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+      height: 38px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .sim-card-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-card-category {
+      font-size: 0.75rem;
+      color: var(--color-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .sim-card-action-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sim-card-action-text svg {
+      width: 12px;
+      height: 12px;
+      fill: currentColor;
+    }
+
+    /* Modal Detail Startup overlay */
+    .sim-detail-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 7, 13, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .sim-detail-modal {
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      background: #0c101d;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+      animation: modal-slide-up 0.3s ease-out;
+    }
+
+    .sim-modal-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-modal-title-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .sim-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .sim-modal-close:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+
+    .sim-modal-close svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .sim-modal-body {
+      padding: 2rem;
+      overflow-y: auto;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+    }
+
+    .sim-modal-left h4, .sim-modal-right h4 {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.5rem;
+    }
+
+    .sim-modal-desc {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Milestone Vertical Timeline in Detail View */
+    .sim-timeline-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sim-timeline-node {
+      display: flex;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .sim-timeline-node::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 24px;
+      bottom: -20px;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sim-timeline-node:last-child::before {
+      display: none;
+    }
+
+    .sim-node-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #181f38;
+      border: 2px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .sim-timeline-node.done .sim-node-dot {
+      background: var(--status-active);
+      border-color: transparent;
+    }
+
+    .sim-node-dot svg {
+      width: 12px;
+      height: 12px;
+      fill: #fff;
+      display: none;
+    }
+
+    .sim-timeline-node.done .sim-node-dot svg {
+      display: block;
+    }
+
+    .sim-node-info {
+      font-size: 0.85rem;
+    }
+
+    .sim-node-name {
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .sim-timeline-node.done .sim-node-name {
+      color: #fff;
+    }
+
+    .sim-node-status {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sim-timeline-node.done .sim-node-status {
+      color: var(--status-active);
+    }
+
+    /* CMS Simulated Milestones updates */
+    .sim-cms-action-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .btn-cms-action {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #c084fc;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-cms-action:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .sim-modal-roles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sim-modal-role-card {
+      background: #111628;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-modal-role-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .sim-modal-role-tag {
+      font-size: 0.7rem;
+      color: var(--color-secondary);
+      font-weight: 500;
+    }
+
+    .btn-modal-apply {
+      background: var(--color-primary);
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-modal-apply:hover {
+      background: #7c3aed;
+    }
+
+    .btn-modal-apply.applied {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    /* View 2: Recruitment Job Board */
+    .sim-job-card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sim-job-card {
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .sim-job-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .sim-job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .sim-job-info-area {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .sim-job-proj-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .sim-job-details-title {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .sim-job-proj-name {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .sim-job-tag-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .sim-job-desc-body {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .sim-job-req-body {
+      font-size: 0.82rem;
+      background: rgba(0,0,0,0.15);
+      border-radius: 6px;
+      padding: 8px 12px;
+      border-left: 3px solid var(--color-primary);
+      margin-bottom: 1.2rem;
+      color: var(--text-main);
+    }
+
+    .sim-job-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* View 3: Incubator Admin Dashboard */
+    .sim-admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .sim-admin-stat-card {
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: left;
+      position: relative;
+    }
+
+    .sim-admin-stat-num {
+      font-family: var(--font-title);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .sim-admin-stat-lbl {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .sim-admin-stat-icon {
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+      color: rgba(255,255,255,0.05);
+    }
+
+    .sim-admin-stat-icon svg {
+      width: 32px;
+      height: 32px;
+      fill: currentColor;
+    }
+
+    .sim-admin-project-list-section h4 {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-admin-export {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-export:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--color-secondary);
+    }
+
+    .sim-admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .sim-admin-table th, .sim-admin-table td {
+      padding: 1rem 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.88rem;
+    }
+
+    .sim-admin-table th {
+      background: rgba(255,255,255,0.02);
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .sim-admin-action-cell {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-admin-action {
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-action.resolve {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--status-active);
+    }
+
+    .btn-admin-action.resolve:hover {
+      background: var(--status-active);
+      color: #fff;
+    }
+
+    .btn-admin-action.unsuspend {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: var(--color-secondary);
+    }
+
+    .btn-admin-action.unsuspend:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .btn-admin-action.nudge {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: var(--status-risk);
+    }
+
+    .btn-admin-action.nudge:hover {
+      background: var(--status-risk);
+      color: #fff;
+    }
+
+    /* Simulated SSO login Modal overlay */
+    .sim-sso-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 5, 10, 0.9);
+      z-index: 1200;
+      display: none; /* Controlled by JS */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sso-box {
+      width: 380px;
+      background: #0f1426;
+      border: 1px solid var(--color-primary);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 0 30px var(--color-primary-glow);
+      text-align: center;
+    }
+
+    .sso-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+    }
+
+    .sso-logo svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .sso-title {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .sso-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .sso-input-group {
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+
+    .sso-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    .sso-input {
+      background: #181e36;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .sso-input:focus {
+      border-color: var(--color-secondary);
+    }
+
+    .btn-sso-login {
+      background: var(--color-primary);
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.9rem;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .btn-sso-login:hover {
+      background: #7c3aed;
+      box-shadow: 0 0 15px var(--color-primary-glow);
+    }
+
+    .btn-sso-cancel {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 0.8rem;
+    }
+
+    .btn-sso-cancel:hover {
+      color: #fff;
+    }
+
+    /* Notification banner */
+    .sim-notification {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #0e1324;
+      border-left: 4px solid var(--color-secondary);
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1300;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateY(-50px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sim-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .sim-notification.error-notif {
+      border-left-color: var(--status-suspended);
+    }
+
+    .sim-notification-icon {
+      color: var(--color-secondary);
+    }
+
+    .sim-notification.error-notif .sim-notification-icon {
+      color: var(--status-suspended);
+    }
+
+    .sim-notification-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .sim-notification-text {
+      font-size: 0.88rem;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* -------------------------------------------------------------
+       6. UTILITIES AND KEY ANIMATIONS
+       ------------------------------------------------------------- */
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 40px var(--color-primary-glow);
+      }
+      50% {
+        box-shadow: 0 0 60px rgba(139, 92, 246, 0.6);
+      }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modal-slide-up {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive scaling for 16:9 on large displays */
+    @media (min-width: 1400px) {
+      .slide {
+        padding: 3rem 6rem;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .slide {
+        padding: 2rem 3rem;
+      }
+      .grid-3 {
+        gap: 1rem;
+      }
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      .slide-title {
+        font-size: 2.1rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        padding: 2rem 2rem;
+        overflow-y: auto;
+      }
+      .slide-title {
+        font-size: 2rem;
+      }
+      .grid-3, .market-container, .fin-roadmap-grid, .ask-contact-grid, .team-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .market-diagram {
+        height: 240px;
+      }
+      .market-circle.tam { width: 220px; height: 220px; }
+      .market-circle.sam { width: 150px; height: 150px; }
+      .market-circle.som { width: 80px; height: 80px; }
+      .tam .circle-label { margin-top: -160px; font-size: 0.8rem; }
+      .sam .circle-label { margin-top: -100px; font-size: 0.75rem; }
+      .som .circle-label { font-size: 0.8rem; }
+      .comp-table {
+        display: block;
+        overflow-x: auto;
+      }
+      #toolbar {
+        bottom: 12px;
+        transform: translateX(-50%) scale(0.9);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="simulator-container">
+    
+    <!-- Top Nav bar -->
+    <header class="sim-header">
+      <div class="sim-logo-area">
+        <div class="sim-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/></svg>
+        </div>
+        <div class="sim-brand">Gara Showcase<span>Ecosystem MVP</span></div>
+      </div>
+      
+      <div class="sim-auth-status">
+        <div id="sim-user-status-area">
+          <button class="btn-launch" id="btn-sim-login-trigger" style="font-size:0.8rem; padding: 6px 14px; border-radius: 4px;">Đăng nhập SSO</button>
+        </div>
+        <button class="btn-sim-exit" id="btn-exit-sim">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          Quay lại Slide
+        </button>
+      </div>
+    </header>
+
+    <div class="sim-body">
+      
+      <!-- Sidebar navigation inside simulator -->
+      <aside class="sim-sidebar">
+        <div class="sim-nav-group">
+          <span class="sim-nav-title">Tính năng sinh viên</span>
+          <div class="sim-nav-item active" data-view="sim-view-projects">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Bảng tin dự án
+          </div>
+          <div class="sim-nav-item" data-view="sim-view-jobs">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+            Tuyển dụng chéo khoa
+          </div>
+          
+          <span class="sim-nav-title" style="margin-top:1.5rem;">Cơ quan quản lý</span>
+          <div class="sim-nav-item" data-view="sim-view-admin">
+            <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+            Dashboard Admin
+          </div>
+        </div>
+
+        <div class="sim-sidebar-footer">
+          <div class="sim-app-limit-title">
+            <span>Giới hạn ứng tuyển (FR-006)</span>
+            <strong id="sim-app-limit-count">0/3 đơn</strong>
+          </div>
+          <div class="sim-app-limit-bar-bg">
+            <div class="sim-app-limit-bar" id="sim-app-limit-progress"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main simulator workspace views -->
+      <main class="sim-content">
+        
+        <!-- View 1: Projects Discovery feed -->
+        <section class="sim-view active" id="sim-view-projects">
+          <div class="sim-view-header">
+            <h3 class="sim-view-title">Các dự án trong Vườn ươm Gara</h3>
+            <span style="font-size:0.85rem; color: var(--text-muted);">Hiển thị danh sách dự án đang ươm tạo</span>
+          </div>
+
+          <div class="sim-search-filter-bar">
+            <div class="sim-search-input-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <input type="text" class="sim-search-input" id="sim-project-search" placeholder="Tìm kiếm tên dự án hoặc từ khóa...">
+            </div>
+            <select class="sim-filter-select" id="sim-project-filter">
+              <option value="ALL">Tất cả ngành nghề</option>
+              <option value="Engineering">Kỹ thuật (Engineering)</option>
+              <option value="Business">Kinh tế (Business)</option>
+              <option value="Design">Thiết kế (Design)</option>
+              <option value="Marketing">Marketing / Truyền thông</option>
+            </select>
+          </div>
+
+          <div class="sim-project-grid" id="sim-projects-grid-root">
+            <!-- Dynamic elements generated by Javascript -->
+          </div>
+        </section>
+
+        <!-- View 2: Recruitment Job Board -->
+        <section class="sim-view" id="sim-view-jobs">
+          <div class="sim-view-header">
+            <h3 class="sim-view-title">Tuyển dụng thành viên chéo khoa</h3>
+            <span style="font-size:0.85rem; color: var(--text-muted);">Hỗ trợ tuyển dụng liên kết chuyên ngành</span>
+          </div>
+          
+          <div class="sim-search-filter-bar" style="margin-bottom: 2rem;">
+            <select class="sim-filter-select" id="sim-job-filter" style="width: 100%;">
+              <option value="ALL">Tất cả vị trí tuyển dụng</option>
+              <option value="Engineering">Kỹ thuật (Engineering / Developer)</option>
+              <option value="Business">Kinh doanh (Business Developer / Planner)</option>
+              <option value="Design">Thiết kế (UI/UX Designer / Graphics)</option>
+              <option value="Marketing">Marketing & Nội dung</option>
+            </select>
+          </div>
+
+          <div class="sim-job-card-grid" id="sim-jobs-grid-root">
+            <!-- Dynamic elements generated by Javascript -->
+          </div>
+        </section>
+
+        <!-- View 3: Incubator Admin Dashboard -->
+        <section class="sim-view" id="sim-view-admin">
+          <div class="sim-view-header">
+            <h3 class="sim-view-title">Bảng điều khiển Giám sát Vườn ươm</h3>
+            <button class="btn-admin-export" id="btn-admin-csv-export">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/></svg>
+              Xuất báo cáo CSV (FR-007)
+            </button>
+          </div>
+
+          <!-- Admin Stats Cards -->
+          <div class="sim-admin-stats">
+            
+            <div class="sim-admin-stat-card">
+              <div class="sim-admin-stat-num" id="sim-stat-total-proj">3</div>
+              <div class="sim-admin-stat-lbl">Đang hoạt động</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              </div>
+            </div>
+
+            <div class="sim-admin-stat-card" style="border-left: 3px solid var(--status-risk);">
+              <div class="sim-admin-stat-num" id="sim-stat-risk-proj" style="color: var(--status-risk);">1</div>
+              <div class="sim-admin-stat-lbl">Bị cảnh báo (14 ngày)</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              </div>
+            </div>
+
+            <div class="sim-admin-stat-card" style="border-left: 3px solid var(--status-suspended);">
+              <div class="sim-admin-stat-num" id="sim-stat-suspended-proj" style="color: var(--status-suspended);">1</div>
+              <div class="sim-admin-stat-lbl">Bị tạm ngưng (30 ngày)</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+              </div>
+            </div>
+
+            <div class="sim-admin-stat-card">
+              <div class="sim-admin-stat-num" id="sim-stat-placements">12</div>
+              <div class="sim-admin-stat-lbl">Tuyển dụng thành công</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.48 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Project Management List Table -->
+          <div class="sim-admin-project-list-section">
+            <h4>Quản lý danh sách các Startup</h4>
+            <table class="sim-admin-table">
+              <thead>
+                <tr>
+                  <th>Dự án</th>
+                  <th>Phân loại</th>
+                  <th>Hoạt động cuối</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="sim-admin-table-body-root">
+                <!-- Dynamic elements generated by Javascript -->
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+    <!-- STARTUP DETAIL OVERLAY IN SIMULATOR -->
+    <div class="sim-detail-modal-overlay" id="sim-detail-modal-root">
+      <!-- Generated dynamically inside JS -->
+    </div>
+
+    <!-- SSO LOGIN MODAL SIMULATION -->
+    <div class="sim-sso-overlay" id="sim-sso-modal-root">
+      <div class="sso-box">
+        <div class="sso-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/></svg>
+        </div>
+        <h4 class="sso-title">Cổng Đăng Nhập SSO</h4>
+        <p class="sso-subtitle">Đăng nhập tài khoản cổng đại học liên thông</p>
+        
+        <div class="sso-input-group">
+          <label class="sso-label">Mã số sinh viên (Student ID)</label>
+          <input type="text" class="sso-input" id="sso-input-id" value="SE170123">
+        </div>
+
+        <div class="sso-input-group">
+          <label class="sso-label">Mật khẩu</label>
+          <input type="password" class="sso-input" id="sso-input-pwd" value="••••••••">
+        </div>
+
+        <button class="btn-sso-login" id="btn-sso-submit">ĐĂNG NHẬP SSO</button>
+        <button class="btn-sso-cancel" id="btn-sso-cancel">Hủy bỏ</button>
+      </div>
+    </div>
+
+    <!-- FLOATING SIMULATOR NOTIFICATION -->
+    <div class="sim-notification" id="sim-notification-root">
+      <div class="sim-notification-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <div class="sim-notification-text" id="sim-notification-text-root">Ứng tuyển thành công!</div>
+    </div>
+
+  </div>
+
+  <script>
+    // Mock core definitions since we are standalone
+    const simulatorContainer = { classList: { add: () => {}, remove: () => {}, contains: () => true } };
+    
+    // Bind "Quay lại Slide" button to redirect back to landing page
+    document.getElementById('btn-exit-sim').addEventListener('click', () => {
+      window.location.href = '/';
+    });
+
+    /* ==========================================
+       B. INTERACTIVE MVP SIMULATOR CORE LOGIC
+       ========================================== */
+    const simulatorContainer = document.getElementById('simulator-container');
+    const launchSimBtn = document.getElementById('btn-launch-sim');
+    const exitSimBtn = document.getElementById('btn-exit-sim');
+    const simNavItems = document.querySelectorAll('.sim-nav-item');
+    const simViews = document.querySelectorAll('.sim-view');
+
+    // Launch/Exit actions
+    launchSimBtn.addEventListener('click', () => {
+      simulatorContainer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      renderProjects();
+      renderJobs();
+      renderAdminDashboard();
+      updateSidebarProgress();
+    });
+
+    exitSimBtn.addEventListener('click', () => {
+      simulatorContainer.classList.remove('open');
+    });
+
+    // Sidebar tab navigation
+    simNavItems.forEach(item => {
+      item.addEventListener('click', () => {
+        simNavItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        
+        const targetViewId = item.getAttribute('data-view');
+        simViews.forEach(view => {
+          view.classList.remove('active');
+          if (view.id === targetViewId) {
+            view.classList.add('active');
+          }
+        });
+
+        if (targetViewId === 'sim-view-admin') {
+          renderAdminDashboard();
+        }
+      });
+    });
+
+    /* ==========================================
+       C. SIMULATOR STATE & BUSINESS RULES
+       ========================================== */
+    let isLoggedIn = false;
+    let loggedUser = null;
+    let studentApplications = []; // Holds list of jobIds applied
+
+    // Startup database
+    const startupProjects = [
+      {
+        id: 'agrismart',
+        name: 'AgriSmart',
+        pitch: 'Hệ thống tưới nước tự động thông minh bằng IoT chống lãng phí nước.',
+        description: 'AgriSmart giải quyết bài toán lãng phí tài nguyên nước và tối ưu hóa năng suất cây trồng bằng việc tích hợp các cảm biến độ ẩm, nhiệt độ đất cùng van tự động kết nối qua mạng di động IoT. Hệ thống tự động phân tích dữ liệu đất để đưa ra lượng nước tưới tối ưu nhất cho nhà nông.',
+        status: 'Active',
+        category: 'Engineering',
+        logo: '🌱',
+        lastUpdatedText: '2 ngày trước',
+        milestones: [
+          { name: 'Khảo sát thực địa nông trại', done: true, date: '05/06/2026' },
+          { name: 'Thiết kế bo mạch cảm biến IoT', done: true, date: '28/06/2026' },
+          { name: 'Chạy thử nghiệm sản phẩm mẫu (Pilot)', done: false, date: 'Dự kiến: 08/2026' }
+        ]
+      },
+      {
+        id: 'eduquest',
+        name: 'EduQuest',
+        pitch: 'Học tập tương tác thông qua trò chơi nhập vai (Gamification).',
+        description: 'EduQuest biến đổi các bài học lý thuyết khô khan môn Toán và Khoa học của cấp Tiểu học thành các trò chơi nhập vai tương tác trực quan. Học sinh làm bài tập để nhận điểm kinh nghiệm, mở khóa trang bị và cùng thảo luận nhóm. Hệ thống giúp tăng 40% độ tập trung của học sinh.',
+        status: 'At-Risk',
+        category: 'Business',
+        logo: '🎮',
+        lastUpdatedText: '15 ngày trước', // > 14 days idle, triggering At-Risk (FR-007)
+        milestones: [
+          { name: 'Nghiên cứu chương trình tiểu học', done: true, date: '10/05/2026' },
+          { name: 'Xây dựng bản chạy thử nghiệm Web', done: true, date: '15/06/2026' },
+          { name: 'Thử nghiệm thực tế tại trường mẫu', done: false, date: 'Dự kiến: 09/2026' }
+        ]
+      },
+      {
+        id: 'recyco',
+        name: 'Recyco',
+        pitch: 'Hệ thống đổi rác thải nhựa lấy ưu đãi tiêu dùng qua Mobile App.',
+        description: 'Recyco liên kết các máy thu gom rác tự động đặt tại các giảng đường với ứng dụng di động. Khi sinh viên nộp chai nhựa hoặc lon nhôm, hệ thống tự động quét và tích điểm thưởng đổi voucher ăn uống, vé xem phim hoặc tài liệu học tập, khuyến khích sống xanh.',
+        status: 'Active',
+        category: 'Design',
+        logo: '♻',
+        lastUpdatedText: '4 ngày trước',
+        milestones: [
+          { name: 'Khảo sát thói quen phân loại rác sinh viên', done: true, date: '12/05/2026' },
+          { name: 'Thiết kế kiểu dáng máy thu rác tự động', done: true, date: '02/06/2026' },
+          { name: 'Phát triển API kết nối phần mềm Mobile', done: false, date: 'Dự kiến: 08/2026' }
+        ]
+      },
+      {
+        id: 'unicar',
+        name: 'UniCar',
+        pitch: 'Ứng dụng đi chung xe tiện lợi và an toàn cho cộng đồng sinh viên.',
+        description: 'UniCar kết nối các sinh viên có cùng lộ trình di chuyển đi học hàng ngày để chia sẻ chi phí đi xe máy hoặc ô tô. Hệ thống bắt buộc xác thực bằng tài khoản email trường đại học để bảo đảm an toàn, tin cậy tuyệt đối cho người đi cùng.',
+        status: 'At-Risk',
+        category: 'Business',
+        logo: '🚗',
+        lastUpdatedText: '16 ngày trước',
+        milestones: [
+          { name: 'Khảo sát nhu cầu đi chung xe liên quận', done: true, date: '18/04/2026' },
+          { name: 'Kiểm thử bản chạy thử nghiệm Alpha nội bộ', done: true, date: '25/05/2026' },
+          { name: 'Mở rộng tính năng ví điện tử sinh viên', done: false, date: 'Dự kiến: 09/2026' }
+        ]
+      },
+      {
+        id: 'foodhub',
+        name: 'FoodHub',
+        pitch: 'Nền tảng gom đơn đặt đồ ăn trưa tiết kiệm chi phí giao hàng.',
+        description: 'FoodHub gom các đơn đặt đồ ăn trưa từ cùng một cửa hàng F&B của sinh viên trong cùng một khu vực giảng đường. Nhờ gom đơn hàng lớn, sinh viên tiết kiệm đến 80% phí giao hàng và nhận được các chính sách chiết khấu giảm giá ưu đãi từ cửa hàng liên kết.',
+        status: 'Active',
+        category: 'Marketing',
+        logo: '🍱',
+        lastUpdatedText: '1 ngày trước',
+        milestones: [
+          { name: 'Liên kết mạng lưới 15 quán ăn quanh trường', done: true, date: '10/06/2026' },
+          { name: 'Xây dựng chatbot gom đơn tự động trên Telegram', done: true, date: '30/06/2026' },
+          { name: 'Chạy thử nghiệm vận hành thực tế (Beta)', done: false, date: 'Dự kiến: 08/2026' }
+        ]
+      },
+      {
+        id: 'finflow',
+        name: 'FinFlow',
+        pitch: 'Trợ lý tài chính cá nhân tự động thông minh dành cho sinh viên.',
+        description: 'FinFlow tự động hóa việc theo dõi chi tiêu của sinh viên bằng cách phân tích tin nhắn giao dịch ngân hàng qua AI. Ứng dụng đưa ra các đề xuất tiết kiệm, kế hoạch ăn uống giá rẻ và cảnh báo khi chi tiêu vượt hạn mức tự đặt giúp các bạn tối ưu hóa dòng tiền sinh hoạt.',
+        status: 'Suspended',
+        category: 'Marketing',
+        logo: '💰',
+        lastUpdatedText: '32 ngày trước', // > 30 days idle, triggering Suspended (BR-08)
+        milestones: [
+          { name: 'Phát triển thuật toán phân loại chi tiêu', done: true, date: '01/05/2026' },
+          { name: 'Thiết kế UI/UX ứng dụng di động', done: false, date: 'Dự kiến: 07/2026' },
+          { name: 'Kết nối API thử nghiệm ngân hàng', done: false, date: 'Dự kiến: 10/2026' }
+        ]
+      }
+    ];
+
+    // Recruitment jobs database
+    const jobListings = [
+      {
+        id: 'job-1',
+        projectId: 'agrismart',
+        projectName: 'AgriSmart',
+        projectLogo: '🌱',
+        title: 'Business Developer (Cơ hội đồng sáng lập)',
+        category: 'Business',
+        desc: 'Lập kế hoạch kinh doanh và nghiên cứu thị trường nông nghiệp miền Nam để tối ưu hóa tệp khách hàng nông gia.',
+        requirement: 'Sinh viên năm 3-4 chuyên ngành QTKD, Kinh tế đối ngoại. Giao tiếp tốt, không ngại đi khảo sát thực tế tại đồng ruộng.'
+      },
+      {
+        id: 'job-2',
+        projectId: 'eduquest',
+        projectName: 'EduQuest',
+        projectLogo: '🎮',
+        title: 'React Native Mobile Developer',
+        category: 'Engineering',
+        desc: 'Xây dựng giao diện ứng dụng di động cho học sinh tiểu học tương tác làm bài tập trực tuyến.',
+        requirement: 'Có kiến thức vững về React Native/Expo. Ưu tiên các bạn đam mê làm hiệu ứng animation chuyển động mượt mà.'
+      },
+      {
+        id: 'job-3',
+        projectId: 'agrismart',
+        projectName: 'AgriSmart',
+        projectLogo: '🌱',
+        title: 'UI/UX Designer (Giao diện nông dân)',
+        category: 'Design',
+        desc: 'Thiết kế giao diện bảng điều khiển thông minh cho người nông dân giám sát đất đai đơn giản nhất.',
+        requirement: 'Sử dụng Figma tốt. Có tư duy thiết kế tinh gọn, dễ hiểu cho đối tượng người dùng lớn tuổi.'
+      },
+      {
+        id: 'job-4',
+        projectId: 'eduquest',
+        projectName: 'EduQuest',
+        projectLogo: '🎮',
+        title: 'Content & Script Writer',
+        category: 'Marketing',
+        desc: 'Xây dựng nội dung kịch bản cốt truyện các bài học dạng trò chơi hấp dẫn cho trẻ em.',
+        requirement: 'Sáng tạo, yêu thích giáo dục trẻ em, có khả năng viết truyện kể (storytelling) lôi cuốn.'
+      },
+      {
+        id: 'job-5',
+        projectId: 'recyco',
+        projectName: 'Recyco',
+        projectLogo: '♻',
+        title: 'Product UI/UX Designer',
+        category: 'Design',
+        desc: 'Thiết kế giao diện ứng dụng di động đổi rác lấy điểm thưởng và giao diện điều khiển của máy thu gom.',
+        requirement: 'Sử dụng Figma thành thạo. Có tư duy thiết kế sản phẩm thân thiện với môi trường, thiết kế trực quan và sinh động.'
+      },
+      {
+        id: 'job-6',
+        projectId: 'unicar',
+        projectName: 'UniCar',
+        projectLogo: '🚗',
+        title: 'Backend Node.js Developer',
+        category: 'Engineering',
+        desc: 'Xây dựng API kết nối và thuật toán tối ưu ghép cặp các tuyến đi chung xe của sinh viên dựa trên bản đồ.',
+        requirement: 'Nắm vững Node.js, Express, MongoDB. Có kinh nghiệm làm việc với bản đồ (Google Maps / Mapbox API) là lợi thế.'
+      },
+      {
+        id: 'job-7',
+        projectId: 'foodhub',
+        projectName: 'FoodHub',
+        projectLogo: '🍱',
+        title: 'Growth Hacker & Marketing Lead',
+        category: 'Marketing',
+        desc: 'Lên kế hoạch phát triển cộng đồng sinh viên đặt chung đơn ăn trưa, tối ưu hóa kênh phân phối tại các trường đại học.',
+        requirement: 'Năng động, có óc sáng tạo content tốt, thấu hiểu insight thói quen ăn uống của sinh viên và thích tạo viral tương tác.'
+      }
+    ];
+
+    // Notification helper
+    function showNotification(text, isError = false) {
+      const banner = document.getElementById('sim-notification-root');
+      const bannerText = document.getElementById('sim-notification-text-root');
+      
+      bannerText.textContent = text;
+      if (isError) {
+        banner.classList.add('error-notif');
+      } else {
+        banner.classList.remove('error-notif');
+      }
+      
+      banner.classList.add('show');
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3500);
+    }
+
+    // Update sidebar limit bar progress (FR-006 / BR-05)
+    function updateSidebarProgress() {
+      const count = studentApplications.length;
+      document.getElementById('sim-app-limit-count').textContent = `${count}/3 đơn`;
+      const pct = (count / 3) * 100;
+      document.getElementById('sim-app-limit-progress').style.width = `${pct}%`;
+      
+      if (count >= 3) {
+        document.getElementById('sim-app-limit-progress').style.backgroundColor = 'var(--status-suspended)';
+      } else {
+        document.getElementById('sim-app-limit-progress').style.backgroundColor = 'var(--color-accent)';
+      }
+    }
+
+    // Filter projects based on search & selector input
+    document.getElementById('sim-project-search').addEventListener('input', renderProjects);
+    document.getElementById('sim-project-filter').addEventListener('change', renderProjects);
+    document.getElementById('sim-job-filter').addEventListener('change', renderJobs);
+
+    /* ==========================================
+       D. RENDER VIEWS
+       ========================================== */
+       
+    // VIEW 1: Projects Feed
+    function renderProjects() {
+      const searchVal = document.getElementById('sim-project-search').value.toLowerCase();
+      const filterVal = document.getElementById('sim-project-filter').value;
+      const gridRoot = document.getElementById('sim-projects-grid-root');
+      
+      gridRoot.innerHTML = '';
+      
+      const filtered = startupProjects.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchVal) || p.pitch.toLowerCase().includes(searchVal);
+        const matchesCategory = (filterVal === 'ALL') || (p.category === filterVal);
+        return matchesSearch && matchesCategory;
+      });
+
+      if (filtered.length === 0) {
+        gridRoot.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem 0;">Không tìm thấy dự án phù hợp.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const badgeClass = p.status === 'Active' ? 'active-badge' : (p.status === 'At-Risk' ? 'risk-badge' : 'suspended-badge');
+        const statusLabel = p.status === 'Active' ? 'Hoạt động' : (p.status === 'At-Risk' ? 'Cảnh báo' : 'Tạm dừng');
+        
+        const card = document.createElement('div');
+        card.className = 'sim-project-card';
+        card.innerHTML = `
+          <div class="sim-card-header">
+            <div class="sim-card-logo">${p.logo}</div>
+            <span class="sim-card-badge ${badgeClass}">${statusLabel}</span>
+          </div>
+          <h4 class="sim-card-name">${p.name}</h4>
+          <p class="sim-card-pitch">${p.pitch}</p>
+          <div class="sim-card-footer">
+            <span class="sim-card-category">${p.category}</span>
+            <span class="sim-card-action-text">
+              Chi tiết
+              <svg viewBox="0 0 24 24" width="12" height="12"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </span>
+          </div>
+        `;
+        card.addEventListener('click', () => openProjectDetails(p.id));
+        gridRoot.appendChild(card);
+      });
+    }
+
+    // VIEW 2: Jobs Board
+    function renderJobs() {
+      const filterVal = document.getElementById('sim-job-filter').value;
+      const jobsRoot = document.getElementById('sim-jobs-grid-root');
+      
+      jobsRoot.innerHTML = '';
+
+      // We only show jobs of active and flagged projects. Suspended projects have their jobs hidden (BR-08)
+      const visibleJobs = jobListings.filter(job => {
+        const proj = startupProjects.find(p => p.id === job.projectId);
+        return proj && proj.status !== 'Suspended';
+      });
+
+      const filtered = visibleJobs.filter(job => {
+        return (filterVal === 'ALL') || (job.category === filterVal);
+      });
+
+      if (filtered.length === 0) {
+        jobsRoot.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 3rem 0;">Không có vị trí tuyển dụng nào hoạt động ở ngành nghề này.</div>`;
+        return;
+      }
+
+      filtered.forEach(job => {
+        const isApplied = studentApplications.includes(job.id);
+        
+        const card = document.createElement('div');
+        card.className = 'sim-job-card';
+        card.innerHTML = `
+          <div class="sim-job-header">
+            <div class="sim-job-info-area">
+              <div class="sim-job-proj-logo">${job.projectLogo}</div>
+              <div>
+                <h4 class="sim-job-details-title">${job.title}</h4>
+                <span class="sim-job-proj-name">Dự án: <strong>${job.projectName}</strong></span>
+              </div>
+            </div>
+            <span class="sim-job-tag-badge">${job.category}</span>
+          </div>
+          <p class="sim-job-desc-body">${job.desc}</p>
+          <div class="sim-job-req-body"><strong>Yêu cầu:</strong> ${job.requirement}</div>
+          <div class="sim-job-footer">
+            <button class="btn-modal-apply ${isApplied ? 'applied' : ''}" onclick="handleApplyJob('${job.id}')">
+              ${isApplied ? 'Đã ứng tuyển' : 'Ứng tuyển nhanh (1-Click)'}
+            </button>
+          </div>
+        `;
+        jobsRoot.appendChild(card);
+      });
+    }
+
+    // VIEW 3: Admin Management Dashboard
+    function renderAdminDashboard() {
+      const tableBody = document.getElementById('sim-admin-table-body-root');
+      tableBody.innerHTML = '';
+
+      // Count dynamic stats
+      let activeCount = 0;
+      let riskCount = 0;
+      let suspendedCount = 0;
+
+      startupProjects.forEach(p => {
+        if (p.status === 'Active') activeCount++;
+        else if (p.status === 'At-Risk') riskCount++;
+        else if (p.status === 'Suspended') suspendedCount++;
+      });
+
+      document.getElementById('sim-stat-total-proj').textContent = activeCount + riskCount;
+      document.getElementById('sim-stat-risk-proj').textContent = riskCount;
+      document.getElementById('sim-stat-suspended-proj').textContent = suspendedCount;
+      document.getElementById('sim-stat-placements').textContent = 12 + studentApplications.length;
+
+      startupProjects.forEach(p => {
+        const badgeClass = p.status === 'Active' ? 'active-badge' : (p.status === 'At-Risk' ? 'risk-badge' : 'suspended-badge');
+        const statusLabel = p.status === 'Active' ? 'Hoạt động' : (p.status === 'At-Risk' ? 'Cảnh báo' : 'Tạm dừng');
+        
+        let actionButtons = '';
+        if (p.status === 'At-Risk') {
+          actionButtons = `
+            <button class="btn-admin-action resolve" onclick="resolveFlag('${p.id}')">Bỏ cờ cảnh báo</button>
+            <button class="btn-admin-action nudge" onclick="sendNudgeAlert('${p.id}')">Gửi nhắc nhở</button>
+          `;
+        } else if (p.status === 'Suspended') {
+          actionButtons = `
+            <button class="btn-admin-action unsuspend" onclick="unsuspendProject('${p.id}')">Kích hoạt lại (Restore)</button>
+          `;
+        } else {
+          actionButtons = `<span style="font-size:0.8rem; color:var(--text-muted);">Hệ thống ổn định</span>`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${p.name}</strong></td>
+          <td>${p.category}</td>
+          <td>${p.lastUpdatedText}</td>
+          <td><span class="sim-card-badge ${badgeClass}">${statusLabel}</span></td>
+          <td class="sim-admin-action-cell">${actionButtons}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    /* ==========================================
+       E. STARTUP DETAILS MODAL & CMS SIMULATION
+       ========================================== */
+    function openProjectDetails(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      const overlay = document.getElementById('sim-detail-modal-root');
+      overlay.innerHTML = '';
+
+      const badgeClass = proj.status === 'Active' ? 'active-badge' : (proj.status === 'At-Risk' ? 'risk-badge' : 'suspended-badge');
+      const statusLabel = proj.status === 'Active' ? 'Hoạt động' : (proj.status === 'At-Risk' ? 'Cảnh báo' : 'Tạm dừng');
+
+      // Milestones rendering
+      let timelineHTML = '';
+      proj.milestones.forEach(m => {
+        timelineHTML += `
+          <div class="sim-timeline-node ${m.done ? 'done' : ''}">
+            <div class="sim-node-dot">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="sim-node-info">
+              <div class="sim-node-name">${m.name}</div>
+              <div class="sim-node-status">${m.done ? `Đã hoàn thành (${m.date})` : m.date}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Filter jobs specifically for this startup
+      const relatedJobs = jobListings.filter(j => j.projectId === projId);
+      let jobsHTML = '';
+      
+      if (proj.status === 'Suspended') {
+        jobsHTML = `<p style="font-size:0.8rem; color:var(--status-suspended);">⚠ Dự án đang bị tạm dừng. Tất cả bài đăng tuyển dụng đã bị ẩn.</p>`;
+      } else if (relatedJobs.length === 0) {
+        jobsHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Hiện tại startup không đăng tuyển thêm nhân sự.</p>`;
+      } else {
+        relatedJobs.forEach(job => {
+          const isApplied = studentApplications.includes(job.id);
+          jobsHTML += `
+            <div class="sim-modal-role-card">
+              <div>
+                <div class="sim-modal-role-title">${job.title}</div>
+                <span class="sim-modal-role-tag">${job.category}</span>
+              </div>
+              <button class="btn-modal-apply ${isApplied ? 'applied' : ''}" onclick="handleApplyJob('${job.id}', true)">
+                ${isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      const modalContainer = document.createElement('div');
+      modalContainer.className = 'sim-detail-modal';
+      modalContainer.innerHTML = `
+        <div class="sim-modal-header">
+          <div class="sim-modal-title-area">
+            <div class="sim-card-logo" style="width:36px; height:36px; font-size:1.2rem;">${proj.logo}</div>
+            <div>
+              <h3 class="sim-job-details-title" style="font-size:1.25rem;">${proj.name}</h3>
+              <span class="sim-card-badge ${badgeClass}" style="font-size:0.65rem; padding: 2px 6px;">${statusLabel}</span>
+            </div>
+          </div>
+          <button class="sim-modal-close" onclick="closeProjectDetails()">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        </div>
+        <div class="sim-modal-body">
+          <div class="sim-modal-left">
+            <h4>Giới thiệu dự án</h4>
+            <p class="sim-modal-desc">${proj.description}</p>
+            
+            <h4>Tuyển dụng liên kết (Chéo khoa)</h4>
+            <div class="sim-modal-roles-list" id="sim-modal-roles-root">
+              ${jobsHTML}
+            </div>
+          </div>
+          <div class="sim-modal-right">
+            <h4>Lộ trình Milestones (Cập nhật liên tục)</h4>
+            <div class="sim-timeline-vertical" id="sim-modal-timeline-root">
+              ${timelineHTML}
+            </div>
+
+            <div class="sim-cms-action-box">
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 0.6rem;">Chế độ: <strong>Người sáng lập (Founder CMS)</strong></p>
+              <button class="btn-cms-action" onclick="simulateCMSUpdate('${proj.id}')">⚡ Cập nhật Milestone mới</button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      overlay.appendChild(modalContainer);
+      overlay.style.display = 'flex';
+    }
+
+    function closeProjectDetails() {
+      document.getElementById('sim-detail-modal-root').style.display = 'none';
+    }
+
+    // CMS Update Milestone Sim (BR-09: Suspended founder logs in & updates milestone -> restores status)
+    function simulateCMSUpdate(projId) {
+      if (!isLoggedIn) {
+        // Trigger SSO login modal first
+        openSSOModal(() => simulateCMSUpdate(projId));
+        return;
+      }
+
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      // Ask for a new milestone name
+      const milestoneName = prompt("Nhập tiêu đề công việc/Milestone mới để cập nhật tiến trình:", "Hoàn thành kiểm thử hiệu năng API");
+      if (!milestoneName) return;
+
+      const dateStr = new Date().toLocaleDateString('vi-VN');
+      
+      // Auto complete previous milestones to look realistic, then push new one
+      proj.milestones.forEach(m => m.done = true);
+      proj.milestones.push({ name: milestoneName, done: true, date: dateStr });
+      
+      // Reset project status to Active since it is updated! (FR-007 / BR-09 / BR-07)
+      const oldStatus = proj.status;
+      proj.status = 'Active';
+      proj.lastUpdatedText = 'Vừa mới cập nhật';
+
+      showNotification(`Đã cập nhật Milestone thành công! Trạng thái dự án chuyển về: Hoạt động.`, false);
+      
+      // Re-render
+      renderProjects();
+      renderJobs();
+      closeProjectDetails();
+      
+      // If modal was open, reopen to show updated states
+      openProjectDetails(projId);
+    }
+
+    /* ==========================================
+       F. SSO SIMULATED FLOW & WORK MATCHING
+       ========================================== */
+    const ssoModal = document.getElementById('sim-sso-modal-root');
+    const ssoSubmit = document.getElementById('btn-sso-submit');
+    const ssoCancel = document.getElementById('btn-sso-cancel');
+    let ssoSuccessCallback = null;
+
+    function openSSOModal(onSuccess) {
+      ssoSuccessCallback = onSuccess;
+      ssoModal.style.display = 'flex';
+    }
+
+    ssoCancel.addEventListener('click', () => {
+      ssoModal.style.display = 'none';
+      ssoSuccessCallback = null;
+    });
+
+    ssoSubmit.addEventListener('click', () => {
+      const studentId = document.getElementById('sso-input-id').value;
+      if (!studentId) {
+        alert("Vui lòng nhập Mã số sinh viên!");
+        return;
+      }
+
+      // Simulate successful login
+      isLoggedIn = true;
+      loggedUser = {
+        id: studentId,
+        name: 'Lê Văn Học',
+        avatar: studentId.charAt(0)
+      };
+
+      // Update Topbar HTML in simulator
+      document.getElementById('sim-user-status-area').innerHTML = `
+        <div class="user-profile-badge">
+          <div class="user-avatar-mini">${loggedUser.avatar}</div>
+          <span class="user-name-mini">${loggedUser.name} (${loggedUser.id})</span>
+        </div>
+      `;
+
+      ssoModal.style.display = 'none';
+      showNotification(`Đăng nhập SSO thành công! Chào mừng ${loggedUser.name}.`);
+
+      if (ssoSuccessCallback) {
+        ssoSuccessCallback();
+        ssoSuccessCallback = null;
+      }
+    });
+
+    // 1-Click Apply feature with application limit checks (FR-006 / BR-05 / BR-04)
+    function handleApplyJob(jobId, insideModal = false) {
+      if (!isLoggedIn) {
+        // Must login first
+        openSSOModal(() => handleApplyJob(jobId, insideModal));
+        return;
+      }
+
+      // Check duplicate application
+      if (studentApplications.includes(jobId)) {
+        showNotification("Bạn đã nộp đơn ứng tuyển vào vị trí này rồi!", true);
+        return;
+      }
+
+      // Business Rule BR-05 / FR-006: Max 3 concurrent applications
+      if (studentApplications.length >= 3) {
+        showNotification("Nộp đơn thất bại! Bạn đã đạt giới hạn tối đa 3 đơn ứng tuyển đồng thời.", true);
+        return;
+      }
+
+      // Process Application
+      studentApplications.push(jobId);
+      updateSidebarProgress();
+      
+      showNotification("Nộp đơn ứng tuyển thành công! Nhà sáng lập sẽ phản hồi qua email SSO của bạn.", false);
+
+      // Re-render
+      renderJobs();
+      if (insideModal) {
+        const currentModalProjId = document.querySelector('.sim-detail-modal .sim-card-logo').parentElement.parentElement.parentElement.parentElement; // dummy traverse
+        // Just reopen/refresh modal for safety
+        const activeModalLogo = document.querySelector('.sim-detail-modal .sim-card-logo');
+        if (activeModalLogo) {
+          // Re-render modal jobs
+          const activeProj = startupProjects.find(p => p.logo === activeModalLogo.textContent);
+          if (activeProj) openProjectDetails(activeProj.id);
+        }
+      }
+    }
+
+    /* ==========================================
+       G. ADMIN MANAGEMENT DISPATCHERS
+       ========================================== */
+       
+    // Resolve inactivity flag (BR-09)
+    function resolveFlag(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      proj.status = 'Active';
+      proj.lastUpdatedText = '1 ngày trước'; // reset clock
+      
+      showNotification(`Đã thu hồi cờ cảnh báo của dự án ${proj.name}.`);
+      renderAdminDashboard();
+      renderProjects();
+    }
+
+    // Send warning email (FR-007)
+    function sendNudgeAlert(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+      showNotification(`Hệ thống đã tự động gửi email nhắc nhở tiến độ đến toàn bộ nhóm sáng lập ${proj.name}!`);
+    }
+
+    // Restore suspended project back to published (BR-09)
+    function unsuspendProject(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      proj.status = 'Active';
+      proj.lastUpdatedText = 'Vừa mở lại';
+      
+      showNotification(`Dự án ${proj.name} đã được khôi phục thành công. Vị trí tuyển dụng được hiển thị lại.`);
+      renderAdminDashboard();
+      renderProjects();
+      renderJobs(); // Job listings return
+    }
+
+
+    /* ==========================================
+       G. API BACKEND INTEGRATION & OIDC SSO
+       ========================================== */
+    const tokenKey = 'token';
+
+    // Parse token from URL or LocalStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    if (urlToken) {
+      localStorage.setItem(tokenKey, urlToken);
+      window.location.href = window.location.pathname; // Clean url
+    }
+
+    const savedToken = localStorage.getItem(tokenKey);
+    if (savedToken) {
+      try {
+        const payloadStr = atob(savedToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'));
+        const payload = JSON.parse(payloadStr);
+        
+        isLoggedIn = true;
+        loggedUser = {
+          id: payload.student_id || 'MANAGER',
+          name: payload.name,
+          role: payload.role,
+          avatar: payload.name.charAt(0)
+        };
+
+        // Render topbar user profile
+        document.getElementById('sim-user-status-area').innerHTML = `
+          <div class="user-profile-badge">
+            <div class="user-avatar-mini">${loggedUser.avatar}</div>
+            <span class="user-name-mini">${loggedUser.name} (${loggedUser.role})</span>
+            <button class="btn-exit-sim" id="btn-sso-logout" style="position:static; margin-left:8px; padding:3px 8px; font-size:0.75rem;">Đăng xuất</button>
+          </div>
+        `;
+
+        // Bind logout
+        document.getElementById('btn-sso-logout').addEventListener('click', () => {
+          localStorage.removeItem(tokenKey);
+          window.location.reload();
+        });
+
+        console.log('[SSO] Đã xác thực thành công qua OIDC Token.');
+      } catch (err) {
+        console.error('[SSO] Lỗi phân tích Token:', err);
+        localStorage.removeItem(tokenKey);
+      }
+    }
+
+    // Override SSO Submit to redirect to OIDC Mock Login endpoint
+    const originalSsoSubmit = ssoSubmit.cloneNode(true);
+    ssoSubmit.parentNode.replaceChild(originalSsoSubmit, ssoSubmit);
+    originalSsoSubmit.addEventListener('click', () => {
+      const studentId = document.getElementById('sso-input-id').value;
+      if (!studentId) {
+        alert("Vui lòng nhập Mã số sinh viên!");
+        return;
+      }
+
+      let mockRole = 'Student';
+      if (studentId.toLowerCase() === 'se184629' || studentId.toLowerCase() === 'phathm') {
+        mockRole = 'Founder';
+      } else if (studentId.toLowerCase().includes('manager')) {
+        mockRole = 'Manager';
+      }
+
+      // Redirect to backend OIDC Login
+      window.location.href = `/api/auth/login?mockRole=${mockRole}`;
+    });
+
+    // Override application fast check
+    window.handleApplyJob = async function(jobId) {
+      const token = localStorage.getItem(tokenKey);
+      if (!token) {
+        openSSOModal(() => handleApplyJob(jobId));
+        return;
+      }
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            studentId: payload.id,
+            jobId: jobId
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showNotification('Ứng tuyển thành công!');
+          studentApplications.push(jobId);
+          renderJobs();
+        } else {
+          showNotification('Lỗi: ' + data.error);
+        }
+      } catch (err) {
+        showNotification('Lỗi kết nối máy chủ.');
+      }
+    };
+
+    // Override Milestone CMS Update
+    window.simulateCMSUpdate = async function(projId) {
+      const token = localStorage.getItem(tokenKey);
+      if (!token) {
+        openSSOModal(() => simulateCMSUpdate(projId));
+        return;
+      }
+      try {
+        const res = await fetch(`/api/projects/${projId}/milestones`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title: 'Cột mốc mới (CMS Update)',
+            description: 'Kích hoạt lại dự án tự động.'
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showNotification('Đã kích hoạt lại trạng thái hoạt động của dự án.');
+          await initLiveWorkspace();
+        } else {
+          showNotification('Lỗi: ' + data.error);
+        }
+      } catch (err) {
+        showNotification('Lỗi kết nối máy chủ.');
+      }
+    };
+
+    // Load dynamic data from Backend
+    async function initLiveWorkspace() {
+      const token = localStorage.getItem(tokenKey);
+      if (!token) return;
+
+      try {
+        // 1. Fetch live projects
+        const resProjects = await fetch('/api/projects');
+        const projects = await resProjects.json();
+        startupProjects.length = 0;
+        projects.forEach(p => {
+          startupProjects.push({
+            id: p.id,
+            name: p.name,
+            pitch: p.pitch,
+            description: p.description || '',
+            status: p.status,
+            category: 'Engineering',
+            logo: p.name.includes('Edu') ? '🎓' : (p.name.includes('Gara') ? '🚗' : '🌱'),
+            lastUpdatedText: 'Vừa xong',
+            milestones: p.milestones ? p.milestones.map(m => ({ name: m.title, done: m.done, date: m.created_at })) : []
+          });
+        });
+
+        // 2. Fetch live jobs
+        const resJobs = await fetch('/api/jobs');
+        const jobs = await resJobs.json();
+        jobListings.length = 0;
+        jobs.forEach(j => {
+          jobListings.push({
+            id: j.id,
+            projectId: j.project_id,
+            projectName: j.project_name,
+            projectLogo: j.project_name.includes('Gara') ? '🚗' : '🎓',
+            title: j.title,
+            category: j.category,
+            desc: j.description,
+            requirement: j.requirements
+          });
+        });
+
+        // 3. Fetch applications
+        const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        const resApps = await fetch(`/api/applications/student/${payload.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const apps = await resApps.json();
+        studentApplications.length = 0;
+        apps.forEach(app => {
+          if (app.application_status === 'Pending' || app.application_status === 'Approved') {
+            // Find job id by title (simulate in-memory check for UI compatibility)
+            const matchedJob = jobListings.find(j => j.title === app.job_title);
+            if (matchedJob) studentApplications.push(matchedJob.id);
+          }
+        });
+
+        renderProjects();
+        renderJobs();
+        renderAdminDashboard();
+        updateSidebarProgress();
+      } catch (err) {
+        console.error('[API] Không thể tải dữ liệu thời gian thực:', err);
+      }
+    }
+
+    // Run live synchronization
+    initLiveWorkspace();
+
+    // Export Admin CSV Report (FR-007)
+    document.getElementById('btn-admin-csv-export').addEventListener('click', () => {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "ID,Project Name,Category,Status,Last Activity\n";
+      
+      startupProjects.forEach(p => {
+        csvContent += `${p.id},${p.name},${p.category},${p.status},${p.lastUpdatedText}\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "gara_incubator_report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showNotification("Đang chuẩn bị báo cáo... Đã tải xuống file csv quản trị!");
+    });
+  </script>
+</body>
+  </script>
+</body>
+</html>
