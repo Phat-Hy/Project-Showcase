@@ -33,27 +33,49 @@ namespace GaraShowcase.Api.Controllers
             var email = "";
             var name = "";
             var studentId = "";
+            var role = "";
             Guid? projectId = null;
 
-            if (mockRole == "Founder")
+            if (mockRole == "FounderPhat")
             {
                 email = "phathmse184629@fpt.edu.vn";
                 name = "Hỷ Minh Phát";
                 studentId = "SE184629";
+                role = "Founder";
                 var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "Gara Startup Project Showcase");
                 projectId = project?.Id;
             }
-            else if (mockRole == "Student")
+            else if (mockRole == "FounderDuc")
             {
-                email = "student.mock@fpt.edu.vn";
-                name = "Nguyễn Văn A";
-                studentId = "SE189999";
+                email = "ducthse184622@fpt.edu.vn";
+                name = "Trịnh Hải Đức";
+                studentId = "SE184622";
+                role = "Founder";
+                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "EduLink Platform");
+                projectId = project?.Id;
+            }
+            else if (mockRole == "FounderPhu")
+            {
+                email = "phupqase180573@fpt.edu.vn";
+                name = "Phan Quới An Phú";
+                studentId = "SE180573";
+                role = "Founder";
+                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Name == "Zodiac Tarot AI Broker");
+                projectId = project?.Id;
+            }
+            else if (mockRole == "StudentKhanh")
+            {
+                email = "khanhltse184638@fpt.edu.vn";
+                name = "Lê Tuấn Khanh";
+                studentId = "SE184638";
+                role = "Student";
             }
             else if (mockRole == "Manager")
             {
                 email = "manager.mock@fpt.edu.vn";
                 name = "Vườn Ươm Gara Manager";
                 studentId = null;
+                role = "Manager";
             }
             else
             {
@@ -69,11 +91,19 @@ namespace GaraShowcase.Api.Controllers
                     Id = Guid.NewGuid(),
                     Email = email,
                     Name = name,
-                    Role = mockRole,
+                    Role = role,
                     StudentId = studentId,
                     ProjectId = projectId
                 };
                 _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                user.Role = role;
+                user.Name = name;
+                user.StudentId = studentId;
+                user.ProjectId = projectId;
                 await _context.SaveChangesAsync();
             }
 

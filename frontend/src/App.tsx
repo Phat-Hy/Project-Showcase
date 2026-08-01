@@ -167,10 +167,10 @@ export default function App() {
     }
   };
 
-  const handleLogin = async (role: 'Student' | 'Founder' | 'Manager') => {
+  const handleLogin = async (mockRole: 'FounderPhat' | 'FounderDuc' | 'FounderPhu' | 'StudentKhanh' | 'Manager') => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/auth/login?mockRole=${role}`, { method: 'POST' });
+      const res = await fetch(`/api/auth/login?mockRole=${mockRole}`, { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
         setCurrentUser(data.user);
@@ -485,36 +485,78 @@ export default function App() {
             Cổng quản lý danh mục và tuyển dụng Khởi nghiệp liên khoa trường Đại học.
           </p>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
+            {/* Student portal */}
             <button 
-              onClick={() => handleLogin('Student')}
-              className="btn btn-outline w-full flex justify-between items-center px-6 py-4 glass-panel-interactive border-white/10 group"
+              onClick={() => handleLogin('StudentKhanh')}
+              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
             >
               <div className="flex items-center gap-3">
                 <Briefcase className="w-5 h-5 text-cyan-400" />
-                <span className="text-left font-heading text-slate-200">Cổng Sinh Viên</span>
+                <div className="text-left">
+                  <span className="block font-heading font-bold text-xs text-slate-200">Cổng Sinh Viên</span>
+                  <span className="block text-[10px] text-slate-400">Lê Tuấn Khanh (SE184638)</span>
+                </div>
               </div>
               <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
             </button>
 
+            {/* Founder Gara Portal */}
             <button 
-              onClick={() => handleLogin('Founder')}
-              className="btn btn-outline w-full flex justify-between items-center px-6 py-4 glass-panel-interactive border-white/10 group"
+              onClick={() => handleLogin('FounderPhat')}
+              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
             >
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-purple-400" />
-                <span className="text-left font-heading text-slate-200">Cổng Nhà Sáng Lập</span>
+                <div className="text-left">
+                  <span className="block font-heading font-bold text-xs text-slate-200">Sáng lập Gara Showcase</span>
+                  <span className="block text-[10px] text-slate-400">Hỷ Minh Phát (SE184629)</span>
+                </div>
               </div>
               <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
             </button>
 
+            {/* Founder EduLink Portal */}
+            <button 
+              onClick={() => handleLogin('FounderDuc')}
+              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
+            >
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-purple-400" />
+                <div className="text-left">
+                  <span className="block font-heading font-bold text-xs text-slate-200">Sáng lập EduLink</span>
+                  <span className="block text-[10px] text-slate-400">Trịnh Hải Đức (SE184622)</span>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            {/* Founder Zodiac Portal */}
+            <button 
+              onClick={() => handleLogin('FounderPhu')}
+              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
+            >
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-purple-400" />
+                <div className="text-left">
+                  <span className="block font-heading font-bold text-xs text-slate-200">Sáng lập Zodiac Tarot AI</span>
+                  <span className="block text-[10px] text-slate-400">Phan Quới An Phú (SE180573)</span>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            {/* Manager Portal */}
             <button 
               onClick={() => handleLogin('Manager')}
-              className="btn btn-outline w-full flex justify-between items-center px-6 py-4 glass-panel-interactive border-white/10 group"
+              className="btn btn-outline w-full flex justify-between items-center px-4 py-3 glass-panel-interactive border-white/10 group"
             >
               <div className="flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-rose-400" />
-                <span className="text-left font-heading text-slate-200">Cổng Quản Trị Viên</span>
+                <div className="text-left">
+                  <span className="block font-heading font-bold text-xs text-slate-200">Cổng Quản Trị Viên</span>
+                  <span className="block text-[10px] text-slate-400">Quản lý Vườn Ươm Gara</span>
+                </div>
               </div>
               <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
             </button>
