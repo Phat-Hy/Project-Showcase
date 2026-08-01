@@ -50,7 +50,7 @@ namespace GaraShowcase.Api.Controllers
             Response.Cookies.Append("token", token, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, // Allow HTTP locally
+                Secure = true, // Required for HTTPS on Azure. Allowed on localhost HTTP by modern browsers.
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
