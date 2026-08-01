@@ -31,4 +31,7 @@ Thumbs.db
 # AI Agent Environments & Skills Configuration
 .agents/
 .claude/
+.harness/
+AGENTS.md
+plan.md
 
