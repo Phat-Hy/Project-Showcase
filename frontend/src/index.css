@@ -439,3 +439,11 @@ tr:last-child {
 .to-cyan-400 { --tw-gradient-to: #22d3ee; }
 .bg-clip-text { -webkit-background-clip: text; background-clip: text; }
 .text-transparent { color: transparent; }
+
+/* Scroll & Height Utilities */
+.max-h-\[90vh\] { max-height: 90vh; }
+.max-h-\[300px\] { max-height: 300px; }
+.max-h-\[250px\] { max-height: 250px; }
+.max-h-\[220px\] { max-height: 220px; }
+.max-h-\[160px\] { max-height: 160px; }
+.overflow-y-auto { overflow-y: auto; }
