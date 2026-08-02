@@ -225,6 +225,7 @@ namespace GaraShowcase.Api.Controllers
 
             if (dto.Pitch != null) project.Pitch = dto.Pitch;
             if (dto.Description != null) project.Description = dto.Description;
+            if (dto.DemoUrl != null) project.DemoUrl = dto.DemoUrl;
 
             project.LastUpdatedAt = DateTime.UtcNow;
             project.UpdatedAt = DateTime.UtcNow;
@@ -266,5 +267,6 @@ namespace GaraShowcase.Api.Controllers
     {
         public string? Pitch { get; set; }
         public string? Description { get; set; }
+        public string? DemoUrl { get; set; }
     }
 }

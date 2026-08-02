@@ -34,6 +34,7 @@ interface Project {
   name: string;
   pitch: string;
   description: string;
+  demoUrl?: string;
   status: 'Draft' | 'Active' | 'At-Risk' | 'Suspended';
   storageUsedBytes: number;
   lastUpdatedAt: string;
@@ -111,6 +112,7 @@ export default function App() {
   const [founderProject, setFounderProject] = useState<Project | null>(null);
   const [projectPitch, setProjectPitch] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
+  const [projectDemoUrl, setProjectDemoUrl] = useState('');
   const [uploadMsg, setUploadMsg] = useState({ text: '', type: '' });
   const [lastUploadedUrl, setLastUploadedUrl] = useState('');
   const [uploadProgress, setUploadProgress] = useState(false);
@@ -342,6 +344,7 @@ export default function App() {
             setFounderProject(projData);
             setProjectPitch(projData.pitch);
             setProjectDescription(projData.description || '');
+            setProjectDemoUrl(projData.demoUrl || '');
 
             // Fetch job applicants for this project
             const candRes = await fetch(`/api/applications/project/${projData.id}`);
@@ -361,7 +364,11 @@ export default function App() {
       const res = await fetch(`/api/projects/${founderProject.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pitch: projectPitch, description: projectDescription })
+        body: JSON.stringify({ 
+          pitch: projectPitch, 
+          description: projectDescription,
+          demoUrl: projectDemoUrl 
+        })
       });
       const data = await res.json();
       if (res.ok) {
@@ -936,6 +943,20 @@ export default function App() {
                       } mb-2`}>{myProject.status}</span>
                       <h2 className="text-2xl font-heading font-extrabold text-slate-100">{myProject.name}</h2>
                       <p className="text-sm text-slate-400 mt-2 italic">"{myProject.pitch}"</p>
+
+                      {myProject.demoUrl && (
+                        <div className="mt-4">
+                          <a 
+                            href={myProject.demoUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="btn btn-outline py-2 px-4 w-full text-xs font-semibold text-center border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 flex items-center justify-center gap-1.5"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            Xem Showcase Trực quan ↗
+                          </a>
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-2 border-t border-white/5 pt-4 text-xs">
@@ -1255,6 +1276,17 @@ export default function App() {
                             onChange={(e) => setProjectPitch(e.target.value)} 
                             placeholder="Nhập giới thiệu ngắn gọn về dự án..."
                             required
+                          />
+                        </div>
+
+                        <div className="space-y-1 text-left">
+                          <label className="text-xs text-slate-400 font-bold uppercase">Link Showcase / Demo Trực quan</label>
+                          <input 
+                            type="text" 
+                            value={projectDemoUrl} 
+                            onChange={(e) => setProjectDemoUrl(e.target.value)} 
+                            placeholder="https://figma.com/... hoặc link website chạy thử"
+                            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-slate-200 text-xs"
                           />
                         </div>
 
@@ -1694,6 +1726,23 @@ export default function App() {
                 <h2 className="text-2xl font-heading font-extrabold text-slate-100">{selectedProject.name}</h2>
                 <p className="text-sm text-slate-400 mt-2 italic">"{selectedProject.pitch}"</p>
               </div>
+
+              {selectedProject.demoUrl && (
+                <div className="p-4 rounded-lg bg-cyan-500/5 border border-cyan-500/20 flex items-center justify-between text-left">
+                  <div>
+                    <h4 className="text-sm font-heading font-bold text-cyan-400">Showcase dự án mẫu trực quan</h4>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Dự án này sở hữu bản demo/mockup tương tác để trải nghiệm sản phẩm.</p>
+                  </div>
+                  <a 
+                    href={selectedProject.demoUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="btn btn-primary py-2 px-4 rounded-lg text-xs font-semibold font-heading shrink-0"
+                  >
+                    Xem Showcase ↗
+                  </a>
+                </div>
+              )}
 
               {/* Roster of members */}
               <div className="space-y-3">

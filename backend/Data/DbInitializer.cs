@@ -39,6 +39,7 @@ namespace GaraShowcase.Api.Data
                     Name = "Gara Startup Project Showcase",
                     Pitch = "Nền tảng quản lý danh mục khởi nghiệp và tuyển dụng thành viên liên khoa cho trường đại học.",
                     Description = "# Gara Startup Showcase\nNền tảng kết nối sinh viên thuộc các khối ngành kỹ thuật (SE), thiết kế (GD) và kinh doanh (Biz) dưới sự quản lý của vườn ươm khởi nghiệp trường đại học.",
+                    DemoUrl = "/mockup.html",
                     Status = "Active",
                     StorageUsedBytes = 452140,
                     LastUpdatedAt = DateTime.UtcNow
@@ -49,6 +50,7 @@ namespace GaraShowcase.Api.Data
                     Name = "EduLink NFC",
                     Pitch = "Thẻ học sinh thông minh tích hợp chip NFC giúp điểm danh nhanh và thanh toán học phí.",
                     Description = "# EduLink NFC Card\nHệ thống thẻ thông minh ứng dụng NFC giúp quản lý học sinh và liên lạc giữa phụ huynh và trường học thời gian thực.",
+                    DemoUrl = "https://www.figma.com/proto/mock-edulink-nfc-deck",
                     Status = "Active",
                     StorageUsedBytes = 2309100,
                     LastUpdatedAt = DateTime.UtcNow
@@ -59,6 +61,7 @@ namespace GaraShowcase.Api.Data
                     Name = "Zodiac Tarot AI",
                     Pitch = "Ứng dụng phân tích bản đồ sao cá nhân và giải mã bài Tarot bằng công nghệ AI sinh ngẫu nhiên.",
                     Description = "# Zodiac Tarot AI Engine\nSử dụng các mô hình ngôn ngữ lớn để diễn giải thông điệp chiêm tinh học và Tarot được cá nhân hóa cao cho người dùng trẻ.",
+                    DemoUrl = "https://www.figma.com/proto/mock-zodiac-tarot-deck",
                     Status = "Active",
                     StorageUsedBytes = 15998200,
                     LastUpdatedAt = DateTime.UtcNow
@@ -69,6 +72,7 @@ namespace GaraShowcase.Api.Data
                     Name = "GreenCycle IoT",
                     Pitch = "Hệ thống thùng rác thông minh tự phân loại rác thải nhựa tích hợp cảm biến IoT.",
                     Description = "# GreenCycle IoT Network\nPhát triển mạng lưới thùng rác công cộng thông minh tự động nén rác và gửi báo cáo đầy rác về trung tâm quản lý đô thị.",
+                    DemoUrl = "https://www.figma.com/proto/mock-greencycle-iot-deck",
                     Status = "Draft",
                     StorageUsedBytes = 0,
                     LastUpdatedAt = DateTime.UtcNow
@@ -79,6 +83,7 @@ namespace GaraShowcase.Api.Data
                     Name = "BookHub Sharing",
                     Pitch = "Nền tảng trao đổi sách giáo khoa và tài liệu học tập cũ giữa các thế hệ sinh viên trong trường.",
                     Description = "# BookHub Platform\nGiải pháp giảm thiểu chi phí mua sách và thúc đẩy văn hóa đọc xanh thông qua mạng lưới chia sẻ sách ngang hàng.",
+                    DemoUrl = "https://www.figma.com/proto/mock-bookhub-deck",
                     Status = "At-Risk",
                     StorageUsedBytes = 120400,
                     LastUpdatedAt = DateTime.UtcNow.AddDays(-15)
@@ -89,6 +94,7 @@ namespace GaraShowcase.Api.Data
                     Name = "CryptoPay Wallet",
                     Pitch = "Ví điện tử thanh toán nội bộ trường học bảo mật cao ứng dụng công nghệ chuỗi khối.",
                     Description = "# CryptoPay Campus Wallet\nGiải pháp giao dịch không tiền mặt an toàn, minh bạch dành cho các hoạt động ngoại khóa, căng tin và đóng quỹ lớp.",
+                    DemoUrl = "https://www.figma.com/proto/mock-cryptopay-deck",
                     Status = "Suspended",
                     StorageUsedBytes = 94100,
                     LastUpdatedAt = DateTime.UtcNow.AddDays(-32)
@@ -130,6 +136,7 @@ namespace GaraShowcase.Api.Data
                     Name = $"{startupNouns[i]} {startupTechs[i]}",
                     Pitch = startupPitches[i],
                     Description = $"# {startupNouns[i]} {startupTechs[i]} Project\nĐây là mô tả chi tiết của dự án {startupNouns[i]} {startupTechs[i]} nhằm giải quyết các vấn đề thực tiễn của cuộc sống.",
+                    DemoUrl = $"https://www.figma.com/proto/mock-{startupNouns[i].ToLower()}-deck",
                     Status = projStatus,
                     StorageUsedBytes = random.Next(10000, 5000000),
                     LastUpdatedAt = staleDays == 0 ? DateTime.UtcNow : DateTime.UtcNow.AddDays(-staleDays)

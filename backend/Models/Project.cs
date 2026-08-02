@@ -19,6 +19,8 @@ namespace GaraShowcase.Api.Models
 
         public string Description { get; set; } = string.Empty;
 
+        public string DemoUrl { get; set; } = string.Empty;
+
         [Required]
         public string Status { get; set; } = "Draft"; // Draft, Active, At-Risk, Suspended
 
