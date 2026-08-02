@@ -365,6 +365,47 @@ export default function App() {
     }
   };
 
+  const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUser) return;
+
+    if (file.type !== 'application/pdf') {
+      showNotification('Hệ thống chỉ chấp nhận tệp tin PDF.', 'error');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      showNotification('Kích thước tệp CV vượt quá giới hạn 10MB.', 'error');
+      return;
+    }
+
+    setProfileMsg({ text: 'Đang tải lên tệp CV...', type: 'info' });
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch(`/api/users/${currentUser.id}/upload-cv`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setCvUrl(data.cvUrl);
+        setProfileMsg({ text: 'Tải lên tệp CV thành công!', type: 'success' });
+        showNotification('Tải lên tệp CV thành công!', 'success');
+        
+        // Refresh session
+        fetchSession();
+      } else {
+        setProfileMsg({ text: data.error || 'Lỗi tải lên tệp CV.', type: 'error' });
+      }
+    } catch {
+      setProfileMsg({ text: 'Lỗi kết nối mạng khi tải lên.', type: 'error' });
+    }
+  };
+
   const handleApplyJob = async (jobId: string) => {
     if (!currentUser) return;
     try {
@@ -1234,14 +1275,36 @@ export default function App() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400 font-bold uppercase">Liên kết tệp hồ sơ CV (PDF)</label>
-                      <input 
-                        type="url" 
-                        value={cvUrl}
-                        onChange={(e) => setCvUrl(e.target.value)}
-                        placeholder="https://..." 
-                        required
-                      />
+                      <label className="text-xs text-slate-400 font-bold uppercase block text-left">Hồ sơ năng lực (CV PDF)</label>
+                      
+                      {cvUrl && (
+                        <div className="p-3 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between text-xs text-slate-300 mb-2">
+                          <div className="flex items-center gap-2 truncate">
+                            <FileText className="w-4 h-4 text-purple-400 shrink-0" />
+                            <span className="truncate">CV_Học_Viên.pdf</span>
+                          </div>
+                          <a 
+                            href={cvUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-cyan-400 hover:underline shrink-0"
+                          >
+                            Xem CV ↗
+                          </a>
+                        </div>
+                      )}
+
+                      <div className="relative border-2 border-dashed border-white/10 rounded-lg p-5 hover:border-purple-500/30 hover:bg-white/5 transition-all text-center cursor-pointer">
+                        <input 
+                          type="file" 
+                          accept=".pdf" 
+                          onChange={handleCvUpload} 
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                        <UploadCloud className="w-7 h-7 text-slate-500 mx-auto mb-2" />
+                        <span className="text-[11px] text-slate-300 block font-medium">Tải lên tệp CV mới (.pdf)</span>
+                        <span className="text-[9px] text-slate-500 block mt-0.5">Dung lượng tối đa 10MB.</span>
+                      </div>
                     </div>
 
                     <button type="submit" className="btn btn-secondary w-full">Lưu thông tin</button>
