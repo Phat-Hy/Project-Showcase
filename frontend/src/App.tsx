@@ -130,6 +130,16 @@ export default function App() {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
+  // Register form states
+  const [isRegister, setIsRegister] = useState(false);
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regName, setRegName] = useState('');
+  const [regRole, setRegRole] = useState<'Student' | 'Founder'>('Student');
+  const [regStudentId, setRegStudentId] = useState('');
+  const [regProjectName, setRegProjectName] = useState('');
+  const [regProjectPitch, setRegProjectPitch] = useState('');
+
   useEffect(() => {
     fetchSession();
   }, []);
@@ -188,6 +198,44 @@ export default function App() {
       } else {
         const errData = await res.json();
         showNotification(errData.error || 'Email hoặc Mật khẩu không chính xác.', 'error');
+      }
+    } catch {
+      showNotification('Lỗi kết nối mạng.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async () => {
+    if (!regEmail.toLowerCase().endsWith('@fpt.edu.vn')) {
+      showNotification('Đăng ký yêu cầu sử dụng email @fpt.edu.vn', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: regEmail,
+          password: regPassword,
+          name: regName,
+          role: regRole,
+          studentId: regStudentId,
+          projectName: regRole === 'Founder' ? regProjectName : '',
+          projectPitch: regRole === 'Founder' ? regProjectPitch : ''
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUser(data.user);
+        showNotification('Đăng ký và đăng nhập thành công!', 'success');
+        setIsRegister(false);
+      } else {
+        const errData = await res.json();
+        showNotification(errData.error || 'Lỗi đăng ký tài khoản.', 'error');
       }
     } catch {
       showNotification('Lỗi kết nối mạng.', 'error');
@@ -552,70 +600,208 @@ export default function App() {
             </a>
           </div>
 
-          <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginEmail, loginPassword); }} className="space-y-4 mb-6">
-            <div>
-              <label className="block text-left text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email học viên / Quản trị</label>
-              <input
-                type="email"
-                placeholder="email@fpt.edu.vn"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                required
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-slate-200"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-left text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Mật khẩu</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                required
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-slate-200"
-              />
-            </div>
+          {!isRegister ? (
+            <>
+              <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginEmail, loginPassword); }} className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-left text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email học viên / Quản trị</label>
+                  <input
+                    type="email"
+                    placeholder="email@fpt.edu.vn"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-slate-200"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-left text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Mật khẩu</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-slate-200"
+                  />
+                </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="btn btn-primary w-full py-3.5 mt-2 rounded-lg font-heading"
-            >
-              {isLoading ? 'Đang xác thực...' : 'Đăng Nhập'}
-            </button>
-          </form>
-
-          <div className="border-t border-white/5 pt-4">
-            <span className="block text-left text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Tài khoản kiểm thử nhanh (Click để tự điền & đăng nhập)</span>
-            <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-1">
-              {[
-                { name: 'Hỷ Minh Phát', id: 'SE184629', email: 'phathmse184629@fpt.edu.vn', role: 'Sáng lập Gara Showcase', color: 'text-purple-400' },
-                { name: 'Lê Tuấn Khanh', id: 'SE184638', email: 'khanhltse184638@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
-                { name: 'Trương Ngọc Vy', id: 'SE182233', email: 'vyntse182233@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
-                { name: 'Trần Minh Quân', id: 'SE183204', email: 'edulink.founder@fpt.edu.vn', role: 'Sáng lập EduLink NFC', color: 'text-purple-400' },
-                { name: 'Võ Hoàng Yến', id: 'SE185112', email: 'zodiac.founder@fpt.edu.vn', role: 'Sáng lập Zodiac AI', color: 'text-purple-400' },
-                { name: 'Vườn Ươm Gara Manager', id: 'Admin', email: 'manager.mock@fpt.edu.vn', role: 'Quản trị hệ thống', color: 'text-rose-400' }
-              ].map((acc) => (
                 <button
-                  key={acc.email}
-                  type="button"
-                  onClick={() => {
-                    setLoginEmail(acc.email);
-                    setLoginPassword('password123');
-                    handleLogin(acc.email, 'password123');
-                  }}
-                  className="btn btn-outline text-left w-full flex flex-col justify-center px-4 py-2.5 glass-panel-interactive border-white/10"
+                  type="submit"
+                  disabled={isLoading}
+                  className="btn btn-primary w-full py-3.5 mt-2 rounded-lg font-heading"
                 >
-                  <div className="flex justify-between items-center w-full">
-                    <span className="font-heading font-semibold text-xs text-slate-200">{acc.name}</span>
-                    <span className={`text-[10px] font-mono ${acc.color}`}>{acc.role}</span>
-                  </div>
-                  <span className="text-[10px] text-slate-400 mt-0.5">{acc.email}</span>
+                  {isLoading ? 'Đang xác thực...' : 'Đăng Nhập'}
                 </button>
-              ))}
-            </div>
-          </div>
+              </form>
+
+              <div className="text-center mb-6">
+                <button 
+                  onClick={() => setIsRegister(true)} 
+                  className="text-xs text-purple-400 hover:text-purple-300 font-semibold"
+                >
+                  Chưa có tài khoản? Đăng ký ngay ↗
+                </button>
+              </div>
+
+              <div className="border-t border-white/5 pt-4">
+                <span className="block text-left text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Tài khoản kiểm thử nhanh (Click để tự điền & đăng nhập)</span>
+                <div className="flex flex-col gap-2 max-h-[160px] overflow-y-auto pr-1">
+                  {[
+                    { name: 'Hỷ Minh Phát', id: 'SE184629', email: 'phathmse184629@fpt.edu.vn', role: 'Sáng lập Gara Showcase', color: 'text-purple-400' },
+                    { name: 'Lê Tuấn Khanh', id: 'SE184638', email: 'khanhltse184638@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
+                    { name: 'Trương Ngọc Vy', id: 'SE182233', email: 'vyntse182233@fpt.edu.vn', role: 'Sinh viên ứng tuyển', color: 'text-cyan-400' },
+                    { name: 'Trần Minh Quân', id: 'SE183204', email: 'edulink.founder@fpt.edu.vn', role: 'Sáng lập EduLink NFC', color: 'text-purple-400' },
+                    { name: 'Võ Hoàng Yến', id: 'SE185112', email: 'zodiac.founder@fpt.edu.vn', role: 'Sáng lập Zodiac AI', color: 'text-purple-400' },
+                    { name: 'Vườn Ươm Gara Manager', id: 'Admin', email: 'manager.mock@fpt.edu.vn', role: 'Quản trị hệ thống', color: 'text-rose-400' }
+                  ].map((acc) => (
+                    <button
+                      key={acc.email}
+                      type="button"
+                      onClick={() => {
+                        setLoginEmail(acc.email);
+                        setLoginPassword('password123');
+                        handleLogin(acc.email, 'password123');
+                      }}
+                      className="btn btn-outline text-left w-full flex flex-col justify-center px-4 py-2.5 glass-panel-interactive border-white/10"
+                    >
+                      <div className="flex justify-between items-center w-full">
+                        <span className="font-heading font-semibold text-xs text-slate-200">{acc.name}</span>
+                        <span className={`text-[10px] font-mono ${acc.color}`}>{acc.role}</span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 mt-0.5">{acc.email}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <form onSubmit={(e) => { e.preventDefault(); handleRegister(); }} className="space-y-4 mb-6 text-left">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Họ và Tên</label>
+                  <input
+                    type="text"
+                    placeholder="Nguyễn Văn A"
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-slate-200 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email (Yêu cầu @fpt.edu.vn)</label>
+                  <input
+                    type="email"
+                    placeholder="anvse123456@fpt.edu.vn"
+                    value={regEmail}
+                    onChange={(e) => setRegEmail(e.target.value)}
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-slate-200 text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Mật khẩu</label>
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      value={regPassword}
+                      onChange={(e) => setRegPassword(e.target.value)}
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-slate-200 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Mã số sinh viên</label>
+                    <input
+                      type="text"
+                      placeholder="SE123456"
+                      value={regStudentId}
+                      onChange={(e) => setRegStudentId(e.target.value)}
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-slate-200 text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Vai trò đăng ký</label>
+                  <div className="grid grid-cols-2 gap-2 mt-1">
+                    <button
+                      type="button"
+                      onClick={() => setRegRole('Student')}
+                      className={`py-2.5 px-3 rounded-lg border text-xs font-semibold font-heading transition-all ${
+                        regRole === 'Student'
+                          ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
+                          : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      Sinh viên tìm dự án
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRegRole('Founder')}
+                      className={`py-2.5 px-3 rounded-lg border text-xs font-semibold font-heading transition-all ${
+                        regRole === 'Founder'
+                          ? 'bg-purple-500/10 text-purple-400 border-purple-500/30'
+                          : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      Nhà sáng lập (Founder)
+                    </button>
+                  </div>
+                </div>
+
+                {regRole === 'Founder' && (
+                  <div className="space-y-4 border-t border-purple-500/10 pt-4 animate-fade-in">
+                    <div>
+                      <label className="block text-xs font-semibold text-purple-400 mb-1.5 uppercase tracking-wider">Tên dự án khởi nghiệp</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Gara Eco-Cycle"
+                        value={regProjectName}
+                        onChange={(e) => setRegProjectName(e.target.value)}
+                        required={regRole === 'Founder'}
+                        className="w-full bg-white/5 border border-purple-500/20 rounded-lg px-4 py-2.5 text-slate-200 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-purple-400 mb-1.5 uppercase tracking-wider">Ý tưởng cốt lõi (Pitch ngắn)</label>
+                      <input
+                        type="text"
+                        placeholder="Nền tảng thu gom rác tái chế bằng ứng dụng..."
+                        value={regProjectPitch}
+                        onChange={(e) => setRegProjectPitch(e.target.value)}
+                        required={regRole === 'Founder'}
+                        className="w-full bg-white/5 border border-purple-500/20 rounded-lg px-4 py-2.5 text-slate-200 text-sm"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="btn btn-primary w-full py-3.5 mt-2 rounded-lg font-heading"
+                >
+                  {isLoading ? 'Đang đăng ký...' : 'Hoàn Tất Đăng Ký & Đăng Nhập'}
+                </button>
+              </form>
+
+              <div className="text-center">
+                <button 
+                  onClick={() => setIsRegister(false)} 
+                  className="text-xs text-slate-400 hover:text-slate-300 font-semibold"
+                >
+                  ← Đã có tài khoản? Đăng nhập tại đây
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );
