@@ -536,9 +536,21 @@ export default function App() {
           <h1 className="text-3xl font-extrabold font-heading bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent text-center mb-2">
             GARA PORTAL
           </h1>
-          <p className="text-sm text-slate-400 text-center mb-6 font-body">
+          <p className="text-sm text-slate-400 text-center mb-4 font-body">
             Hệ thống quản lý dự án & tuyển dụng Vườn ươm khởi nghiệp trường Đại học.
           </p>
+
+          <div className="flex justify-center mb-6">
+            <a 
+              href="/mockup.html" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-semibold hover:bg-cyan-500/20 transition-all font-heading"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              Xem Showcase dự án mẫu trực quan ↗
+            </a>
+          </div>
 
           <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginEmail, loginPassword); }} className="space-y-4 mb-6">
             <div>
@@ -635,6 +647,17 @@ export default function App() {
             </h1>
             <p className="text-[10px] text-slate-400 tracking-wider font-body">INNOVATION HUB</p>
           </div>
+          <div className="hidden sm:block ml-4 border-l border-white/10 pl-4">
+            <a 
+              href="/mockup.html" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors font-body"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              Showcase dự án mẫu ↗
+            </a>
+          </div>
         </div>
 
         <div className="flex items-center gap-6">
@@ -677,14 +700,12 @@ export default function App() {
               >
                 Cơ hội Tuyển dụng
               </button>
-              {currentUser.projectId && (
-                <button 
-                  onClick={() => { setActiveTab('my-joined-project'); fetchStudentDashboard(); }} 
-                  className={`tab-btn ${activeTab === 'my-joined-project' ? 'active' : ''}`}
-                >
-                  Dự án tham gia
-                </button>
-              )}
+              <button 
+                onClick={() => { setActiveTab('my-joined-project'); fetchStudentDashboard(); }} 
+                className={`tab-btn ${activeTab === 'my-joined-project' ? 'active' : ''}`}
+              >
+                Dự án tham gia
+              </button>
               <button 
                 onClick={() => { setActiveTab('history'); fetchStudentDashboard(); }} 
                 className={`tab-btn ${activeTab === 'history' ? 'active' : ''}`}
@@ -694,7 +715,28 @@ export default function App() {
             </div>
 
             {/* TAB: Joined Project */}
-            {activeTab === 'my-joined-project' && currentUser.projectId && (() => {
+            {activeTab === 'my-joined-project' && (() => {
+              if (!currentUser.projectId) {
+                return (
+                  <div className="glass-panel p-8 text-center max-w-2xl mx-auto my-12 space-y-4 border-purple-500/20">
+                    <div className="w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto text-purple-400">
+                      <Users className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-heading font-bold text-slate-200">Bạn chưa tham gia dự án nào</h3>
+                    <p className="text-sm text-slate-400 max-w-md mx-auto">
+                      Để xem chi tiết lộ trình, quản lý dung lượng và xem danh sách đồng đội, bạn cần là thành viên chính thức của một dự án khởi nghiệp thuộc vườn ươm.
+                    </p>
+                    <div className="pt-2">
+                      <button 
+                        onClick={() => { setActiveTab('jobs'); fetchStudentDashboard(); }}
+                        className="btn btn-primary px-6 py-2.5 rounded-lg text-xs font-semibold font-heading"
+                      >
+                        Ứng tuyển thành viên ngay
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
               const myProject = projects.find(p => p.id === currentUser.projectId);
               if (!myProject) return <p className="text-slate-500 py-8 text-center">Đang đồng bộ thông tin dự án của bạn...</p>;
               return (

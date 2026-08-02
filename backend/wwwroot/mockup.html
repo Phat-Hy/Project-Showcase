@@ -1,0 +1,4050 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gara Startup Project Showcase - Pitch Deck (EXE101)</title>
+  <meta name="description" content="Pitch deck chính thức của dự án Gara Startup Project Showcase - Giải pháp số hóa hệ sinh thái khởi nghiệp trường đại học theo tiêu chuẩn môn học EXE.">
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* -------------------------------------------------------------
+       1. DESIGN SYSTEM & BASE VARIABLES
+       ------------------------------------------------------------- */
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dark: #1f2937;
+
+      /* Glowing Brand Colors */
+      --color-primary: #8b5cf6;     /* Violet */
+      --color-primary-glow: rgba(139, 92, 246, 0.4);
+      --color-secondary: #06b6d4;   /* Cyan */
+      --color-secondary-glow: rgba(6, 182, 212, 0.4);
+      --color-accent: #ec4899;      /* Rose */
+      --color-accent-glow: rgba(236, 72, 153, 0.4);
+
+      /* Status Colors */
+      --status-active: #10b981;     /* Emerald */
+      --status-active-glow: rgba(16, 185, 129, 0.3);
+      --status-risk: #f59e0b;       /* Amber */
+      --status-risk-glow: rgba(245, 158, 11, 0.3);
+      --status-suspended: #ef4444;  /* Rose */
+      --status-suspended-glow: rgba(239, 68, 68, 0.3);
+      
+      --font-title: 'Outfit', 'Inter', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --transition-speed: 0.6s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Ambient background glows */
+    .bg-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 50%;
+      height: 50%;
+      background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(100px);
+    }
+
+    .bg-glow-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle, var(--color-secondary-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(100px);
+    }
+
+    /* -------------------------------------------------------------
+       2. SLIDE PRESENTATION LAYOUT
+       ------------------------------------------------------------- */
+    #presentation-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+    }
+
+    .slides-wrapper {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: translateX(60px) scale(0.97);
+      transition: opacity var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1),
+                  transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.2rem 4.5rem;
+      box-sizing: border-box;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .slide.prev {
+      transform: translateX(-60px) scale(0.97);
+    }
+
+    /* Content styling helper */
+    .slide-header {
+      margin-bottom: 1.2rem;
+    }
+
+    .slide-tag {
+      font-family: var(--font-title);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-secondary);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: inline-block;
+      text-shadow: 0 0 10px var(--color-secondary-glow);
+    }
+
+    .slide-title {
+      font-family: var(--font-title);
+      font-size: 2.3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff 40%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-footer {
+      margin-top: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1.5rem;
+    }
+
+    .slide-notes-preview {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 70%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .slide-index-indicator {
+      font-family: var(--font-title);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .slide-index-indicator span {
+      color: var(--color-primary);
+    }
+
+    /* Micro-animations inside slide elements */
+    .animate-element {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide.active .animate-element {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-1 { transition-delay: 0.15s; }
+    .delay-2 { transition-delay: 0.3s; }
+    .delay-3 { transition-delay: 0.45s; }
+    .delay-4 { transition-delay: 0.6s; }
+
+    /* -------------------------------------------------------------
+       3. NAVIGATION BAR & TOOLBARS
+       ------------------------------------------------------------- */
+    #toolbar {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      background: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 40px;
+      padding: 6px 16px;
+      gap: 12px;
+      z-index: 100;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px var(--color-primary-glow);
+      transition: opacity 0.3s;
+    }
+
+    #toolbar.hidden {
+      opacity: 0.1;
+    }
+
+    #toolbar.hidden:hover {
+      opacity: 1;
+    }
+
+    .tool-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--color-secondary);
+      transform: scale(1.1);
+    }
+
+    .tool-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 99;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      width: 0%;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px var(--color-secondary);
+    }
+
+    /* Presenter Notes Overlay */
+    #notes-panel {
+      position: absolute;
+      top: 0;
+      right: -380px;
+      width: 380px;
+      height: 100%;
+      background: rgba(10, 14, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid var(--card-border);
+      z-index: 200;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    #notes-panel.open {
+      right: 0;
+    }
+
+    .notes-title {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-secondary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notes-content {
+      flex: 1;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-main);
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .notes-content p {
+      margin-bottom: 1rem;
+    }
+    
+    .notes-content ul {
+      margin-left: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .notes-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* -------------------------------------------------------------
+       4. SLIDE COMPONENT SPECIFICS (TAM/SAM/SOM, Matrix, Team, etc.)
+       ------------------------------------------------------------- */
+       
+    /* Slide 1: Cover */
+    .cover-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .cover-logo {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 40px var(--color-primary-glow);
+      animation: pulse-glow 3s infinite ease-in-out;
+    }
+
+    .cover-logo svg {
+      width: 50px;
+      height: 50px;
+      fill: #fff;
+    }
+
+    .cover-title {
+      font-family: var(--font-title);
+      font-size: 4.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff, #99f6e4 30%, #c084fc 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .cover-tagline {
+      font-size: 1.35rem;
+      color: var(--text-muted);
+      max-width: 750px;
+      line-height: 1.6;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .cover-meta {
+      display: flex;
+      gap: 30px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      backdrop-filter: blur(8px);
+    }
+
+    .cover-meta-item {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .cover-meta-item strong {
+      color: #fff;
+    }
+
+    /* Grid Layouts for Slides */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      padding: 1.4rem 1.3rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .glass-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+      color: var(--color-secondary);
+      border: 1px solid var(--card-border);
+    }
+
+    .glass-card:hover .card-icon {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #fff;
+      box-shadow: 0 0 12px var(--color-primary-glow);
+    }
+
+    .card-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .card-title {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .card-text {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .problem-highlight {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* Slide 5: Market Size diagram */
+    .market-container {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .market-diagram {
+      position: relative;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .market-circle {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s;
+      cursor: pointer;
+    }
+
+    /* Concentric Circles styling */
+    .market-circle.tam {
+      width: 340px;
+      height: 340px;
+      background: rgba(139, 92, 246, 0.03);
+      border: 2px dashed rgba(139, 92, 246, 0.4);
+      box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.05);
+    }
+
+    .market-circle.sam {
+      width: 230px;
+      height: 230px;
+      background: rgba(6, 182, 212, 0.05);
+      border: 2px dashed rgba(6, 182, 212, 0.5);
+      box-shadow: inset 0 0 25px rgba(6, 182, 212, 0.08);
+    }
+
+    .market-circle.som {
+      width: 130px;
+      height: 130px;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.2));
+      border: 2px solid #ec4899;
+      box-shadow: 0 0 30px var(--color-accent-glow), inset 0 0 15px rgba(236, 72, 153, 0.2);
+    }
+
+    .market-circle:hover {
+      transform: scale(1.03);
+      border-style: solid;
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .market-circle.som:hover {
+      box-shadow: 0 0 45px var(--color-accent);
+    }
+
+    .circle-label {
+      font-family: var(--font-title);
+      font-weight: 800;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .tam .circle-label { margin-top: -260px; font-size: 1.1rem; color: #a78bfa; }
+    .sam .circle-label { margin-top: -160px; font-size: 1rem; color: #67e8f9; }
+    .som .circle-label { font-size: 1.1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
+    .market-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .legend-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      transition: all 0.3s;
+    }
+
+    .legend-item:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .legend-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .legend-badge.tam { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+    .legend-badge.sam { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .legend-badge.som { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+
+    .legend-content h4 {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+      color: #fff;
+    }
+
+    .legend-content p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .legend-value {
+      margin-left: auto;
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .legend-value.tam { color: #c084fc; }
+    .legend-value.sam { color: #22d3ee; }
+    .legend-value.som { color: #f472b6; }
+
+    /* Slide 8: Competition Matrix */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .comp-table th, .comp-table td {
+      padding: 0.75rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.9rem;
+    }
+
+    .comp-table th {
+      background: rgba(255, 255, 255, 0.02);
+      font-family: var(--font-title);
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.05rem;
+    }
+
+    .comp-table td:first-child, .comp-table th:first-child {
+      text-align: left;
+      font-weight: 500;
+      color: #f3f4f6;
+      width: 35%;
+    }
+
+    .comp-table tr.highlight-row {
+      background: rgba(139, 92, 246, 0.04);
+    }
+
+    .comp-table td.highlight-col, .comp-table th.highlight-col {
+      background: rgba(139, 92, 246, 0.08);
+      border-left: 1px solid rgba(139, 92, 246, 0.2);
+      border-right: 1px solid rgba(139, 92, 246, 0.2);
+      font-weight: 600;
+    }
+
+    .comp-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .icon-check { color: var(--status-active); }
+    .icon-cross { color: var(--status-suspended); }
+    .icon-partial { color: var(--status-risk); }
+
+    /* Slide 9: Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    .team-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.8rem 1rem;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      min-width: 0;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--color-primary);
+      box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.2);
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    .team-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border: 3px solid var(--bg-primary);
+    }
+
+    .avatar-glow {
+      position: absolute;
+      top: -4px; left: -4px; right: -4px; bottom: -4px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.6;
+      transition: all 0.3s;
+    }
+
+    .team-card:hover .avatar-glow {
+      transform: scale(1.08);
+      filter: blur(4px);
+    }
+
+    .team-name {
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .team-role {
+      font-size: 0.9rem;
+      color: var(--color-secondary);
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .team-bio {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Slide 10: Financials & Roadmap */
+    .fin-roadmap-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      width: 100%;
+      align-items: center;
+    }
+
+    .roadmap-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .roadmap-step {
+      display: flex;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .roadmap-step::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 36px;
+      bottom: -24px;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .roadmap-step:last-child::before {
+      display: none;
+    }
+
+    .roadmap-step.active::before {
+      background: linear-gradient(180deg, var(--color-secondary), rgba(255,255,255,0.08));
+    }
+
+    .roadmap-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 2px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-title);
+      font-weight: 700;
+      color: var(--text-muted);
+      z-index: 10;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .roadmap-step.active .roadmap-icon {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 0 15px var(--color-secondary-glow);
+    }
+
+    .roadmap-info h4 {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .roadmap-info p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .fin-chart-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chart-title {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .chart-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .svg-chart {
+      width: 100%;
+      height: 180px;
+    }
+
+    .fin-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.2rem;
+    }
+
+    .fin-stat-card {
+      text-align: center;
+    }
+
+    .fin-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+    }
+
+    .fin-stat-val {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-secondary);
+    }
+
+    /* Slide 11: Contact & The Ask */
+    .ask-contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      width: 100%;
+    }
+
+    .ask-box {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(6, 182, 212, 0.05));
+      border: 1px dashed var(--color-primary);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .ask-amount {
+      font-family: var(--font-title);
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #fff 40%, var(--color-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px var(--color-secondary-glow);
+    }
+
+    .ask-label {
+      font-family: var(--font-title);
+      text-transform: uppercase;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+
+    .allocation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .alloc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .alloc-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      margin: 0 1.5rem;
+      overflow: hidden;
+    }
+
+    .alloc-bar {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .alloc-name {
+      width: 140px;
+      color: var(--text-muted);
+    }
+
+    .alloc-pct {
+      font-family: var(--font-title);
+      font-weight: 700;
+      color: #fff;
+      width: 40px;
+      text-align: right;
+    }
+
+    .contact-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem 1.8rem;
+    }
+
+    .contact-item-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-secondary);
+      border: 1px solid var(--card-border);
+    }
+
+    .contact-item-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .contact-item-details h5 {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-item-details p {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Interactive Slide launcher styles */
+    .launcher-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      border-top: 4px solid var(--color-primary);
+      position: relative;
+    }
+
+    .launcher-title {
+      font-family: var(--font-title);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: #fff;
+    }
+
+    .launcher-desc {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .btn-launch {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1.2rem 2.8rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px var(--color-primary-glow);
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-launch:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(6, 182, 212, 0.4), 0 0 15px var(--color-secondary);
+    }
+
+    .btn-launch svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    /* -------------------------------------------------------------
+       5. INTERACTIVE MVP SIMULATOR SYSTEM (FULLSCREEN SIMULATOR)
+       ------------------------------------------------------------- */
+    #simulator-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #070a13;
+      z-index: 1000;
+      display: none; /* Controlled by JS */
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      flex-direction: column;
+    }
+
+    #simulator-container.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Simulator Header bar */
+    .sim-header {
+      background: #0d1222;
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1010;
+    }
+
+    .sim-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sim-logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sim-logo svg {
+      width: 18px;
+      height: 18px;
+      fill: #fff;
+    }
+
+    .sim-brand {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .sim-brand span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-secondary);
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+
+    .sim-auth-status {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px 12px;
+      border-radius: 30px;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-avatar-mini {
+      width: 24px;
+      height: 24px;
+      background: #7c3aed;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.7rem;
+      color: #fff;
+    }
+
+    .user-name-mini {
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .btn-sim-exit {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-sim-exit:hover {
+      background: #ef4444;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Simulator Main Content Area */
+    .sim-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Simulator Sidebar Navigation */
+    .sim-sidebar {
+      width: 250px;
+      background: #090d19;
+      border-right: 1px solid var(--card-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sim-nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sim-nav-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      padding-left: 8px;
+    }
+
+    .sim-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sim-nav-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+      color: #fff;
+    }
+
+    .sim-nav-item.active {
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.02) 100%);
+      color: #fff;
+      border-left: 3px solid var(--color-primary);
+    }
+
+    .sim-nav-item svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .sim-sidebar-footer {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .sim-app-limit-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sim-app-limit-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .sim-app-limit-bar {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%; /* Dynamic */
+      transition: width 0.3s ease;
+    }
+
+    /* Simulator Main Panel */
+    .sim-content {
+      flex: 1;
+      background: #070a13;
+      overflow-y: auto;
+      padding: 2.5rem 3rem;
+    }
+
+    .sim-view {
+      display: none;
+    }
+
+    .sim-view.active {
+      display: block;
+      animation: fade-in 0.3s ease-out;
+    }
+
+    /* View 1: Projects Showcase Grid */
+    .sim-view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .sim-view-title {
+      font-family: var(--font-title);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .sim-search-filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.6rem 1rem;
+    }
+
+    .sim-search-input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sim-search-input-wrapper svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--text-muted);
+    }
+
+    .sim-search-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .sim-filter-select {
+      background: #181f38;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      padding: 4px 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sim-project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sim-project-card {
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .sim-project-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .sim-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .sim-card-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .sim-card-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .sim-card-badge.active-badge { background: rgba(16, 185, 129, 0.1); color: var(--status-active); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .sim-card-badge.risk-badge { background: rgba(245, 158, 11, 0.1); color: var(--status-risk); border: 1px solid rgba(245, 158, 11, 0.2); }
+    .sim-card-badge.suspended-badge { background: rgba(239, 68, 68, 0.1); color: var(--status-suspended); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .sim-card-name {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .sim-card-pitch {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+      height: 38px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .sim-card-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-card-category {
+      font-size: 0.75rem;
+      color: var(--color-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .sim-card-action-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sim-card-action-text svg {
+      width: 12px;
+      height: 12px;
+      fill: currentColor;
+    }
+
+    /* Modal Detail Startup overlay */
+    .sim-detail-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 7, 13, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .sim-detail-modal {
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      background: #0c101d;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+      animation: modal-slide-up 0.3s ease-out;
+    }
+
+    .sim-modal-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-modal-title-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .sim-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .sim-modal-close:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+
+    .sim-modal-close svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .sim-modal-body {
+      padding: 2rem;
+      overflow-y: auto;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+    }
+
+    .sim-modal-left h4, .sim-modal-right h4 {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.5rem;
+    }
+
+    .sim-modal-desc {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Milestone Vertical Timeline in Detail View */
+    .sim-timeline-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sim-timeline-node {
+      display: flex;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .sim-timeline-node::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 24px;
+      bottom: -20px;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sim-timeline-node:last-child::before {
+      display: none;
+    }
+
+    .sim-node-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #181f38;
+      border: 2px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .sim-timeline-node.done .sim-node-dot {
+      background: var(--status-active);
+      border-color: transparent;
+    }
+
+    .sim-node-dot svg {
+      width: 12px;
+      height: 12px;
+      fill: #fff;
+      display: none;
+    }
+
+    .sim-timeline-node.done .sim-node-dot svg {
+      display: block;
+    }
+
+    .sim-node-info {
+      font-size: 0.85rem;
+    }
+
+    .sim-node-name {
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .sim-timeline-node.done .sim-node-name {
+      color: #fff;
+    }
+
+    .sim-node-status {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sim-timeline-node.done .sim-node-status {
+      color: var(--status-active);
+    }
+
+    /* CMS Simulated Milestones updates */
+    .sim-cms-action-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .btn-cms-action {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #c084fc;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-cms-action:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .sim-modal-roles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sim-modal-role-card {
+      background: #111628;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-modal-role-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .sim-modal-role-tag {
+      font-size: 0.7rem;
+      color: var(--color-secondary);
+      font-weight: 500;
+    }
+
+    .btn-modal-apply {
+      background: var(--color-primary);
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-modal-apply:hover {
+      background: #7c3aed;
+    }
+
+    .btn-modal-apply.applied {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    /* View 2: Recruitment Job Board */
+    .sim-job-card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sim-job-card {
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .sim-job-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .sim-job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .sim-job-info-area {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .sim-job-proj-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .sim-job-details-title {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .sim-job-proj-name {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .sim-job-tag-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-secondary);
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .sim-job-desc-body {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .sim-job-req-body {
+      font-size: 0.82rem;
+      background: rgba(0,0,0,0.15);
+      border-radius: 6px;
+      padding: 8px 12px;
+      border-left: 3px solid var(--color-primary);
+      margin-bottom: 1.2rem;
+      color: var(--text-main);
+    }
+
+    .sim-job-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* View 3: Incubator Admin Dashboard */
+    .sim-admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .sim-admin-stat-card {
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: left;
+      position: relative;
+    }
+
+    .sim-admin-stat-num {
+      font-family: var(--font-title);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .sim-admin-stat-lbl {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .sim-admin-stat-icon {
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+      color: rgba(255,255,255,0.05);
+    }
+
+    .sim-admin-stat-icon svg {
+      width: 32px;
+      height: 32px;
+      fill: currentColor;
+    }
+
+    .sim-admin-project-list-section h4 {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-admin-export {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-export:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--color-secondary);
+    }
+
+    .sim-admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #0e1324;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .sim-admin-table th, .sim-admin-table td {
+      padding: 1rem 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.88rem;
+    }
+
+    .sim-admin-table th {
+      background: rgba(255,255,255,0.02);
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .sim-admin-action-cell {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-admin-action {
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-action.resolve {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--status-active);
+    }
+
+    .btn-admin-action.resolve:hover {
+      background: var(--status-active);
+      color: #fff;
+    }
+
+    .btn-admin-action.unsuspend {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: var(--color-secondary);
+    }
+
+    .btn-admin-action.unsuspend:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .btn-admin-action.nudge {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: var(--status-risk);
+    }
+
+    .btn-admin-action.nudge:hover {
+      background: var(--status-risk);
+      color: #fff;
+    }
+
+    /* Simulated SSO login Modal overlay */
+    .sim-sso-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 5, 10, 0.9);
+      z-index: 1200;
+      display: none; /* Controlled by JS */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sso-box {
+      width: 380px;
+      background: #0f1426;
+      border: 1px solid var(--color-primary);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 0 30px var(--color-primary-glow);
+      text-align: center;
+    }
+
+    .sso-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+    }
+
+    .sso-logo svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .sso-title {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .sso-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .sso-input-group {
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+
+    .sso-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    .sso-input {
+      background: #181e36;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+    }
+
+    .sso-input:focus {
+      border-color: var(--color-secondary);
+    }
+
+    .btn-sso-login {
+      background: var(--color-primary);
+      border: none;
+      color: #fff;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.9rem;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .btn-sso-login:hover {
+      background: #7c3aed;
+      box-shadow: 0 0 15px var(--color-primary-glow);
+    }
+
+    .btn-sso-cancel {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 0.8rem;
+    }
+
+    .btn-sso-cancel:hover {
+      color: #fff;
+    }
+
+    /* Notification banner */
+    .sim-notification {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #0e1324;
+      border-left: 4px solid var(--color-secondary);
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1300;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateY(-50px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sim-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .sim-notification.error-notif {
+      border-left-color: var(--status-suspended);
+    }
+
+    .sim-notification-icon {
+      color: var(--color-secondary);
+    }
+
+    .sim-notification.error-notif .sim-notification-icon {
+      color: var(--status-suspended);
+    }
+
+    .sim-notification-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .sim-notification-text {
+      font-size: 0.88rem;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* -------------------------------------------------------------
+       6. UTILITIES AND KEY ANIMATIONS
+       ------------------------------------------------------------- */
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 40px var(--color-primary-glow);
+      }
+      50% {
+        box-shadow: 0 0 60px rgba(139, 92, 246, 0.6);
+      }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modal-slide-up {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive scaling for 16:9 on large displays */
+    @media (min-width: 1400px) {
+      .slide {
+        padding: 3rem 6rem;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .slide {
+        padding: 2rem 3rem;
+      }
+      .grid-3 {
+        gap: 1rem;
+      }
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      .slide-title {
+        font-size: 2.1rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        padding: 2rem 2rem;
+        overflow-y: auto;
+      }
+      .slide-title {
+        font-size: 2rem;
+      }
+      .grid-3, .market-container, .fin-roadmap-grid, .ask-contact-grid, .team-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .market-diagram {
+        height: 240px;
+      }
+      .market-circle.tam { width: 220px; height: 220px; }
+      .market-circle.sam { width: 150px; height: 150px; }
+      .market-circle.som { width: 80px; height: 80px; }
+      .tam .circle-label { margin-top: -160px; font-size: 0.8rem; }
+      .sam .circle-label { margin-top: -100px; font-size: 0.75rem; }
+      .som .circle-label { font-size: 0.8rem; }
+      .comp-table {
+        display: block;
+        overflow-x: auto;
+      }
+      #toolbar {
+        bottom: 12px;
+        transform: translateX(-50%) scale(0.9);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Background Canvas -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- -------------------------------------------------------------
+       PRESENTATION STRUCTURE CONTAINER
+       ------------------------------------------------------------- -->
+  <div id="presentation-container">
+    
+    <!-- Slides Collection -->
+    <div class="slides-wrapper">
+
+      <!-- SLIDE 1: Cover Page -->
+      <section class="slide active" id="slide-1">
+        <div></div> <!-- Empty top for centering -->
+        <div class="cover-container">
+          <div class="cover-logo animate-element">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7zm0 6.7c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm0 3.5c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1z"/>
+            </svg>
+          </div>
+          <h1 class="cover-title animate-element delay-1">GARA SHOWCASE</h1>
+          <p class="cover-tagline animate-element delay-2">
+            Nền tảng số hóa hệ sinh thái khởi nghiệp sinh viên & tuyển dụng tài năng chéo ngành trong các vườn ươm đại học.
+          </p>
+          <div class="cover-meta animate-element delay-3">
+            <div class="cover-meta-item">Dự án: <strong>Gara Showcase (CMS & Job Board)</strong></div>
+            <div class="cover-meta-item">Chương trình: <strong>Khởi nghiệp Thực nghiệm (EXE)</strong></div>
+            <div class="cover-meta-item">Nhóm: <strong>EXE Founding Team</strong></div>
+          </div>
+        </div>
+        
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Giới thiệu dự án, bối cảnh thực hiện trong chương trình khởi nghiệp EXE tại trường.</div>
+          <div class="slide-index-indicator">Trang <span>1</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Problem Statement -->
+      <section class="slide" id="slide-2">
+        <div class="slide-header">
+          <span class="slide-tag">01. Bối cảnh & Vấn đề</span>
+          <h2 class="slide-title">"Hộp Đen" Trong Vườn Ươm Khởi Nghiệp</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="grid-3">
+            
+            <div class="glass-card animate-element">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              </div>
+              <h3 class="card-title">"Hộp đen" Tiến độ</h3>
+              <p class="card-text">
+                Sau khi được vườn ươm tiếp nhận, hoạt động vận hành, các quyết định xoay trục (pivot) và nhu cầu của startup bị <span class="problem-highlight">biến mất vào "hộp đen"</span>, thiếu sự giám sát thường xuyên.
+              </p>
+            </div>
+
+            <div class="glass-card animate-element delay-1">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.48 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </div>
+              <h3 class="card-title">Cô Lập Nhân Sự Chéo Ngành</h3>
+              <p class="card-text">
+                Nhóm kỹ thuật (Engineering) <span class="problem-highlight">thiếu kết nối</span> với sinh viên khối ngành Kinh tế (Business) hay Thiết kế (Design), dẫn đến việc thiếu hụt kỹ năng vận hành nghiêm trọng.
+              </p>
+            </div>
+
+            <div class="glass-card animate-element delay-2">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg>
+              </div>
+              <h3 class="card-title">Quản Lý Thủ Công</h3>
+              <p class="card-text">
+                Ban quản lý và cố vấn phải theo dõi tiến độ thủ công qua các nền tảng chat rời rạc (Zalo, Messenger) và bảng tính Excel. <span class="problem-highlight">Không có cơ chế tự động hóa</span> cảnh báo rủi ro.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Nhấn mạnh vào 3 nỗi đau chính của hệ sinh thái khởi nghiệp sinh viên tại trường đại học.</div>
+          <div class="slide-index-indicator">Trang <span>2</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Solution -->
+      <section class="slide" id="slide-3">
+        <div class="slide-header">
+          <span class="slide-tag">02. Giải pháp</span>
+          <h2 class="slide-title">Gara Showcase: Cổng Thông Tin Số Hóa Tập Trung</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="grid-3">
+            
+            <div class="glass-card animate-element">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+              </div>
+              <h3 class="card-title">Trình Hồ Sơ & Lộ Trình</h3>
+              <p class="card-text">
+                Mỗi startup sở hữu hồ sơ trực quan hiển thị thông tin sản phẩm và lộ trình (milestone) bất đồng bộ. Ban quản lý cập nhật tiến độ tức thời mà không cần họp báo cáo định kỳ.
+              </p>
+            </div>
+
+            <div class="glass-card animate-element delay-1">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+              </div>
+              <h3 class="card-title">Chợ Tuyển Dụng Nội Bộ</h3>
+              <p class="card-text">
+                Tính năng đăng tuyển vai trò chéo ngành (Tech, Biz, Design, Marketing). Sinh viên nộp hồ sơ bằng một cú click, phá bỏ rào cản liên khoa.
+              </p>
+            </div>
+
+            <div class="glass-card animate-element delay-2">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              </div>
+              <h3 class="card-title">Cảnh Báo Tự Động (Oversight)</h3>
+              <p class="card-text">
+                Hệ thống tự động theo dõi hoạt động: Gắn cờ cảnh báo "At-Risk" nếu 14 ngày không cập nhật; chuyển trạng thái "Suspended" (Tạm ngưng) sau 30 ngày để tối ưu tài nguyên.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Giới thiệu cách giải quyết triệt để vấn đề thông qua 3 trụ cột tính năng chính.</div>
+          <div class="slide-index-indicator">Trang <span>3</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Interactive MVP Simulator Launcher -->
+      <section class="slide" id="slide-4">
+        <div class="slide-header">
+          <span class="slide-tag">03. Sản phẩm thực tế</span>
+          <h2 class="slide-title">Trình Mô Phỏng Sản Phẩm MVP</h2>
+        </div>
+        
+        <div class="slide-content" style="align-items: center;">
+          <div class="launcher-container animate-element">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
+            <h3 class="launcher-title">Bản Thử Nghiệm Tương Tác</h3>
+            <p class="launcher-desc">
+              Trải nghiệm trực tiếp hệ thống Gara Showcase: Duyệt các dự án mẫu, xem chi tiết lộ trình milestone, đăng nhập SSO giả lập, ứng tuyển tuyển dụng giới hạn 3 đơn đồng thời và thao tác bảng điều khiển của Admin.
+            </p>
+            <button class="btn-launch" id="btn-launch-sim">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              TRẢI NGHIỆM PROTOTYPE DEMO
+            </button>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Click nút để khởi chạy giao diện tương tác thực tế của dự án. Nhấn nút để thoát.</div>
+          <div class="slide-index-indicator">Trang <span>4</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Market Size (TAM, SAM, SOM) -->
+      <section class="slide" id="slide-5">
+        <div class="slide-header">
+          <span class="slide-tag">04. Quy mô thị trường</span>
+          <h2 class="slide-title">Thị Trường Tiềm Năng (TAM - SAM - SOM)</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="market-container">
+            
+            <div class="market-diagram animate-element">
+              <!-- TAM -->
+              <div class="market-circle tam" data-target="legend-tam">
+                <span class="circle-label">TAM</span>
+              </div>
+              <!-- SAM -->
+              <div class="market-circle sam" data-target="legend-sam">
+                <span class="circle-label">SAM</span>
+              </div>
+              <!-- SOM -->
+              <div class="market-circle som" data-target="legend-som">
+                <span class="circle-label">SOM</span>
+              </div>
+            </div>
+
+            <div class="market-legend animate-element delay-1">
+              
+              <div class="legend-item" id="legend-tam">
+                <div class="legend-badge tam">TAM</div>
+                <div class="legend-content">
+                  <h4>Tổng thị trường khả dụng</h4>
+                  <p>Hơn 400 trường đại học và 2.2 triệu sinh viên tại Việt Nam có nhu cầu đổi mới sáng tạo.</p>
+                </div>
+                <div class="legend-value tam">2.2M SV</div>
+              </div>
+
+              <div class="legend-item" id="legend-sam">
+                <div class="legend-badge sam">SAM</div>
+                <div class="legend-content">
+                  <h4>Thị trường phục vụ được</h4>
+                  <p>100+ trường ĐH định hướng ứng dụng và có trung tâm/vườn ươm khởi nghiệp hoạt động tích cực.</p>
+                </div>
+                <div class="legend-value sam">200K SV</div>
+              </div>
+
+              <div class="legend-item" id="legend-som">
+                <div class="legend-badge som">SOM</div>
+                <div class="legend-content">
+                  <h4>Thị trường mục tiêu (3 năm)</h4>
+                  <p>15-20 trường ĐH trọng điểm tại TP.HCM & Hà Nội liên kết chia sẻ dữ liệu vườn ươm.</p>
+                </div>
+                <div class="legend-value som">30K SV</div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Di chuột vào các vòng tròn để làm nổi bật phân khúc thị trường tương ứng.</div>
+          <div class="slide-index-indicator">Trang <span>5</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Business Model -->
+      <section class="slide" id="slide-6">
+        <div class="slide-header">
+          <span class="slide-tag">05. Mô hình kinh doanh</span>
+          <h2 class="slide-title">Cách Thức Tạo Doanh Thu</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="grid-3">
+            
+            <div class="glass-card animate-element">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.25z"/></svg>
+              </div>
+              <h3 class="card-title">B2B SaaS License</h3>
+              <p class="card-text">
+                Bán gói dịch vụ quản trị cho các Trường đại học / Vườn ươm: <strong style="color: var(--color-secondary); font-size: 1.1rem; display: block; margin: 0.5rem 0;">$500 - $1,200/năm</strong>
+                Bao gồm quản lý đội ngũ, dashboards cảnh báo nâng cao và xuất báo cáo tiến độ tự động.
+              </p>
+            </div>
+
+            <div class="glass-card animate-element delay-1">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+              <h3 class="card-title">Tuyển Dụng Premium</h3>
+              <p class="card-text">
+                Thu phí các doanh nghiệp bên ngoài muốn đặt tin tuyển dụng nổi bật hoặc tìm kiếm đầu mối nhân sự tài năng có <strong style="color: var(--color-secondary); font-size: 1.1rem; display: block; margin: 0.5rem 0;">chỉ số hoạt động thực tế tốt</strong> được chứng thực qua các dự án ươm tạo.
+              </p>
+            </div>
+
+            <div class="glass-card animate-element delay-2">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 8c-.83 0-1.5-.67-1.5-1.5S4.67 5 5.5 5 7 5.67 7 6.5 6.33 8 5.5 8z"/></svg>
+              </div>
+              <h3 class="card-title">Tài Trợ & Sự Kiện</h3>
+              <p class="card-text">
+                Các tập đoàn công nghệ lớn, quỹ đầu tư tài trợ hiển thị thương hiệu và đặt quảng bá các cuộc thi hackathon, học bổng đến tệp sinh viên năng động nhất của các trường.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Doanh thu chính đến từ gói phần mềm quản lý trường học (SaaS) và dịch vụ tuyển dụng kiểm chứng.</div>
+          <div class="slide-index-indicator">Trang <span>6</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Go-to-market Strategy -->
+      <section class="slide" id="slide-7">
+        <div class="slide-header">
+          <span class="slide-tag">06. Chiến lược tiếp cận</span>
+          <h2 class="slide-title">Kế Hoạch Tiếp Cận Thị Trường (Go-To-Market)</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="fin-roadmap-grid">
+            
+            <div class="roadmap-timeline animate-element">
+              
+              <div class="roadmap-step active">
+                <div class="roadmap-icon">1</div>
+                <div class="roadmap-info">
+                  <h4>Giai đoạn 1: Pilot & Proof of Concept (Tháng 1-3)</h4>
+                  <p>Số hóa 100% hồ sơ dự án của vườn ươm nội bộ tại trường ĐH chủ quản. Thu hút 500+ sinh viên đăng ký hệ thống.</p>
+                </div>
+              </div>
+
+              <div class="roadmap-step active">
+                <div class="roadmap-icon">2</div>
+                <div class="roadmap-info">
+                  <h4>Giai đoạn 2: Liên kết cụm trường đại học (Tháng 4-9)</h4>
+                  <p>Nhân rộng phần mềm ra 5 trường đại học có câu lạc bộ và trung tâm khởi nghiệp mạnh tại địa bàn TP.HCM.</p>
+                </div>
+              </div>
+
+              <div class="roadmap-step">
+                <div class="roadmap-icon">3</div>
+                <div class="roadmap-info">
+                  <h4>Giai đoạn 3: Tích hợp hệ sinh thái quốc gia (Tháng 10+)</h4>
+                  <p>Kết nối mở API cổng dữ liệu dự án cho các quỹ đầu tư mạo hiểm (VCs) và hệ sinh thái quốc gia Techfest.</p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="glass-card animate-element delay-2" style="height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid var(--color-secondary);">
+              <h3 class="card-title" style="color: var(--color-secondary);">Đòn Bẩy Tăng Trưởng</h3>
+              <p class="card-text" style="margin-bottom: 1rem;">
+                🚀 <strong>Hợp tác chiến lược:</strong> Ký kết với Phòng Công tác sinh viên và Đoàn thanh niên để tích điểm rèn luyện cho sinh viên khi tham gia dự án.
+              </p>
+              <p class="card-text">
+                🔗 <strong>Hiệu ứng mạng lưới:</strong> Càng nhiều dự án đăng tuyển vai trò, càng thu hút sinh viên các khoa phi kỹ thuật tham gia, tạo thành cổng thông tin tuyển dụng chất lượng cao.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Lộ trình phân kỳ cụ thể giúp sản phẩm thâm nhập từ từ nhưng vững chắc thông qua tệp người dùng sinh viên.</div>
+          <div class="slide-index-indicator">Trang <span>7</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Competition Matrix -->
+      <section class="slide" id="slide-8">
+        <div class="slide-header">
+          <span class="slide-tag">07. Phân tích đối thủ</span>
+          <h2 class="slide-title">Lợi Thế Cạnh Tranh Của Gara Showcase</h2>
+        </div>
+        
+        <div class="slide-content">
+          <table class="comp-table animate-element">
+            <thead>
+              <tr>
+                <th>Tính năng cốt lõi</th>
+                <th class="highlight-col">Gara Showcase</th>
+                <th>Mạng tuyển dụng (TopCV...)</th>
+                <th>Công cụ QLDA (Trello, Jira)</th>
+                <th>Báo cáo Excel / Sheets</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="highlight-row">
+                <td>Showcase dự án mẫu trực quan</td>
+                <td class="highlight-col icon-check">✔ Có</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-cross">❌ Không</td>
+              </tr>
+              <tr>
+                <td>Lộ trình Milestone tự động</td>
+                <td class="highlight-col icon-check">✔ Có</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-check">✔ Có</td>
+                <td class="icon-partial">⚠ Thủ công</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>Tuyển dụng chéo ngành (khối đại học)</td>
+                <td class="highlight-col icon-check">✔ Có</td>
+                <td class="icon-partial">⚠ Tốn phí / Không tối ưu</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-cross">❌ Không</td>
+              </tr>
+              <tr>
+                <td>Dashboard Quản lý Vườn ươm</td>
+                <td class="highlight-col icon-check">✔ Có</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-partial">⚠ Thủ công</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>Hệ thống tự động hóa cờ cảnh báo</td>
+                <td class="highlight-col icon-check">✔ Có</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-cross">❌ Không</td>
+                <td class="icon-cross">❌ Không</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Điểm nổi bật là việc tích hợp cả quản trị dự án, tuyển dụng chéo và tự động hóa giám sát dành riêng cho đại học.</div>
+          <div class="slide-index-indicator">Trang <span>8</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Founding Team -->
+      <section class="slide" id="slide-9">
+        <div class="slide-header">
+          <span class="slide-tag">08. Đội ngũ sáng lập</span>
+          <h2 class="slide-title">Đội Ngũ Đồng Sáng Lập</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="team-grid">
+            
+            <div class="team-card animate-element">
+              <div class="avatar-wrapper">
+                <div class="team-avatar">👑</div>
+                <div class="avatar-glow"></div>
+              </div>
+              <h3 class="team-name" style="font-size: 1.15rem;">Hỷ Minh Phát</h3>
+              <p class="team-role" style="font-size: 0.8rem;">Leader & Cloud DevOps</p>
+              <p class="team-bio" style="font-size: 0.78rem;">SE184629<br><span style="font-size: 0.7rem; color: var(--text-muted);">phathmse184629@fpt.edu.vn</span><br><br>Điều phối dự án, quản lý phân bổ nguồn lực, quản trị hạ tầng Cloud và cấu hình CI/CD đóng gói triển khai.</p>
+            </div>
+
+            <div class="team-card animate-element delay-1">
+              <div class="avatar-wrapper">
+                <div class="team-avatar">💻</div>
+                <div class="avatar-glow"></div>
+              </div>
+              <h3 class="team-name" style="font-size: 1.15rem;">Trịnh Hải Đức</h3>
+              <p class="team-role" style="font-size: 0.8rem;">Tech Lead</p>
+              <p class="team-bio" style="font-size: 0.78rem;">SE184622<br><span style="font-size: 0.7rem; color: var(--text-muted);">ducthse184622@fpt.edu.vn</span><br><br>Phát triển phần mềm full-stack, tích hợp SSO cổng đại học và xây dựng cơ chế giám sát cảnh báo cờ tự động.</p>
+            </div>
+
+            <div class="team-card animate-element delay-2">
+              <div class="avatar-wrapper">
+                <div class="team-avatar">🎨</div>
+                <div class="avatar-glow"></div>
+              </div>
+              <h3 class="team-name" style="font-size: 1.15rem;">Phan Quới An Phú</h3>
+              <p class="team-role" style="font-size: 0.8rem;">UI/UX Lead</p>
+              <p class="team-bio" style="font-size: 0.78rem;">SE180573<br><span style="font-size: 0.7rem; color: var(--text-muted);">phupqase180573@fpt.edu.vn</span><br><br>Thiết kế trải nghiệm người dùng, tối ưu hóa bố cục giao diện responsive và đảm bảo đồng nhất hệ thống thiết kế.</p>
+            </div>
+
+            <div class="team-card animate-element delay-3">
+              <div class="avatar-wrapper">
+                <div class="team-avatar">📊</div>
+                <div class="avatar-glow"></div>
+              </div>
+              <h3 class="team-name" style="font-size: 1.15rem;">Lê Tuấn Khanh</h3>
+              <p class="team-role" style="font-size: 0.8rem;">Business Analyst</p>
+              <p class="team-bio" style="font-size: 0.78rem;">SE184638<br><span style="font-size: 0.7rem; color: var(--text-muted);">khanhltse184638@fpt.edu.vn</span><br><br>Phân tích nghiệp vụ, mô hình hóa các yêu cầu chức năng, xây dựng mô hình doanh thu và dòng tài chính 3 năm.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Đội ngũ đầy đủ 3 trụ cột cơ bản của một dự án khởi nghiệp công nghệ: Kỹ thuật - Kinh doanh - Thiết kế.</div>
+          <div class="slide-index-indicator">Trang <span>9</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Financial Plan & Milestones -->
+      <section class="slide" id="slide-10">
+        <div class="slide-header">
+          <span class="slide-tag">09. Kế hoạch tài chính</span>
+          <h2 class="slide-title">Kế Hoạch Tài Chính & Mục Tiêu 3 Năm</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="fin-roadmap-grid">
+            
+            <div class="fin-chart-container animate-element">
+              <div class="chart-header">
+                <div>
+                  <h3 class="chart-title">Dự phóng Doanh thu (ARR)</h3>
+                  <span class="chart-subtitle">Đơn vị: USD ($)</span>
+                </div>
+                <span class="chart-subtitle">Tốc độ tăng trưởng năm</span>
+              </div>
+              
+              <!-- Simple Responsive SVG Chart -->
+              <svg class="svg-chart" viewBox="0 0 400 180">
+                <!-- Grid Lines -->
+                <line x1="40" y1="20" x2="380" y2="20" stroke="rgba(255,255,255,0.05)" />
+                <line x1="40" y1="70" x2="380" y2="70" stroke="rgba(255,255,255,0.05)" />
+                <line x1="40" y1="120" x2="380" y2="120" stroke="rgba(255,255,255,0.05)" />
+                <line x1="40" y1="150" x2="380" y2="150" stroke="rgba(255,255,255,0.1)" />
+
+                <!-- Axes labels -->
+                <text x="15" y="25" fill="#9ca3af" font-size="9">$300K</text>
+                <text x="15" y="75" fill="#9ca3af" font-size="9">$80K</text>
+                <text x="15" y="125" fill="#9ca3af" font-size="9">$12K</text>
+                <text x="25" y="155" fill="#9ca3af" font-size="9">$0</text>
+
+                <!-- Year indicators -->
+                <text x="100" y="170" fill="#f3f4f6" font-size="10" text-anchor="middle">Năm 1</text>
+                <text x="220" y="170" fill="#f3f4f6" font-size="10" text-anchor="middle">Năm 2</text>
+                <text x="340" y="170" fill="#f3f4f6" font-size="10" text-anchor="middle">Năm 3</text>
+
+                <!-- Glowing area gradient -->
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.4" />
+                    <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d="M100,150 L100,140 L220,105 L340,30 L340,150 Z" fill="url(#chartGrad)" />
+
+                <!-- Chart line -->
+                <path d="M100,140 L220,105 L340,30" fill="none" stroke="url(#chartLineGrad)" stroke-width="3" stroke-linecap="round" />
+                <linearGradient id="chartLineGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#8b5cf6" />
+                  <stop offset="50%" stop-color="#a78bfa" />
+                  <stop offset="100%" stop-color="#06b6d4" />
+                </linearGradient>
+
+                <!-- Dots -->
+                <circle cx="100" cy="140" r="5" fill="#8b5cf6" stroke="#fff" stroke-width="1.5" />
+                <circle cx="220" cy="105" r="5" fill="#a78bfa" stroke="#fff" stroke-width="1.5" />
+                <circle cx="340" cy="30" r="5" fill="#06b6d4" stroke="#fff" stroke-width="1.5" />
+              </svg>
+
+              <div class="fin-stats">
+                <div class="fin-stat-card">
+                  <div class="fin-stat-label">Năm 1</div>
+                  <div class="fin-stat-val">$12,000</div>
+                </div>
+                <div class="fin-stat-card">
+                  <div class="fin-stat-label">Năm 2</div>
+                  <div class="fin-stat-val">$80,000</div>
+                </div>
+                <div class="fin-stat-card">
+                  <div class="fin-stat-label">Năm 3</div>
+                  <div class="fin-stat-val">$300,000</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="roadmap-timeline animate-element delay-1">
+              <h3 class="chart-title" style="margin-bottom: 1rem;">Lượng người dùng mục tiêu</h3>
+              
+              <div class="legend-item">
+                <div class="legend-badge tam" style="width:36px; height:36px;">1</div>
+                <div class="legend-content">
+                  <h4 style="font-size: 1rem;">Năm 1: Đạt 3 Trường đại học</h4>
+                  <p>Hơn 100 dự án được chuẩn hóa hồ sơ và 2.000 sinh viên tham gia hệ sinh thái kết nối.</p>
+                </div>
+              </div>
+
+              <div class="legend-item">
+                <div class="legend-badge sam" style="width:36px; height:36px;">2</div>
+                <div class="legend-content">
+                  <h4 style="font-size: 1rem;">Năm 2: Phủ sóng 15 Trường đại học</h4>
+                  <p>Hơn 600 dự án và 15.000 sinh viên thường xuyên tương tác, kết nối nhà tuyển dụng ngoài trường.</p>
+                </div>
+              </div>
+
+              <div class="legend-item">
+                <div class="legend-badge som" style="width:36px; height:36px;">3</div>
+                <div class="legend-content">
+                  <h4 style="font-size: 1rem;">Năm 3: Mở rộng ra 50 Trường đại học</h4>
+                  <p>Trở thành hub dữ liệu khởi nghiệp sinh viên lớn nhất với hơn 2.000 dự án hoạt động.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Điểm hòa vốn đạt được vào cuối năm 1 nhờ cơ chế cấp bản quyền quản trị cho các vườn ươm.</div>
+          <div class="slide-index-indicator">Trang <span>10</span> / 11</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Call to action & Contact -->
+      <section class="slide" id="slide-11">
+        <div class="slide-header">
+          <span class="slide-tag">10. Kêu gọi & Liên hệ</span>
+          <h2 class="slide-title">Kêu Gọi Đầu Tư & Liên Hệ Hợp Tác</h2>
+        </div>
+        
+        <div class="slide-content">
+          <div class="ask-contact-grid">
+            
+            <div class="ask-box animate-element">
+              <span class="ask-label">Đề xuất kêu gọi vốn</span>
+              <div class="ask-amount">$50,000</div>
+              <p class="card-text" style="margin-bottom: 2rem; font-size: 1rem;">
+                Tìm kiếm khoản tài trợ ươm tạo hạt giống để nâng cấp sản phẩm và đưa ứng dụng thâm nhập sâu vào 10 trường ĐH liên kết.
+              </p>
+              
+              <div class="allocation-list">
+                <div class="alloc-item">
+                  <span class="alloc-name">Phát triển phần mềm & Cloud</span>
+                  <div class="alloc-bar-bg"><div class="alloc-bar" style="width: 50%; background: var(--color-primary);"></div></div>
+                  <span class="alloc-pct">50%</span>
+                </div>
+                <div class="alloc-item">
+                  <span class="alloc-name">Tiếp thị & Campus Launch</span>
+                  <div class="alloc-bar-bg"><div class="alloc-bar" style="width: 30%; background: var(--color-secondary);"></div></div>
+                  <span class="alloc-pct">30%</span>
+                </div>
+                <div class="alloc-item">
+                  <span class="alloc-name">Vận hành & Hỗ trợ pháp lý</span>
+                  <div class="alloc-bar-bg"><div class="alloc-bar" style="width: 20%; background: var(--color-accent);"></div></div>
+                  <span class="alloc-pct">20%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-info-list animate-element delay-2">
+              
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </div>
+                <div class="contact-item-details">
+                  <h5>Văn phòng làm việc</h5>
+                  <p>Phòng 302, Vườn ươm Khởi nghiệp Gara</p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <div class="contact-item-details">
+                  <h5>Email chính thức</h5>
+                  <p>hello@garashowcase.edu.vn</p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-item-icon">
+                  <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </div>
+                <div class="contact-item-details">
+                  <h5>Số điện thoại nhóm</h5>
+                  <p>+84 987 654 321</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="slide-notes-preview">Ghi chú: Lời kêu gọi hợp tác triển khai thí điểm tại các trường Đại học cũng như hỗ trợ đầu tư hạt giống.</div>
+          <div class="slide-index-indicator">Trang <span>11</span> / 11</div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- -------------------------------------------------------------
+         BOTTOM STATUS BAR AND TOOLBAR CONTROLS
+         ------------------------------------------------------------- -->
+    <div id="toolbar">
+      <button class="tool-btn" id="btn-prev" title="Trang trước (Mũi tên Trái)">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      
+      <button class="tool-btn" id="btn-next" title="Trang sau (Mũi tên Phải / Space)">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      
+      <div class="toolbar-divider"></div>
+      
+      <button class="tool-btn" id="btn-notes" title="Hiện/Ẩn Ghi chú người thuyết trình (Phím N)">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+      </button>
+      
+      <button class="tool-btn" id="btn-fullscreen" title="Toàn màn hình (Phím F)">
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+      </button>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="presentation-progress"></div>
+    </div>
+
+  </div>
+
+  <!-- PRESENTER NOTES OVERLAY DRAWER -->
+  <aside id="notes-panel">
+    <h3 class="notes-title">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+      Ghi chú Thuyết trình
+    </h3>
+    <div class="notes-content" id="notes-content-body">
+      <!-- Injected dynamically by JS -->
+    </div>
+  </aside>
+
+  <!-- -------------------------------------------------------------
+       INTERACTIVE MVP SIMULATOR OVERLAY
+       ------------------------------------------------------------- -->
+  <div id="simulator-container">
+    
+    <!-- Top Nav bar -->
+    <header class="sim-header">
+      <div class="sim-logo-area">
+        <div class="sim-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/></svg>
+        </div>
+        <div class="sim-brand">Gara Showcase<span>Ecosystem MVP</span></div>
+      </div>
+      
+      <div class="sim-auth-status">
+        <div id="sim-user-status-area">
+          <button class="btn-launch" id="btn-sim-login-trigger" style="font-size:0.8rem; padding: 6px 14px; border-radius: 4px;">Đăng nhập SSO</button>
+        </div>
+        <button class="btn-sim-exit" id="btn-exit-sim">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          Thoát Demo
+        </button>
+      </div>
+    </header>
+
+    <div class="sim-body">
+      
+      <!-- Sidebar navigation inside simulator -->
+      <aside class="sim-sidebar">
+        <div class="sim-nav-group">
+          <span class="sim-nav-title">Tính năng sinh viên</span>
+          <div class="sim-nav-item active" data-view="sim-view-projects">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Bảng tin dự án
+          </div>
+          <div class="sim-nav-item" data-view="sim-view-jobs">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+            Tuyển dụng chéo khoa
+          </div>
+          
+          <span class="sim-nav-title" style="margin-top:1.5rem;">Cơ quan quản lý</span>
+          <div class="sim-nav-item" data-view="sim-view-admin">
+            <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+            Dashboard Admin
+          </div>
+        </div>
+
+        <div class="sim-sidebar-footer">
+          <div class="sim-app-limit-title">
+            <span>Giới hạn ứng tuyển (FR-006)</span>
+            <strong id="sim-app-limit-count">0/3 đơn</strong>
+          </div>
+          <div class="sim-app-limit-bar-bg">
+            <div class="sim-app-limit-bar" id="sim-app-limit-progress"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main simulator workspace views -->
+      <main class="sim-content">
+        
+        <!-- View 1: Projects Discovery feed -->
+        <section class="sim-view active" id="sim-view-projects">
+          <div class="sim-view-header">
+            <h3 class="sim-view-title">Các dự án trong Vườn ươm Gara</h3>
+            <span style="font-size:0.85rem; color: var(--text-muted);">Hiển thị danh sách dự án đang ươm tạo</span>
+          </div>
+
+          <div class="sim-search-filter-bar">
+            <div class="sim-search-input-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <input type="text" class="sim-search-input" id="sim-project-search" placeholder="Tìm kiếm tên dự án hoặc từ khóa...">
+            </div>
+            <select class="sim-filter-select" id="sim-project-filter">
+              <option value="ALL">Tất cả ngành nghề</option>
+              <option value="Engineering">Kỹ thuật (Engineering)</option>
+              <option value="Business">Kinh tế (Business)</option>
+              <option value="Design">Thiết kế (Design)</option>
+              <option value="Marketing">Marketing / Truyền thông</option>
+            </select>
+          </div>
+
+          <div class="sim-project-grid" id="sim-projects-grid-root">
+            <!-- Dynamic elements generated by Javascript -->
+          </div>
+        </section>
+
+        <!-- View 2: Recruitment Job Board -->
+        <section class="sim-view" id="sim-view-jobs">
+          <div class="sim-view-header">
+            <h3 class="sim-view-title">Tuyển dụng thành viên chéo khoa</h3>
+            <span style="font-size:0.85rem; color: var(--text-muted);">Hỗ trợ tuyển dụng liên kết chuyên ngành</span>
+          </div>
+          
+          <div class="sim-search-filter-bar" style="margin-bottom: 2rem;">
+            <select class="sim-filter-select" id="sim-job-filter" style="width: 100%;">
+              <option value="ALL">Tất cả vị trí tuyển dụng</option>
+              <option value="Engineering">Kỹ thuật (Engineering / Developer)</option>
+              <option value="Business">Kinh doanh (Business Developer / Planner)</option>
+              <option value="Design">Thiết kế (UI/UX Designer / Graphics)</option>
+              <option value="Marketing">Marketing & Nội dung</option>
+            </select>
+          </div>
+
+          <div class="sim-job-card-grid" id="sim-jobs-grid-root">
+            <!-- Dynamic elements generated by Javascript -->
+          </div>
+        </section>
+
+        <!-- View 3: Incubator Admin Dashboard -->
+        <section class="sim-view" id="sim-view-admin">
+          <div class="sim-view-header">
+            <h3 class="sim-view-title">Bảng điều khiển Giám sát Vườn ươm</h3>
+            <button class="btn-admin-export" id="btn-admin-csv-export">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/></svg>
+              Xuất báo cáo CSV (FR-007)
+            </button>
+          </div>
+
+          <!-- Admin Stats Cards -->
+          <div class="sim-admin-stats">
+            
+            <div class="sim-admin-stat-card">
+              <div class="sim-admin-stat-num" id="sim-stat-total-proj">3</div>
+              <div class="sim-admin-stat-lbl">Đang hoạt động</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              </div>
+            </div>
+
+            <div class="sim-admin-stat-card" style="border-left: 3px solid var(--status-risk);">
+              <div class="sim-admin-stat-num" id="sim-stat-risk-proj" style="color: var(--status-risk);">1</div>
+              <div class="sim-admin-stat-lbl">Bị cảnh báo (14 ngày)</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              </div>
+            </div>
+
+            <div class="sim-admin-stat-card" style="border-left: 3px solid var(--status-suspended);">
+              <div class="sim-admin-stat-num" id="sim-stat-suspended-proj" style="color: var(--status-suspended);">1</div>
+              <div class="sim-admin-stat-lbl">Bị tạm ngưng (30 ngày)</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+              </div>
+            </div>
+
+            <div class="sim-admin-stat-card">
+              <div class="sim-admin-stat-num" id="sim-stat-placements">12</div>
+              <div class="sim-admin-stat-lbl">Tuyển dụng thành công</div>
+              <div class="sim-admin-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.48 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Project Management List Table -->
+          <div class="sim-admin-project-list-section">
+            <h4>Quản lý danh sách các Startup</h4>
+            <table class="sim-admin-table">
+              <thead>
+                <tr>
+                  <th>Dự án</th>
+                  <th>Phân loại</th>
+                  <th>Hoạt động cuối</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="sim-admin-table-body-root">
+                <!-- Dynamic elements generated by Javascript -->
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+    <!-- STARTUP DETAIL OVERLAY IN SIMULATOR -->
+    <div class="sim-detail-modal-overlay" id="sim-detail-modal-root">
+      <!-- Generated dynamically inside JS -->
+    </div>
+
+    <!-- SSO LOGIN MODAL SIMULATION -->
+    <div class="sim-sso-overlay" id="sim-sso-modal-root">
+      <div class="sso-box">
+        <div class="sso-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.3L19 19H5l7-13.7z"/></svg>
+        </div>
+        <h4 class="sso-title">Cổng Đăng Nhập SSO</h4>
+        <p class="sso-subtitle">Đăng nhập tài khoản cổng đại học liên thông</p>
+        
+        <div class="sso-input-group">
+          <label class="sso-label">Mã số sinh viên (Student ID)</label>
+          <input type="text" class="sso-input" id="sso-input-id" value="SE170123">
+        </div>
+
+        <div class="sso-input-group">
+          <label class="sso-label">Mật khẩu</label>
+          <input type="password" class="sso-input" id="sso-input-pwd" value="••••••••">
+        </div>
+
+        <button class="btn-sso-login" id="btn-sso-submit">ĐĂNG NHẬP SSO</button>
+        <button class="btn-sso-cancel" id="btn-sso-cancel">Hủy bỏ</button>
+      </div>
+    </div>
+
+    <!-- FLOATING SIMULATOR NOTIFICATION -->
+    <div class="sim-notification" id="sim-notification-root">
+      <div class="sim-notification-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <div class="sim-notification-text" id="sim-notification-text-root">Ứng tuyển thành công!</div>
+    </div>
+
+  </div>
+
+  <!-- -------------------------------------------------------------
+       7. JAVASCRIPT ENGINE (SLIDES & SIMULATOR LOGIC)
+       ------------------------------------------------------------- -->
+  <script>
+    /* ==========================================
+       A. SLIDE PRESENTATION ENGINE
+       ========================================== */
+    const slides = document.querySelectorAll('.slide');
+    let currentSlideIndex = 0;
+    const prevBtn = document.getElementById('btn-prev');
+    const nextBtn = document.getElementById('btn-next');
+    const notesBtn = document.getElementById('btn-notes');
+    const fullscreenBtn = document.getElementById('btn-fullscreen');
+    const progressBar = document.getElementById('presentation-progress');
+    const notesPanel = document.getElementById('notes-panel');
+    const notesContentBody = document.getElementById('notes-content-body');
+    const toolbar = document.getElementById('toolbar');
+
+    // Presenter Notes Database
+    const presenterNotes = {
+      0: `<h3>Slide 1: Trang bìa mở đầu</h3>
+          <ul>
+            <li>Chào mừng ban giám khảo và các nhà đầu tư đến với buổi thuyết trình dự án Gara Showcase.</li>
+            <li>Đây là dự án được thiết kế chuyên biệt cho hệ sinh thái vườn ươm khởi nghiệp trường đại học, nằm trong khuôn khổ môn học Khởi nghiệp Thực nghiệm (EXE).</li>
+            <li>Dự án giải quyết hai khía cạnh: quản trị tiến độ (CMS) và tuyển dụng chéo khoa nội bộ trường.</li>
+          </ul>`,
+      1: `<h3>Slide 2: Nêu bật vấn đề (Nỗi đau thị trường)</h3>
+          <ul>
+            <li>Vấn đề 1: Sau khi dự án được duyệt vào phòng Lab/Vườn ươm, ban giám lý mất dấu vết tiến độ hàng ngày. Dự án rơi vào trạng thái "hộp đen".</li>
+            <li>Vấn đề 2: Kỹ sư phần mềm chỉ quen code, sinh viên kinh tế chỉ quen viết kế hoạch. Không có kênh chính thức để họ tìm kiếm nhau trong khuôn viên trường.</li>
+            <li>Vấn đề 3: Ban quản lý mất hàng giờ nhắn tin Zalo hoặc yêu cầu điền Excel thủ công để nắm thông tin.</li>
+          </ul>`,
+      2: `<h3>Slide 3: Giới thiệu giải pháp</h3>
+          <ul>
+            <li>Gara Showcase ra đời như một Dashboard hợp nhất: số hóa thông tin startup và cung cấp timeline tiến độ bất đồng bộ.</li>
+            <li>Tích hợp cổng tuyển dụng chéo ngành phân loại rõ rệt Engineering, Business, Design, Marketing giúp tối ưu nguồn lực sẵn có của trường ĐH.</li>
+            <li>Tự động hóa hoàn toàn khâu giám sát thông qua hệ thống cảnh báo cờ.</li>
+          </ul>`,
+      3: `<h3>Slide 4: Hướng dẫn trình diễn MVP</h3>
+          <ul>
+            <li>Bây giờ, chúng tôi sẽ khởi chạy trực tiếp Trình mô phỏng Prototype MVP tích hợp ngay trên slide để các nhà đầu tư trải nghiệm trực tiếp hệ thống.</li>
+            <li>Vui lòng click vào nút <strong>"TRẢI NGHIỆM PROTOTYPE DEMO"</strong>.</li>
+            <li>Khi demo mở ra, chúng ta có thể chuyển tab, click xem chi tiết dự án, mô phỏng đăng nhập cổng SSO của trường và nộp thử hồ sơ ứng tuyển.</li>
+          </ul>`,
+      4: `<h3>Slide 5: Quy mô thị trường</h3>
+          <ul>
+            <li><strong>TAM:</strong> Lấy tổng quy mô sinh viên toàn quốc tham gia đào tạo cao đẳng, đại học làm phễu trên.</li>
+            <li><strong>SAM:</strong> Tập trung vào nhóm trường định hướng khởi nghiệp, đã có không gian làm việc chung (Co-working space) hoặc vườn ươm chính thức.</li>
+            <li><strong>SOM:</strong> Mục tiêu 3 năm đầu thâm nhập sâu vào các trường trọng điểm để tạo mạng lưới liên kết dữ liệu chia sẻ.</li>
+          </ul>`,
+      5: `<h3>Slide 6: Mô hình doanh thu</h3>
+          <ul>
+            <li>Mô hình kinh doanh lai (B2B + dịch vụ trung gian tuyển dụng).</li>
+            <li>Nguồn thu chính ban đầu đến từ việc bán gói phần mềm SaaS cho nhà trường để số hóa báo cáo hoạt động.</li>
+            <li>Giá trị gia tăng nằm ở khả năng kiểm chứng chỉ số làm việc của sinh viên để bán dữ liệu tuyển dụng chất lượng cao cho doanh nghiệp liên kết.</li>
+          </ul>`,
+      6: `<h3>Slide 7: Chiến lược Go-To-Market</h3>
+          <ul>
+            <li>Tháng 1-3: Triển khai thử nghiệm (PoC) trong chính vườn ươm đại học chủ quản để tối ưu hóa tính năng cờ cảnh báo và ứng tuyển.</li>
+            <li>Tháng 4-9: Tận dụng Đoàn thanh niên để tích điểm rèn luyện cho sinh viên đăng ký tham gia, tạo động lực kéo nguồn tài năng chéo khoa vào.</li>
+            <li>Tháng 10+: Mở rộng liên trường để thu hút quỹ đầu tư vào xem trực tiếp tiến độ của các nhóm.</li>
+          </ul>`,
+      7: `<h3>Slide 8: Điểm khác biệt cạnh tranh</h3>
+          <ul>
+            <li>So với TopCV: TopCV chỉ đăng tuyển việc làm, không hỗ trợ quản trị tiến độ dự án. Gara Showcase miễn phí cho SV và tối ưu liên khoa.</li>
+            <li>So với Trello/Jira: Gara Showcase giúp hiển thị lộ trình công khai ra ngoài để sinh viên khác tìm kiếm ứng tuyển, không đóng kín nội bộ.</li>
+            <li>So với Excel: Loại bỏ 100% công sức báo cáo thủ công qua email/sheets hàng tuần.</li>
+          </ul>`,
+      8: `<h3>Slide 9: Đội ngũ sáng lập</h3>
+          <ul>
+            <li>Nhóm gồm 4 thành viên đồng sáng lập với Hỷ Minh Phát làm Leader, có chuyên môn bổ trợ nhau xuất sắc: Kỹ thuật (Tech), Thiết kế (UI/UX), Phân tích nghiệp vụ (BA) và Kỹ sư đám mây (DevOps).</li>
+            <li>Sự phân công vai trò rõ ràng giúp đáp ứng tuyệt đối tiêu chuẩn đánh giá EXE và đảm bảo tính khả thi vận hành của nền tảng.</li>
+          </ul>`,
+      9: `<h3>Slide 10: Tài chính & Sự tăng trưởng</h3>
+          <ul>
+            <li>Doanh thu Năm 1 khiêm tốn ở mức $12K từ 3 trường chạy thử nghiệm.</li>
+            <li>Năm 2 bắt đầu thu phí Premium Recruiter và tăng số lượng trường đối tác lên 15 trường, mang lại $80K ARR.</li>
+            <li>Năm 3 tăng trưởng cấp số nhân khi trở thành mạng lưới chia sẻ dữ liệu startup sinh viên liên kết lớn.</li>
+          </ul>`,
+      10: `<h3>Slide 11: Lời kêu gọi đầu tư & Phân bổ ngân sách</h3>
+          <ul>
+            <li>Chúng tôi kêu gọi khoản tài trợ $50,000 để duy trì hoạt động trong vòng 12 tháng kế tiếp.</li>
+            <li>Ngân sách phân bổ lớn nhất vào phát triển hệ thống SSO an toàn và mở rộng dung lượng media lưu trữ dự án của các đội nhóm.</li>
+            <li>Cảm ơn sự lắng nghe của ban giám khảo. Rất mong nhận được sự đồng hành!</li>
+          </ul>`
+    };
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        slide.classList.remove('active', 'prev');
+        if (index === currentSlideIndex) {
+          slide.classList.add('active');
+        } else if (index < currentSlideIndex) {
+          slide.classList.add('prev');
+        }
+      });
+
+      // Update indicators
+      progressBar.style.width = `${((currentSlideIndex) / (slides.length - 1)) * 100}%`;
+      const numSpan = document.querySelector('.slide.active .slide-index-indicator span');
+      if (numSpan) numSpan.textContent = currentSlideIndex + 1;
+
+      // Update presenter notes
+      notesContentBody.innerHTML = presenterNotes[currentSlideIndex] || 'Không có ghi chú cho trang này.';
+      
+      // Auto show/hide notes on desktop slide change if open
+      if (notesPanel.classList.contains('open')) {
+        notesContentBody.scrollTop = 0;
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < slides.length - 1) {
+        currentSlideIndex++;
+        updatePresentation();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        updatePresentation();
+      }
+    }
+
+    function toggleNotes() {
+      notesPanel.classList.toggle('open');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Không thể bật toàn màn hình: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Bind Event Listeners
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    notesBtn.addEventListener('click', toggleNotes);
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // Keyboard navigation (Skip when simulator is open)
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('simulator-container').classList.contains('open')) {
+        return; // Ignore presentation hotkeys if inside simulator
+      }
+      
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'n') {
+        toggleNotes();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+      }
+    });
+
+    // Touch events for mobile swiping
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    document.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      if (document.getElementById('simulator-container').classList.contains('open')) return;
+      if (touchEndX < touchStartX - 60) nextSlide(); // Swipe left -> Next
+      if (touchEndX > touchStartX + 60) prevSlide(); // Swipe right -> Prev
+    }
+
+    // Hover helper on market size concentric circles
+    document.querySelectorAll('.market-circle').forEach(circle => {
+      circle.addEventListener('mouseenter', () => {
+        const targetId = circle.getAttribute('data-target');
+        document.querySelectorAll('.legend-item').forEach(item => {
+          item.style.opacity = '0.3';
+        });
+        document.getElementById(targetId).style.opacity = '1';
+        document.getElementById(targetId).style.transform = 'scale(1.02)';
+      });
+      circle.addEventListener('mouseleave', () => {
+        document.querySelectorAll('.legend-item').forEach(item => {
+          item.style.opacity = '1';
+          item.style.transform = 'none';
+        });
+      });
+    });
+
+    // Init Presentation Notes
+    updatePresentation();
+
+
+    /* ==========================================
+       B. INTERACTIVE MVP SIMULATOR CORE LOGIC
+       ========================================== */
+    const simulatorContainer = document.getElementById('simulator-container');
+    const launchSimBtn = document.getElementById('btn-launch-sim');
+    const exitSimBtn = document.getElementById('btn-exit-sim');
+    const simNavItems = document.querySelectorAll('.sim-nav-item');
+    const simViews = document.querySelectorAll('.sim-view');
+
+    // Launch/Exit actions
+    launchSimBtn.addEventListener('click', () => {
+      simulatorContainer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      renderProjects();
+      renderJobs();
+      renderAdminDashboard();
+      updateSidebarProgress();
+    });
+
+    exitSimBtn.addEventListener('click', () => {
+      simulatorContainer.classList.remove('open');
+    });
+
+    // Sidebar tab navigation
+    simNavItems.forEach(item => {
+      item.addEventListener('click', () => {
+        simNavItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        
+        const targetViewId = item.getAttribute('data-view');
+        simViews.forEach(view => {
+          view.classList.remove('active');
+          if (view.id === targetViewId) {
+            view.classList.add('active');
+          }
+        });
+
+        if (targetViewId === 'sim-view-admin') {
+          renderAdminDashboard();
+        }
+      });
+    });
+
+    /* ==========================================
+       C. SIMULATOR STATE & BUSINESS RULES
+       ========================================== */
+    let isLoggedIn = false;
+    let loggedUser = null;
+    let studentApplications = []; // Holds list of jobIds applied
+
+    // Startup database
+    const startupProjects = [
+      {
+        id: 'agrismart',
+        name: 'AgriSmart',
+        pitch: 'Hệ thống tưới nước tự động thông minh bằng IoT chống lãng phí nước.',
+        description: 'AgriSmart giải quyết bài toán lãng phí tài nguyên nước và tối ưu hóa năng suất cây trồng bằng việc tích hợp các cảm biến độ ẩm, nhiệt độ đất cùng van tự động kết nối qua mạng di động IoT. Hệ thống tự động phân tích dữ liệu đất để đưa ra lượng nước tưới tối ưu nhất cho nhà nông.',
+        status: 'Active',
+        category: 'Engineering',
+        logo: '🌱',
+        lastUpdatedText: '2 ngày trước',
+        milestones: [
+          { name: 'Khảo sát thực địa nông trại', done: true, date: '05/06/2026' },
+          { name: 'Thiết kế bo mạch cảm biến IoT', done: true, date: '28/06/2026' },
+          { name: 'Chạy thử nghiệm sản phẩm mẫu (Pilot)', done: false, date: 'Dự kiến: 08/2026' }
+        ]
+      },
+      {
+        id: 'eduquest',
+        name: 'EduQuest',
+        pitch: 'Học tập tương tác thông qua trò chơi nhập vai (Gamification).',
+        description: 'EduQuest biến đổi các bài học lý thuyết khô khan môn Toán và Khoa học của cấp Tiểu học thành các trò chơi nhập vai tương tác trực quan. Học sinh làm bài tập để nhận điểm kinh nghiệm, mở khóa trang bị và cùng thảo luận nhóm. Hệ thống giúp tăng 40% độ tập trung của học sinh.',
+        status: 'At-Risk',
+        category: 'Business',
+        logo: '🎮',
+        lastUpdatedText: '15 ngày trước', // > 14 days idle, triggering At-Risk (FR-007)
+        milestones: [
+          { name: 'Nghiên cứu chương trình tiểu học', done: true, date: '10/05/2026' },
+          { name: 'Xây dựng bản chạy thử nghiệm Web', done: true, date: '15/06/2026' },
+          { name: 'Thử nghiệm thực tế tại trường mẫu', done: false, date: 'Dự kiến: 09/2026' }
+        ]
+      },
+      {
+        id: 'recyco',
+        name: 'Recyco',
+        pitch: 'Hệ thống đổi rác thải nhựa lấy ưu đãi tiêu dùng qua Mobile App.',
+        description: 'Recyco liên kết các máy thu gom rác tự động đặt tại các giảng đường với ứng dụng di động. Khi sinh viên nộp chai nhựa hoặc lon nhôm, hệ thống tự động quét và tích điểm thưởng đổi voucher ăn uống, vé xem phim hoặc tài liệu học tập, khuyến khích sống xanh.',
+        status: 'Active',
+        category: 'Design',
+        logo: '♻',
+        lastUpdatedText: '4 ngày trước',
+        milestones: [
+          { name: 'Khảo sát thói quen phân loại rác sinh viên', done: true, date: '12/05/2026' },
+          { name: 'Thiết kế kiểu dáng máy thu rác tự động', done: true, date: '02/06/2026' },
+          { name: 'Phát triển API kết nối phần mềm Mobile', done: false, date: 'Dự kiến: 08/2026' }
+        ]
+      },
+      {
+        id: 'unicar',
+        name: 'UniCar',
+        pitch: 'Ứng dụng đi chung xe tiện lợi và an toàn cho cộng đồng sinh viên.',
+        description: 'UniCar kết nối các sinh viên có cùng lộ trình di chuyển đi học hàng ngày để chia sẻ chi phí đi xe máy hoặc ô tô. Hệ thống bắt buộc xác thực bằng tài khoản email trường đại học để bảo đảm an toàn, tin cậy tuyệt đối cho người đi cùng.',
+        status: 'At-Risk',
+        category: 'Business',
+        logo: '🚗',
+        lastUpdatedText: '16 ngày trước',
+        milestones: [
+          { name: 'Khảo sát nhu cầu đi chung xe liên quận', done: true, date: '18/04/2026' },
+          { name: 'Kiểm thử bản chạy thử nghiệm Alpha nội bộ', done: true, date: '25/05/2026' },
+          { name: 'Mở rộng tính năng ví điện tử sinh viên', done: false, date: 'Dự kiến: 09/2026' }
+        ]
+      },
+      {
+        id: 'foodhub',
+        name: 'FoodHub',
+        pitch: 'Nền tảng gom đơn đặt đồ ăn trưa tiết kiệm chi phí giao hàng.',
+        description: 'FoodHub gom các đơn đặt đồ ăn trưa từ cùng một cửa hàng F&B của sinh viên trong cùng một khu vực giảng đường. Nhờ gom đơn hàng lớn, sinh viên tiết kiệm đến 80% phí giao hàng và nhận được các chính sách chiết khấu giảm giá ưu đãi từ cửa hàng liên kết.',
+        status: 'Active',
+        category: 'Marketing',
+        logo: '🍱',
+        lastUpdatedText: '1 ngày trước',
+        milestones: [
+          { name: 'Liên kết mạng lưới 15 quán ăn quanh trường', done: true, date: '10/06/2026' },
+          { name: 'Xây dựng chatbot gom đơn tự động trên Telegram', done: true, date: '30/06/2026' },
+          { name: 'Chạy thử nghiệm vận hành thực tế (Beta)', done: false, date: 'Dự kiến: 08/2026' }
+        ]
+      },
+      {
+        id: 'finflow',
+        name: 'FinFlow',
+        pitch: 'Trợ lý tài chính cá nhân tự động thông minh dành cho sinh viên.',
+        description: 'FinFlow tự động hóa việc theo dõi chi tiêu của sinh viên bằng cách phân tích tin nhắn giao dịch ngân hàng qua AI. Ứng dụng đưa ra các đề xuất tiết kiệm, kế hoạch ăn uống giá rẻ và cảnh báo khi chi tiêu vượt hạn mức tự đặt giúp các bạn tối ưu hóa dòng tiền sinh hoạt.',
+        status: 'Suspended',
+        category: 'Marketing',
+        logo: '💰',
+        lastUpdatedText: '32 ngày trước', // > 30 days idle, triggering Suspended (BR-08)
+        milestones: [
+          { name: 'Phát triển thuật toán phân loại chi tiêu', done: true, date: '01/05/2026' },
+          { name: 'Thiết kế UI/UX ứng dụng di động', done: false, date: 'Dự kiến: 07/2026' },
+          { name: 'Kết nối API thử nghiệm ngân hàng', done: false, date: 'Dự kiến: 10/2026' }
+        ]
+      }
+    ];
+
+    // Recruitment jobs database
+    const jobListings = [
+      {
+        id: 'job-1',
+        projectId: 'agrismart',
+        projectName: 'AgriSmart',
+        projectLogo: '🌱',
+        title: 'Business Developer (Cơ hội đồng sáng lập)',
+        category: 'Business',
+        desc: 'Lập kế hoạch kinh doanh và nghiên cứu thị trường nông nghiệp miền Nam để tối ưu hóa tệp khách hàng nông gia.',
+        requirement: 'Sinh viên năm 3-4 chuyên ngành QTKD, Kinh tế đối ngoại. Giao tiếp tốt, không ngại đi khảo sát thực tế tại đồng ruộng.'
+      },
+      {
+        id: 'job-2',
+        projectId: 'eduquest',
+        projectName: 'EduQuest',
+        projectLogo: '🎮',
+        title: 'React Native Mobile Developer',
+        category: 'Engineering',
+        desc: 'Xây dựng giao diện ứng dụng di động cho học sinh tiểu học tương tác làm bài tập trực tuyến.',
+        requirement: 'Có kiến thức vững về React Native/Expo. Ưu tiên các bạn đam mê làm hiệu ứng animation chuyển động mượt mà.'
+      },
+      {
+        id: 'job-3',
+        projectId: 'agrismart',
+        projectName: 'AgriSmart',
+        projectLogo: '🌱',
+        title: 'UI/UX Designer (Giao diện nông dân)',
+        category: 'Design',
+        desc: 'Thiết kế giao diện bảng điều khiển thông minh cho người nông dân giám sát đất đai đơn giản nhất.',
+        requirement: 'Sử dụng Figma tốt. Có tư duy thiết kế tinh gọn, dễ hiểu cho đối tượng người dùng lớn tuổi.'
+      },
+      {
+        id: 'job-4',
+        projectId: 'eduquest',
+        projectName: 'EduQuest',
+        projectLogo: '🎮',
+        title: 'Content & Script Writer',
+        category: 'Marketing',
+        desc: 'Xây dựng nội dung kịch bản cốt truyện các bài học dạng trò chơi hấp dẫn cho trẻ em.',
+        requirement: 'Sáng tạo, yêu thích giáo dục trẻ em, có khả năng viết truyện kể (storytelling) lôi cuốn.'
+      },
+      {
+        id: 'job-5',
+        projectId: 'recyco',
+        projectName: 'Recyco',
+        projectLogo: '♻',
+        title: 'Product UI/UX Designer',
+        category: 'Design',
+        desc: 'Thiết kế giao diện ứng dụng di động đổi rác lấy điểm thưởng và giao diện điều khiển của máy thu gom.',
+        requirement: 'Sử dụng Figma thành thạo. Có tư duy thiết kế sản phẩm thân thiện với môi trường, thiết kế trực quan và sinh động.'
+      },
+      {
+        id: 'job-6',
+        projectId: 'unicar',
+        projectName: 'UniCar',
+        projectLogo: '🚗',
+        title: 'Backend Node.js Developer',
+        category: 'Engineering',
+        desc: 'Xây dựng API kết nối và thuật toán tối ưu ghép cặp các tuyến đi chung xe của sinh viên dựa trên bản đồ.',
+        requirement: 'Nắm vững Node.js, Express, MongoDB. Có kinh nghiệm làm việc với bản đồ (Google Maps / Mapbox API) là lợi thế.'
+      },
+      {
+        id: 'job-7',
+        projectId: 'foodhub',
+        projectName: 'FoodHub',
+        projectLogo: '🍱',
+        title: 'Growth Hacker & Marketing Lead',
+        category: 'Marketing',
+        desc: 'Lên kế hoạch phát triển cộng đồng sinh viên đặt chung đơn ăn trưa, tối ưu hóa kênh phân phối tại các trường đại học.',
+        requirement: 'Năng động, có óc sáng tạo content tốt, thấu hiểu insight thói quen ăn uống của sinh viên và thích tạo viral tương tác.'
+      }
+    ];
+
+    // Notification helper
+    function showNotification(text, isError = false) {
+      const banner = document.getElementById('sim-notification-root');
+      const bannerText = document.getElementById('sim-notification-text-root');
+      
+      bannerText.textContent = text;
+      if (isError) {
+        banner.classList.add('error-notif');
+      } else {
+        banner.classList.remove('error-notif');
+      }
+      
+      banner.classList.add('show');
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3500);
+    }
+
+    // Update sidebar limit bar progress (FR-006 / BR-05)
+    function updateSidebarProgress() {
+      const count = studentApplications.length;
+      document.getElementById('sim-app-limit-count').textContent = `${count}/3 đơn`;
+      const pct = (count / 3) * 100;
+      document.getElementById('sim-app-limit-progress').style.width = `${pct}%`;
+      
+      if (count >= 3) {
+        document.getElementById('sim-app-limit-progress').style.backgroundColor = 'var(--status-suspended)';
+      } else {
+        document.getElementById('sim-app-limit-progress').style.backgroundColor = 'var(--color-accent)';
+      }
+    }
+
+    // Filter projects based on search & selector input
+    document.getElementById('sim-project-search').addEventListener('input', renderProjects);
+    document.getElementById('sim-project-filter').addEventListener('change', renderProjects);
+    document.getElementById('sim-job-filter').addEventListener('change', renderJobs);
+
+    /* ==========================================
+       D. RENDER VIEWS
+       ========================================== */
+       
+    // VIEW 1: Projects Feed
+    function renderProjects() {
+      const searchVal = document.getElementById('sim-project-search').value.toLowerCase();
+      const filterVal = document.getElementById('sim-project-filter').value;
+      const gridRoot = document.getElementById('sim-projects-grid-root');
+      
+      gridRoot.innerHTML = '';
+      
+      const filtered = startupProjects.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchVal) || p.pitch.toLowerCase().includes(searchVal);
+        const matchesCategory = (filterVal === 'ALL') || (p.category === filterVal);
+        return matchesSearch && matchesCategory;
+      });
+
+      if (filtered.length === 0) {
+        gridRoot.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem 0;">Không tìm thấy dự án phù hợp.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const badgeClass = p.status === 'Active' ? 'active-badge' : (p.status === 'At-Risk' ? 'risk-badge' : 'suspended-badge');
+        const statusLabel = p.status === 'Active' ? 'Hoạt động' : (p.status === 'At-Risk' ? 'Cảnh báo' : 'Tạm dừng');
+        
+        const card = document.createElement('div');
+        card.className = 'sim-project-card';
+        card.innerHTML = `
+          <div class="sim-card-header">
+            <div class="sim-card-logo">${p.logo}</div>
+            <span class="sim-card-badge ${badgeClass}">${statusLabel}</span>
+          </div>
+          <h4 class="sim-card-name">${p.name}</h4>
+          <p class="sim-card-pitch">${p.pitch}</p>
+          <div class="sim-card-footer">
+            <span class="sim-card-category">${p.category}</span>
+            <span class="sim-card-action-text">
+              Chi tiết
+              <svg viewBox="0 0 24 24" width="12" height="12"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </span>
+          </div>
+        `;
+        card.addEventListener('click', () => openProjectDetails(p.id));
+        gridRoot.appendChild(card);
+      });
+    }
+
+    // VIEW 2: Jobs Board
+    function renderJobs() {
+      const filterVal = document.getElementById('sim-job-filter').value;
+      const jobsRoot = document.getElementById('sim-jobs-grid-root');
+      
+      jobsRoot.innerHTML = '';
+
+      // We only show jobs of active and flagged projects. Suspended projects have their jobs hidden (BR-08)
+      const visibleJobs = jobListings.filter(job => {
+        const proj = startupProjects.find(p => p.id === job.projectId);
+        return proj && proj.status !== 'Suspended';
+      });
+
+      const filtered = visibleJobs.filter(job => {
+        return (filterVal === 'ALL') || (job.category === filterVal);
+      });
+
+      if (filtered.length === 0) {
+        jobsRoot.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 3rem 0;">Không có vị trí tuyển dụng nào hoạt động ở ngành nghề này.</div>`;
+        return;
+      }
+
+      filtered.forEach(job => {
+        const isApplied = studentApplications.includes(job.id);
+        
+        const card = document.createElement('div');
+        card.className = 'sim-job-card';
+        card.innerHTML = `
+          <div class="sim-job-header">
+            <div class="sim-job-info-area">
+              <div class="sim-job-proj-logo">${job.projectLogo}</div>
+              <div>
+                <h4 class="sim-job-details-title">${job.title}</h4>
+                <span class="sim-job-proj-name">Dự án: <strong>${job.projectName}</strong></span>
+              </div>
+            </div>
+            <span class="sim-job-tag-badge">${job.category}</span>
+          </div>
+          <p class="sim-job-desc-body">${job.desc}</p>
+          <div class="sim-job-req-body"><strong>Yêu cầu:</strong> ${job.requirement}</div>
+          <div class="sim-job-footer">
+            <button class="btn-modal-apply ${isApplied ? 'applied' : ''}" onclick="handleApplyJob('${job.id}')">
+              ${isApplied ? 'Đã ứng tuyển' : 'Ứng tuyển nhanh (1-Click)'}
+            </button>
+          </div>
+        `;
+        jobsRoot.appendChild(card);
+      });
+    }
+
+    // VIEW 3: Admin Management Dashboard
+    function renderAdminDashboard() {
+      const tableBody = document.getElementById('sim-admin-table-body-root');
+      tableBody.innerHTML = '';
+
+      // Count dynamic stats
+      let activeCount = 0;
+      let riskCount = 0;
+      let suspendedCount = 0;
+
+      startupProjects.forEach(p => {
+        if (p.status === 'Active') activeCount++;
+        else if (p.status === 'At-Risk') riskCount++;
+        else if (p.status === 'Suspended') suspendedCount++;
+      });
+
+      document.getElementById('sim-stat-total-proj').textContent = activeCount + riskCount;
+      document.getElementById('sim-stat-risk-proj').textContent = riskCount;
+      document.getElementById('sim-stat-suspended-proj').textContent = suspendedCount;
+      document.getElementById('sim-stat-placements').textContent = 12 + studentApplications.length;
+
+      startupProjects.forEach(p => {
+        const badgeClass = p.status === 'Active' ? 'active-badge' : (p.status === 'At-Risk' ? 'risk-badge' : 'suspended-badge');
+        const statusLabel = p.status === 'Active' ? 'Hoạt động' : (p.status === 'At-Risk' ? 'Cảnh báo' : 'Tạm dừng');
+        
+        let actionButtons = '';
+        if (p.status === 'At-Risk') {
+          actionButtons = `
+            <button class="btn-admin-action resolve" onclick="resolveFlag('${p.id}')">Bỏ cờ cảnh báo</button>
+            <button class="btn-admin-action nudge" onclick="sendNudgeAlert('${p.id}')">Gửi nhắc nhở</button>
+          `;
+        } else if (p.status === 'Suspended') {
+          actionButtons = `
+            <button class="btn-admin-action unsuspend" onclick="unsuspendProject('${p.id}')">Kích hoạt lại (Restore)</button>
+          `;
+        } else {
+          actionButtons = `<span style="font-size:0.8rem; color:var(--text-muted);">Hệ thống ổn định</span>`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${p.name}</strong></td>
+          <td>${p.category}</td>
+          <td>${p.lastUpdatedText}</td>
+          <td><span class="sim-card-badge ${badgeClass}">${statusLabel}</span></td>
+          <td class="sim-admin-action-cell">${actionButtons}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    /* ==========================================
+       E. STARTUP DETAILS MODAL & CMS SIMULATION
+       ========================================== */
+    function openProjectDetails(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      const overlay = document.getElementById('sim-detail-modal-root');
+      overlay.innerHTML = '';
+
+      const badgeClass = proj.status === 'Active' ? 'active-badge' : (proj.status === 'At-Risk' ? 'risk-badge' : 'suspended-badge');
+      const statusLabel = proj.status === 'Active' ? 'Hoạt động' : (proj.status === 'At-Risk' ? 'Cảnh báo' : 'Tạm dừng');
+
+      // Milestones rendering
+      let timelineHTML = '';
+      proj.milestones.forEach(m => {
+        timelineHTML += `
+          <div class="sim-timeline-node ${m.done ? 'done' : ''}">
+            <div class="sim-node-dot">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="sim-node-info">
+              <div class="sim-node-name">${m.name}</div>
+              <div class="sim-node-status">${m.done ? `Đã hoàn thành (${m.date})` : m.date}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Filter jobs specifically for this startup
+      const relatedJobs = jobListings.filter(j => j.projectId === projId);
+      let jobsHTML = '';
+      
+      if (proj.status === 'Suspended') {
+        jobsHTML = `<p style="font-size:0.8rem; color:var(--status-suspended);">⚠ Dự án đang bị tạm dừng. Tất cả bài đăng tuyển dụng đã bị ẩn.</p>`;
+      } else if (relatedJobs.length === 0) {
+        jobsHTML = `<p style="font-size:0.8rem; color:var(--text-muted);">Hiện tại startup không đăng tuyển thêm nhân sự.</p>`;
+      } else {
+        relatedJobs.forEach(job => {
+          const isApplied = studentApplications.includes(job.id);
+          jobsHTML += `
+            <div class="sim-modal-role-card">
+              <div>
+                <div class="sim-modal-role-title">${job.title}</div>
+                <span class="sim-modal-role-tag">${job.category}</span>
+              </div>
+              <button class="btn-modal-apply ${isApplied ? 'applied' : ''}" onclick="handleApplyJob('${job.id}', true)">
+                ${isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      const modalContainer = document.createElement('div');
+      modalContainer.className = 'sim-detail-modal';
+      modalContainer.innerHTML = `
+        <div class="sim-modal-header">
+          <div class="sim-modal-title-area">
+            <div class="sim-card-logo" style="width:36px; height:36px; font-size:1.2rem;">${proj.logo}</div>
+            <div>
+              <h3 class="sim-job-details-title" style="font-size:1.25rem;">${proj.name}</h3>
+              <span class="sim-card-badge ${badgeClass}" style="font-size:0.65rem; padding: 2px 6px;">${statusLabel}</span>
+            </div>
+          </div>
+          <button class="sim-modal-close" onclick="closeProjectDetails()">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        </div>
+        <div class="sim-modal-body">
+          <div class="sim-modal-left">
+            <h4>Giới thiệu dự án</h4>
+            <p class="sim-modal-desc">${proj.description}</p>
+            
+            <h4>Tuyển dụng liên kết (Chéo khoa)</h4>
+            <div class="sim-modal-roles-list" id="sim-modal-roles-root">
+              ${jobsHTML}
+            </div>
+          </div>
+          <div class="sim-modal-right">
+            <h4>Lộ trình Milestones (Cập nhật liên tục)</h4>
+            <div class="sim-timeline-vertical" id="sim-modal-timeline-root">
+              ${timelineHTML}
+            </div>
+
+            <div class="sim-cms-action-box">
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom: 0.6rem;">Chế độ: <strong>Người sáng lập (Founder CMS)</strong></p>
+              <button class="btn-cms-action" onclick="simulateCMSUpdate('${proj.id}')">⚡ Cập nhật Milestone mới</button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      overlay.appendChild(modalContainer);
+      overlay.style.display = 'flex';
+    }
+
+    function closeProjectDetails() {
+      document.getElementById('sim-detail-modal-root').style.display = 'none';
+    }
+
+    // CMS Update Milestone Sim (BR-09: Suspended founder logs in & updates milestone -> restores status)
+    function simulateCMSUpdate(projId) {
+      if (!isLoggedIn) {
+        // Trigger SSO login modal first
+        openSSOModal(() => simulateCMSUpdate(projId));
+        return;
+      }
+
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      // Ask for a new milestone name
+      const milestoneName = prompt("Nhập tiêu đề công việc/Milestone mới để cập nhật tiến trình:", "Hoàn thành kiểm thử hiệu năng API");
+      if (!milestoneName) return;
+
+      const dateStr = new Date().toLocaleDateString('vi-VN');
+      
+      // Auto complete previous milestones to look realistic, then push new one
+      proj.milestones.forEach(m => m.done = true);
+      proj.milestones.push({ name: milestoneName, done: true, date: dateStr });
+      
+      // Reset project status to Active since it is updated! (FR-007 / BR-09 / BR-07)
+      const oldStatus = proj.status;
+      proj.status = 'Active';
+      proj.lastUpdatedText = 'Vừa mới cập nhật';
+
+      showNotification(`Đã cập nhật Milestone thành công! Trạng thái dự án chuyển về: Hoạt động.`, false);
+      
+      // Re-render
+      renderProjects();
+      renderJobs();
+      closeProjectDetails();
+      
+      // If modal was open, reopen to show updated states
+      openProjectDetails(projId);
+    }
+
+    /* ==========================================
+       F. SSO SIMULATED FLOW & WORK MATCHING
+       ========================================== */
+    const ssoModal = document.getElementById('sim-sso-modal-root');
+    const ssoSubmit = document.getElementById('btn-sso-submit');
+    const ssoCancel = document.getElementById('btn-sso-cancel');
+    let ssoSuccessCallback = null;
+
+    function openSSOModal(onSuccess) {
+      ssoSuccessCallback = onSuccess;
+      ssoModal.style.display = 'flex';
+    }
+
+    ssoCancel.addEventListener('click', () => {
+      ssoModal.style.display = 'none';
+      ssoSuccessCallback = null;
+    });
+
+    ssoSubmit.addEventListener('click', () => {
+      const studentId = document.getElementById('sso-input-id').value;
+      if (!studentId) {
+        alert("Vui lòng nhập Mã số sinh viên!");
+        return;
+      }
+
+      // Simulate successful login
+      isLoggedIn = true;
+      loggedUser = {
+        id: studentId,
+        name: 'Lê Văn Học',
+        avatar: studentId.charAt(0)
+      };
+
+      // Update Topbar HTML in simulator
+      document.getElementById('sim-user-status-area').innerHTML = `
+        <div class="user-profile-badge">
+          <div class="user-avatar-mini">${loggedUser.avatar}</div>
+          <span class="user-name-mini">${loggedUser.name} (${loggedUser.id})</span>
+        </div>
+      `;
+
+      ssoModal.style.display = 'none';
+      showNotification(`Đăng nhập SSO thành công! Chào mừng ${loggedUser.name}.`);
+
+      if (ssoSuccessCallback) {
+        ssoSuccessCallback();
+        ssoSuccessCallback = null;
+      }
+    });
+
+    // 1-Click Apply feature with application limit checks (FR-006 / BR-05 / BR-04)
+    function handleApplyJob(jobId, insideModal = false) {
+      if (!isLoggedIn) {
+        // Must login first
+        openSSOModal(() => handleApplyJob(jobId, insideModal));
+        return;
+      }
+
+      // Check duplicate application
+      if (studentApplications.includes(jobId)) {
+        showNotification("Bạn đã nộp đơn ứng tuyển vào vị trí này rồi!", true);
+        return;
+      }
+
+      // Business Rule BR-05 / FR-006: Max 3 concurrent applications
+      if (studentApplications.length >= 3) {
+        showNotification("Nộp đơn thất bại! Bạn đã đạt giới hạn tối đa 3 đơn ứng tuyển đồng thời.", true);
+        return;
+      }
+
+      // Process Application
+      studentApplications.push(jobId);
+      updateSidebarProgress();
+      
+      showNotification("Nộp đơn ứng tuyển thành công! Nhà sáng lập sẽ phản hồi qua email SSO của bạn.", false);
+
+      // Re-render
+      renderJobs();
+      if (insideModal) {
+        const currentModalProjId = document.querySelector('.sim-detail-modal .sim-card-logo').parentElement.parentElement.parentElement.parentElement; // dummy traverse
+        // Just reopen/refresh modal for safety
+        const activeModalLogo = document.querySelector('.sim-detail-modal .sim-card-logo');
+        if (activeModalLogo) {
+          // Re-render modal jobs
+          const activeProj = startupProjects.find(p => p.logo === activeModalLogo.textContent);
+          if (activeProj) openProjectDetails(activeProj.id);
+        }
+      }
+    }
+
+    /* ==========================================
+       G. ADMIN MANAGEMENT DISPATCHERS
+       ========================================== */
+       
+    // Resolve inactivity flag (BR-09)
+    function resolveFlag(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      proj.status = 'Active';
+      proj.lastUpdatedText = '1 ngày trước'; // reset clock
+      
+      showNotification(`Đã thu hồi cờ cảnh báo của dự án ${proj.name}.`);
+      renderAdminDashboard();
+      renderProjects();
+    }
+
+    // Send warning email (FR-007)
+    function sendNudgeAlert(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+      showNotification(`Hệ thống đã tự động gửi email nhắc nhở tiến độ đến toàn bộ nhóm sáng lập ${proj.name}!`);
+    }
+
+    // Restore suspended project back to published (BR-09)
+    function unsuspendProject(projId) {
+      const proj = startupProjects.find(p => p.id === projId);
+      if (!proj) return;
+
+      proj.status = 'Active';
+      proj.lastUpdatedText = 'Vừa mở lại';
+      
+      showNotification(`Dự án ${proj.name} đã được khôi phục thành công. Vị trí tuyển dụng được hiển thị lại.`);
+      renderAdminDashboard();
+      renderProjects();
+      renderJobs(); // Job listings return
+    }
+
+    // Export Admin CSV Report (FR-007)
+    document.getElementById('btn-admin-csv-export').addEventListener('click', () => {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "ID,Project Name,Category,Status,Last Activity\n";
+      
+      startupProjects.forEach(p => {
+        csvContent += `${p.id},${p.name},${p.category},${p.status},${p.lastUpdatedText}\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "gara_incubator_report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showNotification("Đang chuẩn bị báo cáo... Đã tải xuống file csv quản trị!");
+    });
+  </script>
+</body>
+</html>
