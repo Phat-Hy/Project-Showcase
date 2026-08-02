@@ -86,6 +86,63 @@ interface Candidate {
   student_cv?: string;
 }
 
+const renderInlineLinks = (text: string) => {
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+    parts.push(
+      <a 
+        key={match.index} 
+        href={match[2]} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-cyan-400 hover:underline font-semibold"
+      >
+        {match[1]}
+      </a>
+    );
+    lastIndex = linkRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+};
+
+const renderMarkdown = (text: string) => {
+  if (!text) return <p className="text-slate-500 italic">Chưa có mô tả chi tiết.</p>;
+  
+  const lines = text.split('\n');
+  return (
+    <div className="space-y-2 text-slate-300 text-sm leading-relaxed">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('# ')) {
+          return <h3 key={idx} className="text-lg font-heading font-bold text-slate-200 mt-4 mb-2">{trimmed.slice(2)}</h3>;
+        }
+        if (trimmed.startsWith('## ')) {
+          return <h4 key={idx} className="text-base font-heading font-bold text-slate-200 mt-3 mb-1">{trimmed.slice(3)}</h4>;
+        }
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          return <li key={idx} className="ml-4 list-disc text-slate-300">{renderInlineLinks(trimmed.slice(2))}</li>;
+        }
+        if (trimmed === '') {
+          return <div key={idx} className="h-2"></div>;
+        }
+        return <p key={idx}>{renderInlineLinks(line)}</p>;
+      })}
+    </div>
+  );
+};
+
 export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -976,6 +1033,16 @@ export default function App() {
 
                   {/* Right Columns: Description, Team Roster, and Milestones */}
                   <div className="lg:col-span-2 space-y-6">
+                    {/* Project Description (Markdown) */}
+                    <div className="glass-panel p-6 border-white/5 space-y-4">
+                      <h3 className="text-lg font-heading font-bold text-slate-200 flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-purple-400" /> Mô tả chi tiết dự án
+                      </h3>
+                      <div className="p-4 rounded-lg bg-white/5 border border-white/5 max-h-[300px] overflow-y-auto text-left">
+                        {renderMarkdown(myProject.description)}
+                      </div>
+                    </div>
+
                     {/* Teammates List */}
                     <div className="glass-panel p-6 border-white/5 space-y-4">
                       <h3 className="text-lg font-heading font-bold text-slate-200 flex items-center gap-2">
@@ -1743,6 +1810,13 @@ export default function App() {
                   </a>
                 </div>
               )}
+              {/* Detailed Description (Markdown) */}
+              <div className="space-y-2 border-t border-white/5 pt-4 text-left">
+                <h3 className="text-sm font-heading font-bold text-slate-300">Mô tả chi tiết</h3>
+                <div className="p-4 rounded-lg bg-white/5 border border-white/5 max-h-[250px] overflow-y-auto">
+                  {renderMarkdown(selectedProject.description)}
+                </div>
+              </div>
 
               {/* Roster of members */}
               <div className="space-y-3">
