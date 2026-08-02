@@ -322,16 +322,17 @@ export default function App() {
   };
 
   // --- STUDENT DASHBOARD FETCHERS ---
-  const fetchStudentDashboard = async () => {
+  const fetchStudentDashboard = async (userId?: string) => {
     try {
       const resProj = await fetch('/api/projects');
-      if (resProj.ok) setProjects(await resProj.ok ? await resProj.json() : []);
+      if (resProj.ok) setProjects(await resProj.json());
 
       const resJobs = await fetch('/api/jobs');
       if (resJobs.ok) setJobs(await resJobs.json());
 
-      if (currentUser?.id) {
-        const resApps = await fetch(`/api/applications/student/${currentUser.id}`);
+      const targetId = userId || currentUser?.id;
+      if (targetId) {
+        const resApps = await fetch(`/api/applications/student/${targetId}`);
         if (resApps.ok) setStudentApps(await resApps.json());
       }
     } catch (err) {
@@ -355,8 +356,10 @@ export default function App() {
       if (res.ok) {
         setProfileMsg({ text: 'Hồ sơ cá nhân cập nhật thành công!', type: 'success' });
         setCurrentUser(data.user);
+        if (data.user.contactLink) setContactLink(data.user.contactLink);
+        if (data.user.cvUrl) setCvUrl(data.user.cvUrl);
         // Refresh feeds
-        fetchStudentDashboard();
+        fetchStudentDashboard(data.user.id);
       } else {
         setProfileMsg({ text: data.error || 'Lỗi cập nhật hồ sơ.', type: 'error' });
       }
