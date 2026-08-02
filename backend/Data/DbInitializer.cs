@@ -327,15 +327,21 @@ namespace GaraShowcase.Api.Data
             {
                 var seeker = seekers[i];
                 var job = openJobs[random.Next(openJobs.Count)];
+                var status = random.NextDouble() > 0.7 ? "Approved" : (random.NextDouble() > 0.5 ? "Rejected" : "Pending");
                 
                 applicationList.Add(new Application
                 {
                     Id = Guid.NewGuid(),
                     StudentId = seeker.Id,
                     JobId = job.Id,
-                    Status = random.NextDouble() > 0.7 ? "Approved" : (random.NextDouble() > 0.5 ? "Rejected" : "Pending"),
+                    Status = status,
                     CreatedAt = DateTime.UtcNow.AddDays(-random.Next(1, 8))
                 });
+
+                if (status == "Approved")
+                {
+                    seeker.ProjectId = job.ProjectId;
+                }
             }
 
             context.Applications.AddRange(applicationList);
