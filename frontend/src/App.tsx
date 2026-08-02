@@ -396,11 +396,9 @@ export default function App() {
       const data = await res.json();
       if (res.ok) {
         setCvUrl(data.cvUrl);
+        setCurrentUser(prev => prev ? { ...prev, cvUrl: data.cvUrl } : null);
         setProfileMsg({ text: 'Tải lên tệp CV thành công!', type: 'success' });
         showNotification('Tải lên tệp CV thành công!', 'success');
-        
-        // Refresh session
-        fetchSession();
       } else {
         setProfileMsg({ text: data.error || 'Lỗi tải lên tệp CV.', type: 'error' });
       }
